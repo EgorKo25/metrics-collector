@@ -1,8 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"net/http"
 	rt "runtime"
+	"strconv"
 	"time"
 )
 
@@ -33,12 +35,12 @@ func CountAndCompare(m *rt.MemStats, metric_list *map[string]*uint64, PollCounte
 	}
 }
 
-func UpdateMetric(PollCounter *counter) {
+func UpdateMetric(PollCounter *counter) (metric_list map[string]*uint64) {
 	var m rt.MemStats
 	rt.ReadMemStats(&m)
 
 	GCCPUFraction := uint64(m.GCCPUFraction)
-	metric_list := map[string]*uint64{
+	metric_list = map[string]*uint64{
 		"Alloc":         &m.Alloc,
 		"BuckHashSys":   &m.BuckHashSys,
 		"Frees":         &m.Frees,
@@ -49,11 +51,20 @@ func UpdateMetric(PollCounter *counter) {
 	}
 
 	CountAndCompare(&m, &metric_list, PollCounter)
-	fmt.Println(*PollCounter)
+	return
 }
 
-func MetricSender() {
-	fmt.Println("Ok")
+func MetricSender(metrcs_list *map[string]*uint64) {
+	for k, v := range *metrcs_list {
+
+		url := "http://127.0.0.1/update/" + "guage" + "/" + k + "/" + strconv.Itoa(int(*v)) + "/"
+		_, err := http.Get(url)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	}
+
 }
 
 func Monitor() {
@@ -61,6 +72,7 @@ func Monitor() {
 	rt.ReadMemStats(&m)
 
 	var PollCount counter = 0
+	var metrics_list map[string]*uint64
 
 	var dur_conf config
 	dur_conf.pollInterval = 2
@@ -72,10 +84,10 @@ func Monitor() {
 	for {
 		select {
 		case <-tickerInterval.C:
-			UpdateMetric(&PollCount)
+			metrics_list = UpdateMetric(&PollCount)
 
 		case <-tickerReport.C:
-			MetricSender()
+			MetricSender(&metrics_list)
 		}
 	}
 
