@@ -63,7 +63,7 @@ func sendData(metricsList *map[string]*uint64) {
 	for k, v := range *metricsList {
 
 		url := "http://127.0.0.1:8080/update/" + "type" + "/" + k + "/" + strconv.Itoa(int(*v)) + "/"
-		_, err := http.NewRequest("POST", url, nil)
+		_, err := http.Post(url, "text/plain", nil)
 		if err != nil {
 			log.Fatal(err)
 		}
