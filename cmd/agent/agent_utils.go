@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-type guage uint64
-
 type counter int
 
 type config struct {
@@ -17,30 +15,36 @@ type config struct {
 	reportInterval time.Duration
 }
 
-func copy_map(metric_list *map[string]*uint64) map[string]uint64 {
-	old_metric_list := make(map[string]uint64)
-	for k, v := range *metric_list {
-		old_metric_list[k] = *v
+// This function makes a copy of the map so that the metrics can be updated.
+func copyMap(metricList *map[string]*uint64) map[string]uint64 {
+	oldMetricList := make(map[string]uint64)
+	for k, v := range *metricList {
+		oldMetricList[k] = *v
 	}
-	return old_metric_list
+	return oldMetricList
 }
 
-func CountAndCompare(m *rt.MemStats, metric_list *map[string]*uint64, PollCounter *counter) {
-	old_metric_list := copy_map(metric_list)
+// updating and counting updated metrics
+func updateAndCount(m *rt.MemStats, metricList *map[string]*uint64, pollCounter *counter) {
+
+	oldMetricList := copyMap(metricList)
+	//Updating
 	rt.ReadMemStats(m)
-	for k, _ := range *metric_list {
-		if old_metric_list[k] != *(*metric_list)[k] {
-			*PollCounter++
+	//Counting
+	for k := range *metricList {
+		if oldMetricList[k] != *(*metricList)[k] {
+			*pollCounter++
 		}
 	}
 }
 
-func UpdateMetric(PollCounter *counter) (metric_list map[string]*uint64) {
+// function to create a metrics list and Memory Stats obj
+func createMetricList(pollCounter *counter) (metricList map[string]*uint64) {
 	var m rt.MemStats
 	rt.ReadMemStats(&m)
 
 	GCCPUFraction := uint64(m.GCCPUFraction)
-	metric_list = map[string]*uint64{
+	metricList = map[string]*uint64{
 		"Alloc":         &m.Alloc,
 		"BuckHashSys":   &m.BuckHashSys,
 		"Frees":         &m.Frees,
@@ -50,15 +54,16 @@ func UpdateMetric(PollCounter *counter) (metric_list map[string]*uint64) {
 		"HeapIdle":      &m.HeapIdle,
 	}
 
-	CountAndCompare(&m, &metric_list, PollCounter)
+	updateAndCount(&m, &metricList, pollCounter)
 	return
 }
 
-func MetricSender(metrcs_list *map[string]*uint64) {
-	for k, v := range *metrcs_list {
+// sending collected metrics to 127.0.0.1/updates on port 8080
+func sendData(metricsList *map[string]*uint64) {
+	for k, v := range *metricsList {
 
-		url := "http://127.0.0.1:8080/update/" + "guage" + "/" + k + "/" + strconv.Itoa(int(*v)) + "/"
-		_, err := http.Get(url)
+		url := "http://127.0.0.1:8080/update/" + "type" + "/" + k + "/" + strconv.Itoa(int(*v)) + "/"
+		_, err := http.NewRequest("POST", url, nil)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -67,31 +72,29 @@ func MetricSender(metrcs_list *map[string]*uint64) {
 
 }
 
-func Monitor() {
-	var m rt.MemStats
-	rt.ReadMemStats(&m)
+// system monitor
+func myMonitor() {
+	//metric counter
+	var pollCount counter = 0
+	//map for metric
+	var metricsList map[string]*uint64
 
-	var PollCount counter = 0
-	var metrics_list map[string]*uint64
+	//interval settings
+	var durConf config
+	durConf.pollInterval = 2
+	durConf.reportInterval = 10
 
-	var dur_conf config
-	dur_conf.pollInterval = 2
-	dur_conf.reportInterval = 10
-
-	tickerInterval := time.NewTicker(dur_conf.pollInterval * time.Second)
-	tickerReport := time.NewTicker(dur_conf.reportInterval * time.Second)
+	tickerInterval := time.NewTicker(durConf.pollInterval * time.Second)
+	tickerReport := time.NewTicker(durConf.reportInterval * time.Second)
 
 	for {
 		select {
 		case <-tickerInterval.C:
-			metrics_list = UpdateMetric(&PollCount)
+			metricsList = createMetricList(&pollCount)
 
 		case <-tickerReport.C:
-			MetricSender(&metrics_list)
+			sendData(&metricsList)
 		}
 	}
 
-}
-func main() {
-	Monitor()
 }
