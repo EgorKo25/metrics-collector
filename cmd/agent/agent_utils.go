@@ -57,7 +57,7 @@ func UpdateMetric(PollCounter *counter) (metric_list map[string]*uint64) {
 func MetricSender(metrcs_list *map[string]*uint64) {
 	for k, v := range *metrcs_list {
 
-		url := "http://127.0.0.1/update/" + "guage" + "/" + k + "/" + strconv.Itoa(int(*v)) + "/"
+		url := "http://127.0.0.1:8080/update/" + "guage" + "/" + k + "/" + strconv.Itoa(int(*v)) + "/"
 		_, err := http.Get(url)
 		if err != nil {
 			log.Fatal(err)
