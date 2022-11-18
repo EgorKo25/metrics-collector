@@ -1,4 +1,4 @@
-package main
+package utils_agent
 
 import (
 	"log"
@@ -73,7 +73,7 @@ func sendData(metricsList *map[string]*uint64) {
 }
 
 // system monitor
-func myMonitor() {
+func MyMonitor() {
 	//metric counter
 	var pollCount counter = 0
 	//map for metric
