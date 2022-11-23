@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - first-inc
+      - inc-2
 
 jobs:
 
