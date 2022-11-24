@@ -1,4 +1,4 @@
-package server
+package handlers
 
 import (
 	"net/http"
@@ -23,7 +23,7 @@ func TestGetMetricList(t *testing.T) {
 				MetricList:  &map[string]Guage{},
 				CounterList: &map[string]Counter{},
 			},
-			url:      "/update/?type=Guage&name=Alloc&value=12",
+			url:      "http://127.0.0.1:8080/update/guage/Alloc/12",
 			wantCode: 200,
 		},
 		{
@@ -32,7 +32,7 @@ func TestGetMetricList(t *testing.T) {
 				MetricList:  &map[string]Guage{},
 				CounterList: &map[string]Counter{},
 			},
-			url:      "/update/?type=Guage&name=Alloc&value=qdqw",
+			url:      "/update/guage/Alloc/qdqw",
 			wantCode: 500,
 		},
 		{
@@ -41,7 +41,7 @@ func TestGetMetricList(t *testing.T) {
 				MetricList:  &map[string]Guage{},
 				CounterList: &map[string]Counter{},
 			},
-			url:      "/update/?type=Counter&name=Alloc&value=qdqw",
+			url:      "/update/counter/Alloc/qdqw",
 			wantCode: 500,
 		},
 		{
@@ -50,7 +50,7 @@ func TestGetMetricList(t *testing.T) {
 				MetricList:  &map[string]Guage{},
 				CounterList: &map[string]Counter{},
 			},
-			url:      "/update/?type=jkhjhk&name=Alloc&value=125",
+			url:      "/update/khjhk/Alloc/125",
 			wantCode: 400,
 		},
 	}
