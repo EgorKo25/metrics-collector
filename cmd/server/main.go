@@ -1,7 +1,7 @@
 package main
 
 import (
-	"handlers/handlers"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/handlers"
 	"log"
 	"net/http"
 )
