@@ -1,5 +1,7 @@
 package main
 
+import "github.com/EgorKo25/DevOps-Track-Yandex/internal/utils_agent"
+
 func main() {
-	utils_agent.MyMonitor()
+	agent.MyMonitor()
 }
