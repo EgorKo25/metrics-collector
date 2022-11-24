@@ -7,21 +7,21 @@ import (
 	"strings"
 )
 
-type Guage float64
+type Gauge float64
 type Counter uint64
 
-func GetMetricList(MetricList *map[string]Guage, CounterList *map[string]Counter) http.HandlerFunc {
+func GetMetricList(MetricList *map[string]Gauge, CounterList *map[string]Counter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		url := r.URL.Path
 		data := strings.Split(url, "/")
 
-		if data[2] == "guage" {
+		if data[2] == "gauge" {
 			if len(data) > 4 {
 				value, err := strconv.ParseFloat(data[4], 64)
 				if err != nil {
 					w.WriteHeader(http.StatusBadRequest)
 				}
-				(*MetricList)[data[3]] = Guage(value)
+				(*MetricList)[data[3]] = Gauge(value)
 				log.Println(MetricList)
 
 				w.WriteHeader(http.StatusOK)
