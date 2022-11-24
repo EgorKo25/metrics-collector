@@ -1,6 +1,6 @@
 package main
 
-import "github.com/EgorKo25/DevOps-Track-Yandex/internal/utils_agent"
+import agent "AgentSupport/AgentFunctions"
 
 func main() {
 	agent.MyMonitor()
