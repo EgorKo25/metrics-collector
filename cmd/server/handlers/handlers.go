@@ -19,7 +19,7 @@ func GetMetricList(MetricList *map[string]Guage, CounterList *map[string]Counter
 			if len(data) > 4 {
 				value, err := strconv.ParseFloat(data[4], 64)
 				if err != nil {
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 				}
 				(*MetricList)[data[3]] = Guage(value)
 				log.Println(MetricList)
@@ -36,7 +36,7 @@ func GetMetricList(MetricList *map[string]Guage, CounterList *map[string]Counter
 			if len(data) > 4 {
 				value, err := strconv.Atoi(data[4])
 				if err != nil {
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 				}
 				(*CounterList)[data[3]] = Counter(value)
 				log.Println(CounterList)
