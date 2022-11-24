@@ -1,7 +1,9 @@
 package main
 
-import agent "AgentSupport/AgentFunctions"
+import (
+	"DevOps-Track-Yandex/internal/AgentSupport/AgentFunctions"
+)
 
 func main() {
-	agent.MyMonitor()
+	AgentFunctions.MyMonitor()
 }

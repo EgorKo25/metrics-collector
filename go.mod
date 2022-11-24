@@ -1,3 +1,3 @@
-module github.com/EgorKo25/DevOps-Track-Yandex
+module DevOps-Track-Yandex
 
 go 1.19
