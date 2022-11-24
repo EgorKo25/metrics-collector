@@ -1,14 +1,14 @@
 package main
 
 import (
+	"handlers/handlers"
 	"log"
 	"net/http"
-	handlers "server/handlers"
 )
 
 func main() {
-	var MetricList map[string]handlers.Guage
-	var CounterList map[string]handlers.Counter
+	MetricList := make(map[string]handlers.Guage)
+	CounterList := make(map[string]handlers.Counter)
 
 	http.HandleFunc("/update/", handlers.GetMetricList(&MetricList, &CounterList))
 
