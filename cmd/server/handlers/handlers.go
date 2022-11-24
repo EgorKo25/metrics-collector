@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type Guage float64
@@ -10,23 +11,26 @@ type Counter uint64
 
 func GetMetricList(MetricList *map[string]Guage, CounterList *map[string]Counter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if dataType := r.URL.Query().Get("type"); dataType == "Guage" {
-			value, err := strconv.ParseFloat(r.URL.Query().Get("value"), 64)
+		url := r.URL.Path
+		data := strings.Split(url, "/")
+
+		if data[2] == "guage" {
+			value, err := strconv.ParseFloat(data[4], 64)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 			}
-			(*MetricList)[r.URL.Query().Get("name")] = Guage(value)
+			(*MetricList)[data[3]] = Guage(value)
 
 			w.WriteHeader(http.StatusOK)
 			return
 
 		}
-		if dataType := r.URL.Query().Get("type"); dataType == "Counter" {
-			value, err := strconv.Atoi(r.URL.Query().Get("value"))
+		if data[2] == "counter" {
+			value, err := strconv.Atoi(data[4])
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 			}
-			(*CounterList)[r.URL.Query().Get("name")] = Counter(value)
+			(*CounterList)[data[3]] = Counter(value)
 
 			w.WriteHeader(http.StatusOK)
 			return
