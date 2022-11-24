@@ -8,7 +8,7 @@ import (
 
 func TestGetMetricList(t *testing.T) {
 	type args struct {
-		MetricList  *map[string]Guage
+		MetricList  *map[string]Gauge
 		CounterList *map[string]Counter
 	}
 	tests := []struct {
@@ -20,38 +20,38 @@ func TestGetMetricList(t *testing.T) {
 		{
 			name: "test code 200",
 			args: args{
-				MetricList:  &map[string]Guage{},
+				MetricList:  &map[string]Gauge{},
 				CounterList: &map[string]Counter{},
 			},
-			url:      "http://127.0.0.1:8080/update/guage/Alloc/12",
+			url:      "http://127.0.0.1:8080/update/gauge/Alloc/12",
 			wantCode: 200,
-		},
-		{
-			name: "test code 500",
-			args: args{
-				MetricList:  &map[string]Guage{},
-				CounterList: &map[string]Counter{},
-			},
-			url:      "/update/guage/Alloc/qdqw",
-			wantCode: 500,
-		},
-		{
-			name: "test code 500",
-			args: args{
-				MetricList:  &map[string]Guage{},
-				CounterList: &map[string]Counter{},
-			},
-			url:      "/update/counter/Alloc/qdqw",
-			wantCode: 500,
 		},
 		{
 			name: "test code 400",
 			args: args{
-				MetricList:  &map[string]Guage{},
+				MetricList:  &map[string]Gauge{},
+				CounterList: &map[string]Counter{},
+			},
+			url:      "/update/gauge/Alloc/qdqw",
+			wantCode: 400,
+		},
+		{
+			name: "test code 400",
+			args: args{
+				MetricList:  &map[string]Gauge{},
+				CounterList: &map[string]Counter{},
+			},
+			url:      "/update/counter/Alloc/qdqw",
+			wantCode: 400,
+		},
+		{
+			name: "test code 501",
+			args: args{
+				MetricList:  &map[string]Gauge{},
 				CounterList: &map[string]Counter{},
 			},
 			url:      "/update/khjhk/Alloc/125",
-			wantCode: 400,
+			wantCode: 501,
 		},
 	}
 	for _, tt := range tests {
