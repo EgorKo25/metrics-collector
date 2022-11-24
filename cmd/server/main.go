@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	MetricList := make(map[string]handlers.Guage)
+	MetricList := make(map[string]handlers.Gauge)
 	CounterList := make(map[string]handlers.Counter)
 
 	http.HandleFunc("/update/", handlers.GetMetricList(&MetricList, &CounterList))
