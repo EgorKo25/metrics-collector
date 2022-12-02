@@ -10,14 +10,17 @@ import (
 	"strings"
 )
 
-func ShowThisMetricValue(m StorageSupport.MemStats, r chi.Router) http.HandlerFunc {
+func ShowThisMetricValue(m StorageSupport.MemStats) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		res := m.TakeThisStat(chi.URLParam(r, "name"), chi.URLParam(r, "type"))
 		if res == nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		w.Write([]byte(fmt.Sprintf("%v\n", res)))
+		_, err := w.Write([]byte(fmt.Sprintf("%v\n", res)))
+		if err != nil {
+			log.Println("%s", err)
+		}
 		w.WriteHeader(http.StatusOK)
 		return
 
@@ -36,7 +39,7 @@ func ShowAllMetricFromStorage(m StorageSupport.MemStats) http.HandlerFunc {
 		}
 	}
 }
-func AddMetricToStorage(m StorageSupport.MemStats, r chi.Router) http.HandlerFunc {
+func AddMetricToStorage(m StorageSupport.MemStats) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if mType := chi.URLParam(r, "type"); mType == "gauge" {
 			value, err := strconv.ParseFloat(chi.URLParam(r, "value"), 64)
@@ -105,10 +108,5 @@ func GetMetricList(MetricList *map[string]StorageSupport.Gauge, CounterList *map
 		}
 		w.WriteHeader(http.StatusNotImplemented)
 		return
-	}
-}
-func TakeDaefaultPage() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("SOSI"))
 	}
 }
