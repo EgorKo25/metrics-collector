@@ -62,7 +62,7 @@ func AddMetricToStorage(m StorageSupport.MemStats) http.HandlerFunc {
 			m.GetStats(chi.URLParam(r, "name"), any(StorageSupport.Counter(value)), mType)
 			w.WriteHeader(http.StatusOK)
 		} else {
-			w.WriteHeader(http.StatusNotFound)
+			w.WriteHeader(http.StatusNotImplemented)
 			return
 		}
 	}
