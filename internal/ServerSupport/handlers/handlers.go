@@ -41,8 +41,8 @@ func AddMetricToStorage(m StorageSupport.MemStats, r chi.Router) http.HandlerFun
 		if mType := chi.URLParam(r, "type"); mType == "gauge" {
 			value, err := strconv.ParseFloat(chi.URLParam(r, "value"), 64)
 			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				log.Fatalf("Somethings went wrong: %s", err)
+				w.WriteHeader(http.StatusBadRequest)
+				log.Println("Somethings went wrong: %s", err)
 				return
 			}
 			m.GetStats(chi.URLParam(r, "name"), any(StorageSupport.Gauge(value)), mType)
@@ -51,8 +51,8 @@ func AddMetricToStorage(m StorageSupport.MemStats, r chi.Router) http.HandlerFun
 		if mType := chi.URLParam(r, "type"); mType == "counter" {
 			value, err := strconv.Atoi(chi.URLParam(r, "value"))
 			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				log.Fatalf("Somethings went wrong: %s", err)
+				w.WriteHeader(http.StatusBadRequest)
+				log.Println("Somethings went wrong: %s", err)
 				return
 			}
 
