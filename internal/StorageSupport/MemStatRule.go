@@ -23,12 +23,16 @@ func (m MemStats) TakeStats() (map[string]Gauge, map[string]Counter) {
 }
 func (m MemStats) TakeThisStat(name, mType string) (value any) {
 	if mType == "gauge" {
-		value = m.MetricsGauge[name]
-		return value
+		if _, ok := m.MetricsGauge[name]; ok {
+			value = m.MetricsGauge[name]
+		}
+		return nil
 	}
 	if mType == "counter" {
-		value = m.MetricsCounter[name]
-		return value
+		if _, ok := m.MetricsCounter[name]; ok {
+			value = m.MetricsCounter[name]
+		}
+		return nil
 	}
 
 	return nil
