@@ -1,12 +1,54 @@
 package handlers
 
 import (
-	"DevOps-Track-Yandex/internal/StorageSupport "
+	"DevOps-Track-Yandex/internal/StorageSupport"
+	"fmt"
+	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
 )
+
+func ShowThisMetricValue(m StorageSupport.MemStats, r chi.Router) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		res := m.TakeThisStat(chi.URLParam(r, "name"), chi.URLParam(r, "type"))
+		if res == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		w.Write([]byte(fmt.Sprintf("%v\n", res)))
+		w.WriteHeader(http.StatusOK)
+		return
+
+	}
+}
+func ShowAllMetricFromStorage(m StorageSupport.MemStats) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		for k, v := range m.MetricsGauge {
+			tmp := "> " + k + ":  " + fmt.Sprintf("%f", v) + "\n"
+			w.Write([]byte(tmp))
+		}
+		for k, v := range m.MetricsCounter {
+			tmp := "> " + k + ":  " + fmt.Sprintf("%i", v) + "\n"
+			w.Write([]byte(tmp))
+		}
+	}
+}
+func AddMetricToStorage(m StorageSupport.MemStats, r chi.Router) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if mType := chi.URLParam(r, "type"); mType == "gauge" {
+			value, err := strconv.ParseFloat(chi.URLParam(r, "value"), 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				log.Fatalf("Somethings went wrong: %s", err)
+			}
+			m.GetStats(chi.URLParam(r, "name"), any(StorageSupport.Gauge(value)), mType)
+			w.WriteHeader(http.StatusOK)
+		}
+	}
+}
 
 func GetMetricList(MetricList *map[string]StorageSupport.Gauge, CounterList *map[string]StorageSupport.Counter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +94,6 @@ func GetMetricList(MetricList *map[string]StorageSupport.Gauge, CounterList *map
 }
 func TakeDaefaultPage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("SOSI"))
 	}
 }
