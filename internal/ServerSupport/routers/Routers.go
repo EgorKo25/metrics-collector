@@ -19,6 +19,7 @@ func NewRouter(m StorageSupport.MemStats) chi.Router {
 		r.Get("/", handlers.ShowAllMetricFromStorage(m))
 		r.Get("/value/{type}/{name}", handlers.ShowThisMetricValue(m, r))
 		r.Post("/update/{type}/{name}/{value}", handlers.AddMetricToStorage(m, r))
+		r.Post("/update", handlers.GetMetricList(&m.MetricsGauge, &m.MetricsCounter))
 
 	})
 
