@@ -6,9 +6,7 @@ import (
 	"net/http"
 )
 
-func main() {
-	MetricList := make(map[string]handlers.Gauge)
-	CounterList := make(map[string]handlers.Counter)
+func SimpleServerFunc() {
 
 	http.HandleFunc("/update/", handlers.GetMetricList(&MetricList, &CounterList))
 

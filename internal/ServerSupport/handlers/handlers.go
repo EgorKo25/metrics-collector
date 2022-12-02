@@ -1,16 +1,14 @@
 package handlers
 
 import (
+	"DevOps-Track-Yandex/internal/StorageSupport "
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-type Gauge float64
-type Counter uint64
-
-func GetMetricList(MetricList *map[string]Gauge, CounterList *map[string]Counter) http.HandlerFunc {
+func GetMetricList(MetricList *map[string]StorageSupport.Gauge, CounterList *map[string]StorageSupport.Counter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		url := r.URL.Path
 		data := strings.Split(url, "/")
@@ -21,7 +19,7 @@ func GetMetricList(MetricList *map[string]Gauge, CounterList *map[string]Counter
 				if err != nil {
 					w.WriteHeader(http.StatusBadRequest)
 				}
-				(*MetricList)[data[3]] = Gauge(value)
+				(*MetricList)[data[3]] = StorageSupport.Gauge(value)
 				log.Println(MetricList)
 
 				w.WriteHeader(http.StatusOK)
@@ -38,7 +36,7 @@ func GetMetricList(MetricList *map[string]Gauge, CounterList *map[string]Counter
 				if err != nil {
 					w.WriteHeader(http.StatusBadRequest)
 				}
-				(*CounterList)[data[3]] = Counter(value)
+				(*CounterList)[data[3]] = StorageSupport.Counter(value)
 				log.Println(CounterList)
 
 				w.WriteHeader(http.StatusOK)
@@ -50,5 +48,10 @@ func GetMetricList(MetricList *map[string]Gauge, CounterList *map[string]Counter
 		}
 		w.WriteHeader(http.StatusNotImplemented)
 		return
+	}
+}
+func TakeDaefaultPage() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
 	}
 }
