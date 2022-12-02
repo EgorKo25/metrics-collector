@@ -25,12 +25,15 @@ func (m MemStats) TakeThisStat(name, mType string) (value any) {
 	if mType == "gauge" {
 		if _, ok := m.MetricsGauge[name]; ok {
 			value = m.MetricsGauge[name]
+			return value
 		}
 		return nil
 	}
 	if mType == "counter" {
 		if _, ok := m.MetricsCounter[name]; ok {
 			value = m.MetricsCounter[name]
+			return value
+
 		}
 		return nil
 	}
