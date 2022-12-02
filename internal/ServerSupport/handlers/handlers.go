@@ -19,7 +19,7 @@ func ShowThisMetricValue(m StorageSupport.MemStats) http.HandlerFunc {
 		}
 		_, err := w.Write([]byte(fmt.Sprintf("%v\n", res)))
 		if err != nil {
-			log.Println("%s", err)
+			log.Printf("Cannot write reqeust: %s", err)
 		}
 		w.WriteHeader(http.StatusOK)
 		return
@@ -34,7 +34,7 @@ func ShowAllMetricFromStorage(m StorageSupport.MemStats) http.HandlerFunc {
 			w.Write([]byte(tmp))
 		}
 		for k, v := range m.MetricsCounter {
-			tmp := "> " + k + ":  " + fmt.Sprintf("%i", v) + "\n"
+			tmp := "> " + k + ":  " + fmt.Sprintf("%d", v) + "\n"
 			w.Write([]byte(tmp))
 		}
 	}
@@ -45,7 +45,7 @@ func AddMetricToStorage(m StorageSupport.MemStats) http.HandlerFunc {
 			value, err := strconv.ParseFloat(chi.URLParam(r, "value"), 64)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				log.Println("Somethings went wrong: %s", err)
+				log.Printf("Somethings went wrong: %s", err)
 				return
 			}
 			m.GetStats(chi.URLParam(r, "name"), any(StorageSupport.Gauge(value)), mType)
@@ -55,7 +55,7 @@ func AddMetricToStorage(m StorageSupport.MemStats) http.HandlerFunc {
 			value, err := strconv.Atoi(chi.URLParam(r, "value"))
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				log.Println("Somethings went wrong: %s", err)
+				log.Printf("Somethings went wrong: %s", err)
 				return
 			}
 
