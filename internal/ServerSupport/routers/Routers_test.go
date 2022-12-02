@@ -24,7 +24,7 @@ func TestNewRouter(t *testing.T) {
 	assert.Equal(t, http.StatusOK, statusCode)
 	assert.Equal(t, "> Alloc:  123.000000\n", body)
 
-	statusCode, body = testRequest(t, ts, "GET", "/update/gauge/Alloc")
+	statusCode, body = testRequest(t, ts, "GET", "/value/gauge/Alloc")
 	assert.Equal(t, http.StatusOK, statusCode)
 	assert.Equal(t, "123\n", body)
 
