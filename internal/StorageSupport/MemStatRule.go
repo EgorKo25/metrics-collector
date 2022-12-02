@@ -13,7 +13,8 @@ func (m MemStats) GetStats(name string, value any, mType string) {
 		m.MetricsGauge[name] = value.(Gauge)
 	}
 	if mType == "counter" {
-		m.MetricsCounter[name] = value.(Counter)
+		m.MetricsCounter[name] += value.(Counter)
+
 	}
 
 }
