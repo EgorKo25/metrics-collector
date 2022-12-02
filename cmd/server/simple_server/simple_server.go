@@ -1,12 +1,16 @@
-package main
+package simple_server
 
 import (
 	"DevOps-Track-Yandex/internal/ServerSupport/handlers"
+	"DevOps-Track-Yandex/internal/StorageSupport"
 	"log"
 	"net/http"
 )
 
 func SimpleServerFunc() {
+
+	MetricList := make(map[string]StorageSupport.Gauge)
+	CounterList := make(map[string]StorageSupport.Counter)
 
 	http.HandleFunc("/update/", handlers.GetMetricList(&MetricList, &CounterList))
 
