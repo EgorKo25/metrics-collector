@@ -1,17 +1,17 @@
 package main
 
 import (
-	"DevOps-Track-Yandex/internal/ServerSupport/routers"
-	"DevOps-Track-Yandex/internal/StorageSupport"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"log"
 	"net/http"
 )
 
 func main() {
-	var m StorageSupport.MemStats
-	m.CreateBaseMap()
+
+	m := storage.CreateBaseStorage()
 
 	r := routers.NewRouter(m)
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Println(http.ListenAndServe(":8080", r))
 }
