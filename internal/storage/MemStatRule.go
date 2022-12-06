@@ -1,4 +1,4 @@
-package StorageSupport
+package storage
 
 type Gauge float64
 type Counter uint64
@@ -40,14 +40,16 @@ func (m MemStats) TakeThisStat(name, mType string) (value any) {
 
 	return nil
 }
-func (m *MemStats) CreateBaseMap() {
+func CreateBaseStorage() *MemStats {
+	var m MemStats
 	m.MetricsCounter = make(map[string]Counter)
 	m.MetricsGauge = make(map[string]Gauge)
+	return &m
 }
 
 type MemStatsRule interface {
 	GetStats(map[string]any)
 	TakeStats() (map[string]Gauge, map[string]Counter)
 	TakeThisStat(string) any
-	CreateBaseMap()
+	CreateBaseStorage() *MemStats
 }
