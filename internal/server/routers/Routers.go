@@ -11,9 +11,6 @@ func NewRouter(m *storage.MemStats) chi.Router {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
-	r.Use(middleware.RequestID)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.RealIP)
 
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", handlers.ShowAllMetricFromStorage(m))
