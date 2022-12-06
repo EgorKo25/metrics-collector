@@ -2,6 +2,8 @@ package agent
 
 import (
 	"fmt"
+	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"log"
 	"math/rand"
@@ -10,11 +12,6 @@ import (
 	"runtime"
 	"time"
 )
-
-type config struct {
-	pollInterval   time.Duration
-	reportInterval time.Duration
-}
 
 func copyMap(metricList *map[string]*storage.Gauge) map[string]storage.Gauge {
 	oldMetricList := make(map[string]storage.Gauge)
@@ -99,18 +96,15 @@ func MyMonitor() {
 	var pollCount storage.Counter = 0
 	//map for metric
 	var metricsList map[string]*storage.Gauge
+	// interval cfg
+	var durCfg = config.NewAgentConfig(2, 5)
 
-	//interval settings
-	var durConf config
-	durConf.pollInterval = 2
-	durConf.reportInterval = 10
-
-	tickerInterval := time.NewTicker(durConf.pollInterval * time.Second)
-	tickerReport := time.NewTicker(durConf.reportInterval * time.Second)
+	tickerPoll := time.NewTicker(durCfg.PollInterval * time.Second)
+	tickerReport := time.NewTicker(durCfg.ReportInterval * time.Second)
 
 	for {
 		select {
-		case <-tickerInterval.C:
+		case <-tickerPoll.C:
 			metricsList = createMetricList(&pollCount)
 
 		case <-tickerReport.C:
