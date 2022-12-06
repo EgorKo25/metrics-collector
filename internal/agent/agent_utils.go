@@ -86,7 +86,7 @@ func sendData(metricsList *map[string]*storage.Gauge) {
 
 		_, err = http.Post(URL, "text/plain", nil)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalln(err)
 		}
 	}
 }
