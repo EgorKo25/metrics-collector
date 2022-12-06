@@ -1,13 +1,13 @@
 package routers
 
 import (
-	"DevOps-Track-Yandex/internal/ServerSupport/handlers"
-	"DevOps-Track-Yandex/internal/StorageSupport"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-func NewRouter(m StorageSupport.MemStats) chi.Router {
+func NewRouter(m *storage.MemStats) chi.Router {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)

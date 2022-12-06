@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"DevOps-Track-Yandex/internal/StorageSupport"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,8 +9,8 @@ import (
 
 func TestGetMetricList(t *testing.T) {
 	type args struct {
-		MetricList  *map[string]StorageSupport.Gauge
-		CounterList *map[string]StorageSupport.Counter
+		MetricList  *map[string]storage.Gauge
+		CounterList *map[string]storage.Counter
 	}
 	tests := []struct {
 		name     string
@@ -21,8 +21,8 @@ func TestGetMetricList(t *testing.T) {
 		{
 			name: "test code 200",
 			args: args{
-				MetricList:  &map[string]StorageSupport.Gauge{},
-				CounterList: &map[string]StorageSupport.Counter{},
+				MetricList:  &map[string]storage.Gauge{},
+				CounterList: &map[string]storage.Counter{},
 			},
 			url:      "http://127.0.0.1:8080/update/gauge/Alloc/12",
 			wantCode: 200,
@@ -30,8 +30,8 @@ func TestGetMetricList(t *testing.T) {
 		{
 			name: "test code 400",
 			args: args{
-				MetricList:  &map[string]StorageSupport.Gauge{},
-				CounterList: &map[string]StorageSupport.Counter{},
+				MetricList:  &map[string]storage.Gauge{},
+				CounterList: &map[string]storage.Counter{},
 			},
 			url:      "/update/gauge/Alloc/qdqw",
 			wantCode: 400,
@@ -39,8 +39,8 @@ func TestGetMetricList(t *testing.T) {
 		{
 			name: "test code 400",
 			args: args{
-				MetricList:  &map[string]StorageSupport.Gauge{},
-				CounterList: &map[string]StorageSupport.Counter{},
+				MetricList:  &map[string]storage.Gauge{},
+				CounterList: &map[string]storage.Counter{},
 			},
 			url:      "/update/counter/Alloc/qdqw",
 			wantCode: 400,
@@ -48,8 +48,8 @@ func TestGetMetricList(t *testing.T) {
 		{
 			name: "test code 501",
 			args: args{
-				MetricList:  &map[string]StorageSupport.Gauge{},
-				CounterList: &map[string]StorageSupport.Counter{},
+				MetricList:  &map[string]storage.Gauge{},
+				CounterList: &map[string]storage.Counter{},
 			},
 			url:      "/update/khjhk/Alloc/125",
 			wantCode: 501,

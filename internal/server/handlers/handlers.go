@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"DevOps-Track-Yandex/internal/StorageSupport"
 	"fmt"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
@@ -10,9 +10,9 @@ import (
 	"strings"
 )
 
-func ShowThisMetricValue(m StorageSupport.MemStats) http.HandlerFunc {
+func ShowThisMetricValue(m *storage.MemStats) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		res := m.TakeThisStat(chi.URLParam(r, "name"), chi.URLParam(r, "type"))
+		res := (*m).TakeThisStat(chi.URLParam(r, "name"), chi.URLParam(r, "type"))
 		if res == nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
@@ -26,20 +26,28 @@ func ShowThisMetricValue(m StorageSupport.MemStats) http.HandlerFunc {
 
 	}
 }
-func ShowAllMetricFromStorage(m StorageSupport.MemStats) http.HandlerFunc {
+func ShowAllMetricFromStorage(m *storage.MemStats) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		for k, v := range m.MetricsGauge {
+		for k, v := range (*m).MetricsGauge {
 			tmp := "> " + k + ":  " + fmt.Sprintf("%f", v) + "\n"
-			w.Write([]byte(tmp))
+			_, err := w.Write([]byte(tmp))
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				log.Fatalln(err)
+			}
 		}
-		for k, v := range m.MetricsCounter {
+		for k, v := range (*m).MetricsCounter {
 			tmp := "> " + k + ":  " + fmt.Sprintf("%d", v) + "\n"
-			w.Write([]byte(tmp))
+			_, err := w.Write([]byte(tmp))
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				log.Fatalln(err)
+			}
 		}
 	}
 }
-func AddMetricToStorage(m StorageSupport.MemStats) http.HandlerFunc {
+func AddMetricToStorage(m *storage.MemStats) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if mType := chi.URLParam(r, "type"); mType == "gauge" {
 			value, err := strconv.ParseFloat(chi.URLParam(r, "value"), 64)
@@ -48,7 +56,7 @@ func AddMetricToStorage(m StorageSupport.MemStats) http.HandlerFunc {
 				log.Printf("Somethings went wrong: %s", err)
 				return
 			}
-			m.GetStats(chi.URLParam(r, "name"), any(StorageSupport.Gauge(value)), mType)
+			(*m).GetStats(chi.URLParam(r, "name"), any(storage.Gauge(value)), mType)
 			w.WriteHeader(http.StatusOK)
 		}
 		if mType := chi.URLParam(r, "type"); mType == "counter" {
@@ -59,7 +67,7 @@ func AddMetricToStorage(m StorageSupport.MemStats) http.HandlerFunc {
 				return
 			}
 
-			m.GetStats(chi.URLParam(r, "name"), any(StorageSupport.Counter(value)), mType)
+			(*m).GetStats(chi.URLParam(r, "name"), any(storage.Counter(value)), mType)
 			w.WriteHeader(http.StatusOK)
 		} else {
 			w.WriteHeader(http.StatusNotImplemented)
@@ -68,7 +76,7 @@ func AddMetricToStorage(m StorageSupport.MemStats) http.HandlerFunc {
 	}
 }
 
-func GetMetricList(MetricList *map[string]StorageSupport.Gauge, CounterList *map[string]StorageSupport.Counter) http.HandlerFunc {
+func GetMetricList(MetricList *map[string]storage.Gauge, CounterList *map[string]storage.Counter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		url := r.URL.Path
 		data := strings.Split(url, "/")
@@ -79,7 +87,7 @@ func GetMetricList(MetricList *map[string]StorageSupport.Gauge, CounterList *map
 				if err != nil {
 					w.WriteHeader(http.StatusBadRequest)
 				}
-				(*MetricList)[data[3]] = StorageSupport.Gauge(value)
+				(*MetricList)[data[3]] = storage.Gauge(value)
 				log.Println(MetricList)
 
 				w.WriteHeader(http.StatusOK)
@@ -96,7 +104,7 @@ func GetMetricList(MetricList *map[string]StorageSupport.Gauge, CounterList *map
 				if err != nil {
 					w.WriteHeader(http.StatusBadRequest)
 				}
-				(*CounterList)[data[3]] = StorageSupport.Counter(value)
+				(*CounterList)[data[3]] = storage.Counter(value)
 				log.Println(CounterList)
 
 				w.WriteHeader(http.StatusOK)

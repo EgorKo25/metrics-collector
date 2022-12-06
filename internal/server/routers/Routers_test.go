@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"DevOps-Track-Yandex/internal/StorageSupport"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"io"
@@ -11,14 +11,14 @@ import (
 )
 
 func TestNewRouter(t *testing.T) {
-	var m StorageSupport.MemStats
-	m.CreateBaseMap()
+
+	m := storage.CreateBaseStorage()
 
 	r := NewRouter(m)
 	ts := httptest.NewServer(r)
 	defer ts.Close()
 
-	m.GetStats("Alloc", any(StorageSupport.Gauge(123)), "gauge")
+	m.GetStats("Alloc", any(storage.Gauge(123)), "gauge")
 
 	statusCode, body := testRequest(t, ts, "GET", "/")
 	assert.Equal(t, http.StatusOK, statusCode)
@@ -42,8 +42,6 @@ func testRequest(t *testing.T, ts *httptest.Server, method, path string) (int, s
 
 	respBody, err := io.ReadAll(resp.Body)
 	require.NoError(t, err)
-
-	defer resp.Body.Close()
 
 	return resp.StatusCode, string(respBody)
 }
