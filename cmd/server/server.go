@@ -9,9 +9,9 @@ import (
 
 func main() {
 
-	m := storage.CreateBaseStorage()
+	memStorage := storage.NewStorage()
 
-	r := routers.NewRouter(m)
+	router := routers.NewRouter(memStorage)
 
-	log.Println(http.ListenAndServe(":8080", r))
+	log.Println(http.ListenAndServe(":8080", router))
 }
