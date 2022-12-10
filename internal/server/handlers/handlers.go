@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func ShowThisMetricValue(m *storage.MemStats) http.HandlerFunc {
+func ShowThisMetricValue(m *storage.MetricStorage) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		res := (*m).TakeThisStat(chi.URLParam(r, "name"), chi.URLParam(r, "type"))
 		if res == nil {
@@ -26,7 +26,7 @@ func ShowThisMetricValue(m *storage.MemStats) http.HandlerFunc {
 
 	}
 }
-func ShowAllMetricFromStorage(m *storage.MemStats) http.HandlerFunc {
+func ShowAllMetricFromStorage(m *storage.MetricStorage) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		for k, v := range (*m).MetricsGauge {
@@ -47,7 +47,7 @@ func ShowAllMetricFromStorage(m *storage.MemStats) http.HandlerFunc {
 		}
 	}
 }
-func AddMetricToStorage(m *storage.MemStats) http.HandlerFunc {
+func AddMetricToStorage(m *storage.MetricStorage) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if mType := chi.URLParam(r, "type"); mType == "gauge" {
 			value, err := strconv.ParseFloat(chi.URLParam(r, "value"), 64)
@@ -76,7 +76,7 @@ func AddMetricToStorage(m *storage.MemStats) http.HandlerFunc {
 	}
 }
 
-func GetMetricList(MetricList *map[string]storage.Gauge, CounterList *map[string]storage.Counter) http.HandlerFunc {
+func GetMetricList(MetricList *map[string]storage.Gauge, CounterList *map[string]storage.Counter) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		url := r.URL.Path
 		data := strings.Split(url, "/")

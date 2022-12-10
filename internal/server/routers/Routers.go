@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-func NewRouter(m *storage.MemStats) chi.Router {
+func NewRouter(m *storage.MetricStorage) chi.Router {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)

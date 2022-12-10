@@ -12,7 +12,7 @@ import (
 
 func TestNewRouter(t *testing.T) {
 
-	m := storage.CreateBaseStorage()
+	m := storage.NewStorage()
 
 	r := NewRouter(m)
 	ts := httptest.NewServer(r)
