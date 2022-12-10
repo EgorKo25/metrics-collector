@@ -11,5 +11,5 @@ func main() {
 	//Создаю новый монитор
 	monitor := agent.NewMonitor(cfg)
 	//Запускаю монитор
-	go monitor.Run()
+	monitor.Run()
 }
