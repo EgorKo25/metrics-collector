@@ -6,10 +6,10 @@ import (
 )
 
 func main() {
-	//Формирую конфигурацию монитора
+
 	cfg := config.NewAgentConfig(2, 10)
-	//Создаю новый монитор
+
 	monitor := agent.NewMonitor(cfg)
-	//Запускаю монитор
+
 	monitor.Run()
 }
