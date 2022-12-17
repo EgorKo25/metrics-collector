@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"log"
@@ -9,9 +10,11 @@ import (
 
 func main() {
 
-	memStorage := storage.NewStorage()
+	strg := storage.NewStorage()
 
-	router := routers.NewRouter(memStorage)
+	handler := handlers.NewHandler(strg)
+
+	router := routers.NewRouter(handler)
 
 	log.Println(http.ListenAndServe(":8080", router))
 }
