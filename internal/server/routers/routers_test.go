@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -12,13 +13,14 @@ import (
 
 func TestNewRouter(t *testing.T) {
 
-	m := storage.NewStorage()
+	mem := storage.NewStorage()
+	handler := handlers.NewHandler(mem)
 
-	r := NewRouter(m)
+	r := NewRouter(handler)
 	ts := httptest.NewServer(r)
 	defer ts.Close()
 
-	m.GetStats("Alloc", any(storage.Gauge(123)), "gauge")
+	mem.SetGaugeStat("Alloc", storage.Gauge(123), "gauge")
 
 	statusCode, body := testRequest(t, ts, "GET", "/")
 	assert.Equal(t, http.StatusOK, statusCode)
