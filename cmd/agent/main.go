@@ -3,13 +3,16 @@ package main
 import (
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/agent"
 	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 )
 
 func main() {
 
+	srl := serializer.NewSerialize()
+
 	cfg := config.NewAgentConfig(2, 10)
 
-	monitor := agent.NewMonitor(cfg)
+	monitor := agent.NewMonitor(cfg, srl)
 
 	monitor.Run()
 }
