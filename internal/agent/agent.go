@@ -2,7 +2,6 @@ package agent
 
 import (
 	"bytes"
-	"fmt"
 	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 
@@ -27,7 +26,7 @@ func sendData(value storage.Gauge, name string, serializer *serializer.Serialize
 		log.Fatalf("Somethings went wrong: %s", err)
 	}
 
-	URL, _ := url.JoinPath("http://127.0.0.1:8080", "update", "gauge", name, fmt.Sprintf("%f", value))
+	URL, _ := url.JoinPath("http://127.0.0.1:8080", "update")
 
 	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
