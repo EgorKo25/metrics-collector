@@ -48,8 +48,8 @@ func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
 	if err != nil {
 		log.Printf("Somethings went wrong: %s", err)
 	}
-
-	URL, _ := url.JoinPath(m.config.Address, "update")
+	addr := m.config.Address
+	URL, _ := url.JoinPath("http://", addr, "update/")
 
 	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
