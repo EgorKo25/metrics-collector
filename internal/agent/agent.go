@@ -33,14 +33,18 @@ func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
 	m.serializer.ID = name
 	m.serializer.MType = Mtype
 
-	if Mtype == "counter" {
+	defaultCounter := storage.Counter(0)
+	defaultGauge := storage.Gauge(0)
+
+	if Mtype == ""+
+		"counter" {
 		tmp := storage.Counter(value)
 		m.serializer.Delta = &tmp
-		*m.serializer.Value = 0
+		m.serializer.Value = &defaultGauge
 	}
 	if Mtype == "gauge" {
 		m.serializer.Value = &value
-		*m.serializer.Delta = 0
+		m.serializer.Delta = &defaultCounter
 	}
 
 	dataJSON, err := m.serializer.Run()
