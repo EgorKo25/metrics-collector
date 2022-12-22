@@ -43,24 +43,25 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 
 // GetJSONValue go dock
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
+
 	w.Header().Add("Content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
-	log.Printf("%s", *h.serializer)
 
 	switch h.serializer.MType {
 	case "gauge":
 		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
 			h.serializer.Value = tmp.(*storage.Gauge)
+			log.Printf("%f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 		}
 	case "counter":
 		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
 			tmp := stat.(storage.Counter)
 			h.serializer.Delta = &tmp
+			log.Printf("%d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
 		}
 	}
 	if dataJSON, err := h.serializer.Run(); err == nil {
@@ -72,7 +73,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
+
 	w.Header().Add("content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
@@ -89,9 +90,12 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	switch h.serializer.MType {
 	case "gauge":
 		if h.serializer.Value != nil {
+			log.Printf("%f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 			h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
+
 		}
 		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil {
+			log.Printf("%d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
 			tmp := stat.(storage.Gauge)
 			h.serializer.Value = &tmp
 		}
