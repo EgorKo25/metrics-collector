@@ -61,6 +61,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 			tmp := stat.(storage.Counter)
 			h.serializer.Delta = &tmp
 		}
+
 	}
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
@@ -77,11 +78,6 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
 		fmt.Printf("something went wrong:  %s\n", err)
-	}
-
-	if h.serializer.Value == nil && h.serializer.Delta == nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 
 	switch h.serializer.MType {
