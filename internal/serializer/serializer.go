@@ -6,10 +6,10 @@ import (
 )
 
 type Serialize struct {
-	ID    string           `json:"id"`              // имя метрики
-	MType string           `json:"type"`            // параметр, принимающий значение gauge или counter
-	Delta *storage.Counter `json:"delta,omitempty"` // значение метрики в случае передачи counter
-	Value *storage.Gauge   `json:"value,omitempty"` // значение метрики в случае передачи gauge
+	ID    string           `json:"id"`
+	MType string           `json:"type"`
+	Delta *storage.Counter `json:"delta,omitempty"`
+	Value *storage.Gauge   `json:"value,omitempty"`
 }
 
 func NewSerialize() *Serialize {
