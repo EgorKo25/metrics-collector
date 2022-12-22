@@ -75,11 +75,6 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("something went wrong:  %s\n", err)
 	}
 
-	if h.serializer.Value == 0 && h.serializer.Delta == 0 {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
 	switch h.serializer.MType {
 	case "gauge":
 		if h.serializer.Value != 0 {
