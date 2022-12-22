@@ -49,7 +49,7 @@ func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
 	}
 
 	addr := m.config.Address
-	URL, _ := url.JoinPath("http://", addr, "update", Mtype, name+"/")
+	URL, _ := url.JoinPath("http://", addr, "update/")
 
 	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
