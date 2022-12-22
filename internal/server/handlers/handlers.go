@@ -57,8 +57,9 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 			h.serializer.Value = tmp.(*storage.Gauge)
 		}
 	case "counter":
-		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil && tmp.(storage.Counter) != 0 {
-			h.serializer.Delta = tmp.(*storage.Counter)
+		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
+			tmp := stat.(storage.Counter)
+			h.serializer.Delta = &tmp
 		}
 	}
 	if dataJSON, err := h.serializer.Run(); err == nil {
@@ -94,10 +95,12 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		}
 	case "counter":
 		if h.serializer.Delta != nil {
-			h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
+			tmp := *h.serializer.Delta
+			h.storage.SetCounterStat(h.serializer.ID, tmp, h.serializer.MType)
 		}
-		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil && tmp.(storage.Counter) != 0 {
-			h.serializer.Delta = tmp.(*storage.Counter)
+		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
+			tmp := stat.(storage.Counter)
+			h.serializer.Delta = &tmp
 		}
 
 	}
