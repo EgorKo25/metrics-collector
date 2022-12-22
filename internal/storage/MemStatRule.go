@@ -52,7 +52,6 @@ func (m *MetricStorage) StatStatus(name, mType string) (value any) {
 			value = m.MetricsGauge[name]
 			return value
 		}
-		return nil
 	}
 	if mType == "counter" {
 		if _, ok := m.MetricsCounter[name]; ok {
@@ -60,7 +59,7 @@ func (m *MetricStorage) StatStatus(name, mType string) (value any) {
 			return value
 
 		}
-		return nil
+
 	}
 
 	return nil

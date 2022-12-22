@@ -89,6 +89,10 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	switch h.serializer.MType {
 	case "gauge":
+		if h.serializer.Delta == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 		if h.serializer.Value != nil {
 			log.Printf("If not nil %f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 			h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
@@ -100,6 +104,10 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 			h.serializer.Value = &tmp
 		}
 	case "counter":
+		if h.serializer.Delta == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 		if h.serializer.Delta != nil {
 			h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
 		}
