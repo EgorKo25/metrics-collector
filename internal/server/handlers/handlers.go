@@ -43,7 +43,7 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 
 // GetJSONValue go dock
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
-	h.serializer.Clean()
+
 	w.Header().Add("Content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
@@ -62,6 +62,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 		if stat != nil {
 			tmp := stat.(storage.Gauge)
 			h.serializer.Value = &tmp
+			h.serializer.Delta = nil
 			log.Printf("%f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 		}
 	case "counter":
@@ -72,14 +73,17 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 		if stat != nil {
 			tmp := stat.(storage.Counter)
 			h.serializer.Delta = &tmp
+			h.serializer.Value = nil
 			log.Printf(" In Block Counter: %d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
 		}
 	}
+
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Add("Content-Type", "application/json")
 		_, _ = w.Write(dataJSON)
 	}
+
 }
 
 // SetJSONValue go dock
