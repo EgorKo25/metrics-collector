@@ -39,22 +39,24 @@ func (m Monitor) sendData(value storage.Gauge, name, Mtype string) {
 	if Mtype == "counter" {
 		tmp := storage.Counter(value)
 		m.serializer.Delta = &tmp
+		m.serializer.Value = nil
 	}
 	if Mtype == "gauge" {
 		m.serializer.Value = &value
+		m.serializer.Delta = nil
 	}
 
 	dataJSON, err := m.serializer.Run()
 
 	if err != nil {
-		log.Fatalf("Somethings went wrong: %s", err)
+		log.Printf("Somethings went wrong: %s", err)
 	}
 
-	URL, _ := url.JoinPath("http://127.0.0.1:8080", "update/")
+	URL, _ := url.JoinPath("http://127.0.0.1:8080", "update")
 
 	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
-		log.Fatalf("Somethings went wrong: %s", err)
+		log.Printf("Somethings went wrong: %s", err)
 	}
 }
 func (m *Monitor) Run() {
