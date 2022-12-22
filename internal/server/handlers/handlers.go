@@ -60,6 +60,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
+		w.Header().Add("Content-Type", "application/json")
 		_, _ = w.Write(dataJSON)
 	}
 }
@@ -88,6 +89,7 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
+		w.Header().Add("Content-Type", "application/json")
 		_, _ = w.Write(dataJSON)
 	}
 
