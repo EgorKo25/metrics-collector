@@ -52,7 +52,7 @@ func (m Monitor) sendData(value storage.Gauge, name, Mtype string) {
 		log.Printf("Somethings went wrong: %s", err)
 	}
 
-	URL, _ := url.JoinPath("http://127.0.0.1:8080", "update", "/")
+	URL, _ := url.JoinPath("http://127.0.0.1:8080", "update")
 
 	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
