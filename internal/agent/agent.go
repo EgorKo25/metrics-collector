@@ -16,22 +16,19 @@ import (
 
 type Monitor struct {
 	serializer *serializer.Serialize
+	config     *config.ConfigurationAgent
 
 	pollCount storage.Counter
-
-	pollInterval   time.Duration
-	reportInterval time.Duration
 }
 
 func NewMonitor(cfg *config.ConfigurationAgent, srl *serializer.Serialize) *Monitor {
 	var mon Monitor
-	mon.pollInterval = cfg.PollInterval
-	mon.reportInterval = cfg.ReportInterval
+	mon.config = cfg
 	mon.serializer = srl
 	return &mon
 
 }
-func (m Monitor) sendData(value storage.Gauge, name, Mtype string) {
+func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
 
 	m.serializer.ID = name
 	m.serializer.MType = Mtype
@@ -52,7 +49,7 @@ func (m Monitor) sendData(value storage.Gauge, name, Mtype string) {
 		log.Printf("Somethings went wrong: %s", err)
 	}
 
-	URL, _ := url.JoinPath("http://127.0.0.1:8080", "update")
+	URL, _ := url.JoinPath(m.config.Address, "update")
 
 	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
@@ -62,8 +59,8 @@ func (m Monitor) sendData(value storage.Gauge, name, Mtype string) {
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
 
-	tickerPoll := time.NewTicker(m.pollInterval * time.Second)
-	tickerReport := time.NewTicker(m.reportInterval * time.Second)
+	tickerPoll := time.NewTicker(m.config.PollInterval)
+	tickerReport := time.NewTicker(m.config.ReportInterval)
 
 	for {
 		select {

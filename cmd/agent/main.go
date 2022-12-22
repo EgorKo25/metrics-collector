@@ -10,7 +10,7 @@ func main() {
 
 	srl := serializer.NewSerialize()
 
-	cfg := config.NewAgentConfig(2, 10)
+	cfg := config.NewAgentConfig()
 
 	monitor := agent.NewMonitor(cfg, srl)
 
