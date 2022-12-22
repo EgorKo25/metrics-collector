@@ -1,22 +1,27 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/go-chi/chi/v5"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
 )
 
 type Handler struct {
-	storage *storage.MetricStorage
+	storage    *storage.MetricStorage
+	serializer *serializer.Serialize
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage) *Handler {
+func NewHandler(storage *storage.MetricStorage, srl *serializer.Serialize) *Handler {
 	return &Handler{
-		storage: storage,
+		storage:    storage,
+		serializer: srl,
 	}
 }
 
@@ -33,6 +38,58 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	return
+
+}
+
+// GetJSONValue go dock
+func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
+	b, _ := io.ReadAll(r.Body)
+
+	if err := json.Unmarshal(b, h.serializer); err != nil {
+		fmt.Printf("something went wrong:  %s\n", err)
+	}
+	switch h.serializer.MType {
+	case "gauge":
+		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
+			h.serializer.Value = tmp.(*storage.Gauge)
+		}
+	case "counter":
+		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
+			h.serializer.Delta = tmp.(*storage.Counter)
+		}
+	}
+	if dataJSON, err := h.serializer.Run(); err == nil {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(dataJSON)
+	}
+}
+
+// SetJSONValue go dock
+func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
+	b, _ := io.ReadAll(r.Body)
+
+	if err := json.Unmarshal(b, h.serializer); err != nil {
+		fmt.Printf("something went wrong:  %s\n", err)
+	}
+
+	if h.serializer.Value != nil && h.serializer.Delta != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	switch h.serializer.MType {
+	case "gauge":
+		h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
+		h.serializer.Value = h.storage.StatStatus(h.serializer.ID, h.serializer.MType).(*storage.Gauge)
+	case "counter":
+		h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
+		h.serializer.Delta = h.storage.StatStatus(h.serializer.ID, h.serializer.MType).(*storage.Counter)
+	}
+
+	if dataJSON, err := h.serializer.Run(); err == nil {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(dataJSON)
+	}
 
 }
 

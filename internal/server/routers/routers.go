@@ -16,6 +16,9 @@ func NewRouter(handler *handlers.Handler) chi.Router {
 		r.Get("/value/{type}/{name}", handler.GetValueStat)
 		r.Post("/update/{type}/{name}/{value}", handler.SetMetricValue)
 
+		r.Post("/update/", handler.SetJSONValue)
+		r.Post("/value/", handler.GetJSONValue)
+
 	})
 
 	return r
