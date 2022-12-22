@@ -43,6 +43,7 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 
 // GetJSONValue go dock
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
@@ -60,13 +61,14 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
-		w.Header().Add("Content-Type", "application/json")
+		w.Header().Add("content-Type", "application/json")
 		_, _ = w.Write(dataJSON)
 	}
 }
 
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
@@ -91,7 +93,7 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
-		w.Header().Add("Content-Type", "application/json")
+		w.Header().Add("content-Type", "application/json")
 		_, _ = w.Write(dataJSON)
 	}
 
