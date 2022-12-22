@@ -1,15 +1,18 @@
 package config
 
-import "time"
+import (
+	"github.com/caarlos0/env/v6"
+	"time"
+)
 
 type ConfigurationAgent struct {
-	PollInterval   time.Duration
-	ReportInterval time.Duration
+	PollInterval   time.Duration `env:"POLL_INTERVAL" envDefault:"2s"`
+	ReportInterval time.Duration `env:"REPORT_INTERVAL" envDefault:"5s"`
+	Address        string        `env:"ADDRESS" envDefault:"127.0.0.1:8080"`
 }
 
-func NewAgentConfig(poll, report int) *ConfigurationAgent {
+func NewAgentConfig() *ConfigurationAgent {
 	var cfg ConfigurationAgent
-	cfg.PollInterval = time.Duration(poll)
-	cfg.ReportInterval = time.Duration(report)
+	_ = env.Parse(&cfg)
 	return &cfg
 }
