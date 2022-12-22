@@ -9,7 +9,7 @@ type Serialize struct {
 	ID    string          `json:"id"`
 	MType string          `json:"type"`
 	Delta storage.Counter `json:"delta,omitempty"`
-	Value *storage.Gauge  `json:"value,omitempty"`
+	Value storage.Gauge   `json:"value,omitempty"`
 }
 
 func NewSerialize() *Serialize {
