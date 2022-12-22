@@ -75,7 +75,7 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("something went wrong:  %s\n", err)
 	}
 
-	if h.serializer.Value != nil && h.serializer.Delta != nil {
+	if h.serializer.Value == nil && h.serializer.Delta == nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -85,15 +85,18 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		if h.serializer.Value != nil {
 			h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
 		}
-		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
-			h.serializer.Value = tmp.(*storage.Gauge)
+		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil {
+			tmp := stat.(storage.Gauge)
+			h.serializer.Value = &tmp
 		}
 	case "counter":
 		if h.serializer.Delta != nil {
 			h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
 		}
-		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil && tmp.(storage.Counter) != 0 {
-			h.serializer.Delta = tmp.(*storage.Counter)
+		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
+
+			tmp := stat.(storage.Counter)
+			h.serializer.Delta = &tmp
 		}
 
 	}
