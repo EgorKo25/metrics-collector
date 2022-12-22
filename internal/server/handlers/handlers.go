@@ -44,6 +44,8 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 // GetJSONValue go dock
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Accept", "application/json")
+
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
@@ -61,7 +63,6 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
-		w.Header().Add("Content-Type", "application/json")
 		_, _ = w.Write(dataJSON)
 	}
 }
@@ -69,13 +70,15 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("content-Type", "application/json")
+	w.Header().Add("Accept", "application/json")
+
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
 		fmt.Printf("something went wrong:  %s\n", err)
 	}
 
-	if h.serializer.Value != nil && h.serializer.Delta != nil {
+	if h.serializer.Value == nil && h.serializer.Delta == nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -85,8 +88,9 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		if h.serializer.Value != nil {
 			h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
 		}
-		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
-			h.serializer.Value = tmp.(*storage.Gauge)
+		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil {
+			tmp := stat.(storage.Gauge)
+			h.serializer.Value = &tmp
 		}
 	case "counter":
 		if h.serializer.Delta != nil {
