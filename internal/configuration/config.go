@@ -16,3 +16,13 @@ func NewAgentConfig() *ConfigurationAgent {
 	_ = env.Parse(&cfg)
 	return &cfg
 }
+
+type ConfigurationServer struct {
+	Address string `env:"ADDRESS" envDefault:"127.0.0.1:8080"`
+}
+
+func NewServerConfig() *ConfigurationServer {
+	var cfg ConfigurationServer
+	_ = env.Parse(&cfg)
+	return &cfg
+}

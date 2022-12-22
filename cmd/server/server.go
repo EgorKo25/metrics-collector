@@ -1,6 +1,7 @@
 package main
 
 import (
+	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
@@ -11,6 +12,8 @@ import (
 
 func main() {
 
+	cfg := config.NewServerConfig()
+
 	srl := serializer.NewSerialize()
 
 	strg := storage.NewStorage()
@@ -19,5 +22,5 @@ func main() {
 
 	router := routers.NewRouter(handler)
 
-	log.Println(http.ListenAndServe(":8080", router))
+	log.Println(http.ListenAndServe(cfg.Address, router))
 }
