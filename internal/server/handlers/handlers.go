@@ -48,8 +48,10 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
-		fmt.Printf("something went wrong:  %s\n", err)
+		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
+	log.Printf("%s", *h.serializer)
+
 	switch h.serializer.MType {
 	case "gauge":
 		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
@@ -75,8 +77,9 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
-		fmt.Printf("something went wrong:  %s\n", err)
+		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
+	log.Printf("%s", *h.serializer)
 
 	if h.serializer.Value == nil && h.serializer.Delta == nil {
 		w.WriteHeader(http.StatusBadRequest)
