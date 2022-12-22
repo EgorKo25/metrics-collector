@@ -53,8 +53,9 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	switch h.serializer.MType {
 	case "gauge":
-		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
-			h.serializer.Value = tmp.(*storage.Gauge)
+		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil {
+			tmp := stat.(storage.Gauge)
+			h.serializer.Value = &tmp
 			log.Printf("%f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 		}
 	case "counter":
