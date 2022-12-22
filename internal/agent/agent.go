@@ -51,11 +51,10 @@ func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
 	addr := m.config.Address
 	URL, _ := url.JoinPath("http://", addr, "update/")
 
-	resp, err := http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
+	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
 		log.Printf("Somethings went wrong: %s", err)
 	}
-	resp.Body.Close()
 }
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
