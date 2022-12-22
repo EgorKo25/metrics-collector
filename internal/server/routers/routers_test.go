@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/stretchr/testify/assert"
@@ -14,7 +15,9 @@ import (
 func TestNewRouter(t *testing.T) {
 
 	mem := storage.NewStorage()
-	handler := handlers.NewHandler(mem)
+	srl := serializer.NewSerialize()
+
+	handler := handlers.NewHandler(mem, srl)
 
 	r := NewRouter(handler)
 	ts := httptest.NewServer(r)

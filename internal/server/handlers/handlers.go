@@ -81,10 +81,12 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	switch h.serializer.MType {
 	case "gauge":
 		h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
-		h.serializer.Value = h.storage.StatStatus(h.serializer.ID, h.serializer.MType).(*storage.Gauge)
+		tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType).(storage.Gauge)
+		h.serializer.Value = &tmp
 	case "counter":
 		h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
-		h.serializer.Delta = h.storage.StatStatus(h.serializer.ID, h.serializer.MType).(*storage.Counter)
+		tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType).(storage.Counter)
+		h.serializer.Delta = &tmp
 	}
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
