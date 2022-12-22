@@ -61,7 +61,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
 			tmp := stat.(storage.Counter)
 			h.serializer.Delta = &tmp
-			log.Printf("%d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
+			log.Printf(" In Block Counter: %d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
 		}
 	}
 	if dataJSON, err := h.serializer.Run(); err == nil {
@@ -80,7 +80,6 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(b, h.serializer); err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
-	log.Printf("%s", *h.serializer)
 
 	if h.serializer.Value == nil && h.serializer.Delta == nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -90,12 +89,12 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	switch h.serializer.MType {
 	case "gauge":
 		if h.serializer.Value != nil {
-			log.Printf("%f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
+			log.Printf("If not nil %f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 			h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
 
 		}
 		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil {
-			log.Printf("%d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
+			log.Printf("In Block Guage: %f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 			tmp := stat.(storage.Gauge)
 			h.serializer.Value = &tmp
 		}
@@ -104,6 +103,7 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 			h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
 		}
 		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
+			log.Printf("In Block Counter: %d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
 			tmp := stat.(storage.Counter)
 			h.serializer.Delta = &tmp
 		}
