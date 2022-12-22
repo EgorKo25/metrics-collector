@@ -43,7 +43,7 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 
 // GetJSONValue go dock
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("content-Type", "application/json")
+	w.Header().Add("Content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
@@ -61,7 +61,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
-		w.Header().Add("content-Type", "application/json")
+		w.Header().Add("Content-Type", "application/json")
 		_, _ = w.Write(dataJSON)
 	}
 }
@@ -82,13 +82,20 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	switch h.serializer.MType {
 	case "gauge":
-		h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
-		tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType).(storage.Gauge)
-		h.serializer.Value = &tmp
+		if h.serializer.Value != nil {
+			h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
+		}
+		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
+			h.serializer.Value = tmp.(*storage.Gauge)
+		}
 	case "counter":
-		h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
-		tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType).(storage.Counter)
-		h.serializer.Delta = &tmp
+		if h.serializer.Delta != nil {
+			h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
+		}
+		if tmp := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); tmp != nil {
+			h.serializer.Delta = tmp.(*storage.Counter)
+		}
+
 	}
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
