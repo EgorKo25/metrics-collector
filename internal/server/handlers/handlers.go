@@ -43,6 +43,7 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 
 // GetJSONValue go dock
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	w.Header().Add("Content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
@@ -69,6 +70,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	w.Header().Add("content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
