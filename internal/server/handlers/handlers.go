@@ -51,15 +51,25 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
 
+	stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType)
+
 	switch h.serializer.MType {
 	case "gauge":
-		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil {
+		if stat == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		if stat != nil {
 			tmp := stat.(storage.Gauge)
 			h.serializer.Value = &tmp
 			log.Printf("%f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 		}
 	case "counter":
-		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
+		if stat == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		if stat != nil {
 			tmp := stat.(storage.Counter)
 			h.serializer.Delta = &tmp
 			log.Printf(" In Block Counter: %d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
