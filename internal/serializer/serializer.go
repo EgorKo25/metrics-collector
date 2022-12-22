@@ -19,3 +19,9 @@ func NewSerialize() *Serialize {
 func (s Serialize) Run() ([]byte, error) {
 	return json.Marshal(s)
 }
+func (s Serialize) Clean() {
+	s.MType = ""
+	s.ID = ""
+	s.Value = nil
+	s.Delta = nil
+}

@@ -29,22 +29,18 @@ func NewMonitor(cfg *config.ConfigurationAgent, srl *serializer.Serialize) *Moni
 
 }
 func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
+	m.serializer.Clean()
 
 	m.serializer.ID = name
 	m.serializer.MType = Mtype
 
-	defaultCounter := storage.Counter(0)
-	defaultGauge := storage.Gauge(0)
-
-	if Mtype == ""+
-		"counter" {
+	switch Mtype {
+	case "counter":
 		tmp := storage.Counter(value)
 		m.serializer.Delta = &tmp
-		m.serializer.Value = &defaultGauge
-	}
-	if Mtype == "gauge" {
+
+	case "gauge":
 		m.serializer.Value = &value
-		m.serializer.Delta = &defaultCounter
 	}
 
 	dataJSON, err := m.serializer.Run()
