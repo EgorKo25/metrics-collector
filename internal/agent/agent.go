@@ -69,7 +69,7 @@ func (m *Monitor) Run() {
 			m.pollCount++
 
 		case <-tickerReport.C:
-			m.sendData(storage.Gauge(m.pollCount), "PollCounter", "counter")
+			m.sendData(storage.Gauge(m.pollCount), "PollCount", "counter")
 			m.sendData(storage.Gauge(rand.Float64()), "RandomValue", "gauge")
 			m.sendData(storage.Gauge(mem.Alloc), "Alloc", "gauge")
 			m.sendData(storage.Gauge(mem.BuckHashSys), "BuckHashSys", "gauge")
