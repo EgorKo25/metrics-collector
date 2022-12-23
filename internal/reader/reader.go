@@ -39,9 +39,7 @@ func (r *Read) ReadAll() (data []byte, err error) {
 		if err = json.Unmarshal(data, r.srl); err != nil {
 			return nil, err
 		}
-		for k, v := range r.strg.MetricsGauge {
-			r.strg.MetricsGauge[k] = v
-		}
+		r.strg.MetricsGauge[r.srl.ID] = *r.srl.Value
 	}
 	if data, err = r.reader.ReadBytes('\n'); err != nil {
 		return nil, err
