@@ -21,10 +21,11 @@ type Save struct {
 func NewSave(cfg *config.ConfigurationServer, strg *storage.MetricStorage, srl *serializer.Serialize) *Save {
 	file, _ := os.OpenFile(cfg.StoreFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0777)
 	return &Save{
-		cfg:  cfg,
-		strg: strg,
-		srl:  srl,
-		file: file,
+		cfg:    cfg,
+		strg:   strg,
+		srl:    srl,
+		file:   file,
+		writer: bufio.NewWriter(file),
 	}
 }
 
