@@ -54,6 +54,8 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType)
 
+	log.Println(h.storage, "\n", h.serializer, "\n")
+
 	switch h.serializer.MType {
 	case "gauge":
 		if stat == nil {
