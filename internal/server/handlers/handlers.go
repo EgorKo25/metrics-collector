@@ -169,7 +169,7 @@ func (h Handler) SetMetricValue(w http.ResponseWriter, r *http.Request) {
 
 		value, err := strconv.ParseFloat(chi.URLParam(r, "value"), 64)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusNotFound)
 			log.Printf("Somethings went wrong: %s", err)
 			return
 		}
