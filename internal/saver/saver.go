@@ -35,12 +35,13 @@ func (s *Save) Close() error {
 
 func (s *Save) WriteAll() (err error) {
 	var data []byte
-	s.srl.Clean()
 
 	s.srl.MType = "gauge"
 	for k, v := range s.strg.MetricsGauge {
+		s.srl.Clean()
 		s.srl.ID = k
 		s.srl.Value = &v
+		s.srl.Delta = nil
 
 		if data, err = s.srl.Run(); err != nil {
 			return
@@ -52,10 +53,13 @@ func (s *Save) WriteAll() (err error) {
 			return
 		}
 	}
+
 	s.srl.MType = "counter"
 	for k, v := range s.strg.MetricsCounter {
+		s.srl.Clean()
 		s.srl.ID = k
 		s.srl.Delta = &v
+		s.srl.Value = nil
 
 		if data, err = s.srl.Run(); err != nil {
 			return

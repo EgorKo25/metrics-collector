@@ -30,8 +30,9 @@ func NewRead(cfg *config.ConfigurationServer, strg *storage.MetricStorage, srl *
 }
 
 func (r *Read) ReadAll() (data []byte, err error) {
-	r.srl.MType = "gauge"
-	for r.srl.MType == "gauge" {
+	r.srl.Clean()
+	for {
+
 		if data, err = r.reader.ReadBytes('\n'); err != nil {
 			return nil, err
 		}
@@ -39,15 +40,17 @@ func (r *Read) ReadAll() (data []byte, err error) {
 		if err = json.Unmarshal(data, r.srl); err != nil {
 			return nil, err
 		}
-		r.strg.MetricsGauge[r.srl.ID] = *r.srl.Value
-	}
-	if data, err = r.reader.ReadBytes('\n'); err != nil {
-		return nil, err
+		if r.srl.MType == "gauge" {
+			r.strg.MetricsGauge[r.srl.ID] = *r.srl.Value
+			r.srl.Clean()
+		}
+		if r.srl.MType == "counter" {
+			r.strg.MetricsCounter[r.srl.ID] = *r.srl.Delta
+			r.srl.Clean()
+			break
+		}
+
 	}
 
-	if err = json.Unmarshal(data, r.srl); err != nil {
-		return nil, err
-	}
-	r.strg.MetricsCounter[r.srl.ID] = *r.srl.Delta
 	return
 }
