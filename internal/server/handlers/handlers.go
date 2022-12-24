@@ -101,10 +101,12 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 
 		w.Header().Add("Content-Type", "application/json")
-		w.Header().Add("Accept-Encoding", "gzip")
 
 		if r.Header.Get("Accept-Encoding") == "gzip" {
+
+			w.Header().Add("Accept-Encoding", "gzip")
 			dataJSON, _ = h.compressor.Compress(dataJSON)
+
 		}
 
 		_, _ = w.Write(dataJSON)
@@ -172,8 +174,10 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 
 		if r.Header.Get("Accept-Encoding") == "gzip" {
+
 			w.Header().Add("Accept-Encoding", "gzip")
 			dataJSON, _ = h.compressor.Compress(dataJSON)
+
 		}
 
 		_, _ = w.Write(dataJSON)
