@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/EgorKo25/DevOps-Track-Yandex/cmd/compress"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/go-chi/chi/v5"
@@ -15,13 +16,15 @@ import (
 type Handler struct {
 	storage    *storage.MetricStorage
 	serializer *serializer.Serialize
+	compressor *compress.Compressor
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, srl *serializer.Serialize) *Handler {
+func NewHandler(storage *storage.MetricStorage, srl *serializer.Serialize, cpr *compress.Compressor) *Handler {
 	return &Handler{
 		storage:    storage,
 		serializer: srl,
+		compressor: cpr,
 	}
 }
 
@@ -82,7 +85,13 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Add("Content-Type", "application/json")
-		_, _ = w.Write(dataJSON)
+
+		if compressedData, err := h.compressor.Compress(dataJSON); err == nil {
+			_, _ = w.Write(compressedData)
+			return
+		}
+
+		log.Println("Failed to compress data")
 	}
 
 }
@@ -93,7 +102,12 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
 
-	if err := json.Unmarshal(b, h.serializer); err != nil {
+	decompressData, err := h.compressor.Decompress(b)
+	if err != nil {
+		log.Println("Failed to decompress")
+	}
+
+	if err := json.Unmarshal(decompressData, h.serializer); err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
 
