@@ -1,7 +1,6 @@
 package main
 
 import (
-	compress2 "github.com/EgorKo25/DevOps-Track-Yandex/cmd/compress"
 	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/reader"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/saver"
@@ -15,15 +14,13 @@ import (
 
 func main() {
 
-	compress := compress2.NewCompressor()
-
 	cfg := config.NewServerConfig()
 
 	srl := serializer.NewSerialize()
 
 	strg := storage.NewStorage()
 
-	handler := handlers.NewHandler(strg, srl, compress)
+	handler := handlers.NewHandler(strg, srl)
 
 	router := routers.NewRouter(handler)
 
