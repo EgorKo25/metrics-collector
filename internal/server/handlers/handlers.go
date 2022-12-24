@@ -49,6 +49,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	h.serializer.Clean()
 	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Accept-Encoding", "gzip")
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
@@ -99,15 +100,16 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	h.serializer.Clean()
-	w.Header().Add("content-Type", "application/json")
+	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Accept-Encoding", "gzip")
 	b, _ := io.ReadAll(r.Body)
 
-	decompressData, err := h.compressor.Decompress(b)
-	if err != nil {
-		log.Println("Failed to decompress")
+	if ok := r.Header.Get("Accept-Encoding"); ok == "gzip" {
+		log.Println("GBPLF")
+		b, _ = h.compressor.Decompress(b)
 	}
 
-	if err := json.Unmarshal(decompressData, h.serializer); err != nil {
+	if err := json.Unmarshal(b, h.serializer); err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
 
@@ -141,6 +143,7 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 			h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
 		}
 		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
+
 			log.Printf("In Block Counter: %d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
 			tmp := stat.(storage.Counter)
 			h.serializer.Delta = &tmp
@@ -149,9 +152,13 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
+
 		w.WriteHeader(http.StatusOK)
-		w.Header().Add("content-Type", "application/json")
-		_, _ = w.Write(dataJSON)
+		w.Header().Add("Content-Type", "application/json")
+		w.Header().Add("Accept-Encoding", "gzip")
+
+		compressedDate, _ := h.compressor.Compress(dataJSON)
+		_, _ = w.Write(compressedDate)
 	}
 
 }
