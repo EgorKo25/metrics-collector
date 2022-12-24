@@ -15,7 +15,7 @@ type ConfigurationAgent struct {
 func NewAgentConfig() *ConfigurationAgent {
 	var cfg ConfigurationAgent
 	flag.StringVar(&cfg.Address,
-		"a", "http://127.0.0.1:8080",
+		"a", "127.0.0.1:8080",
 		"listening address of the server",
 	)
 	flag.DurationVar(&cfg.PollInterval,
