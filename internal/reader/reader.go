@@ -41,7 +41,7 @@ func (r *Read) ReadAll() (data []byte, err error) {
 		if err = json.Unmarshal(data, r.srl); err != nil {
 			return nil, err
 		}
-		log.Println("Unmarshal srtuct^   ^   :   ", r.srl)
+		log.Println("Unmarshal srtuct^   ^   :   ", r.srl, "Data: ", data)
 		if r.srl.MType == "gauge" {
 			r.strg.MetricsGauge[r.srl.ID] = *r.srl.Value
 			r.srl.Clean()
@@ -49,7 +49,7 @@ func (r *Read) ReadAll() (data []byte, err error) {
 		if r.srl.MType == "counter" {
 			r.strg.MetricsCounter[r.srl.ID] = *r.srl.Delta
 			r.srl.Clean()
-			break
+
 		}
 
 	}
