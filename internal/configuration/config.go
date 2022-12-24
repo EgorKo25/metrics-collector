@@ -15,7 +15,7 @@ type ConfigurationAgent struct {
 func NewAgentConfig() *ConfigurationAgent {
 	var cfg ConfigurationAgent
 	flag.StringVar(&cfg.Address,
-		"a", "127.0.0.1:8080",
+		"a", "http://127.0.0.1:8080",
 		"listening address of the server",
 	)
 	flag.DurationVar(&cfg.PollInterval,
@@ -33,7 +33,7 @@ func NewAgentConfig() *ConfigurationAgent {
 }
 
 type ConfigurationServer struct {
-	Address string `env:"ADDRESS" envDefault:"127.0.0.1:8080"`
+	Address string `env:"ADDRESS" `
 
 	StoreInterval time.Duration `env:"STORE_INTERVAL"`
 	StoreFile     string        `env:"STORE_FILE"`

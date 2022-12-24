@@ -6,7 +6,6 @@ import (
 	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-	"log"
 	"os"
 )
 
@@ -41,7 +40,7 @@ func (r *Read) ReadAll() (data []byte, err error) {
 		if err = json.Unmarshal(data, r.srl); err != nil {
 			return nil, err
 		}
-		log.Println("Unmarshal srtuct^   ^   :   ", r.srl, "Data: ", data)
+
 		if r.srl.MType == "gauge" {
 			r.strg.MetricsGauge[r.srl.ID] = *r.srl.Value
 			r.srl.Clean()
