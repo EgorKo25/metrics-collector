@@ -87,6 +87,15 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	if dataJSON, err := h.serializer.Run(); err == nil {
 		w.Header().Add("Content-Type", "application/json")
 
+		if r.Header.Get("Accept-Encoding") == "gzip" {
+			dataJSON, err = h.compressor.Compress(dataJSON)
+			if err != nil {
+				log.Println("Failed to compress ", err)
+			}
+
+			w.Header().Add("Accept-Encoding", "gzip")
+		}
+
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(dataJSON)
 	}
