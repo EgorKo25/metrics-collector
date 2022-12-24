@@ -5,7 +5,6 @@ import (
 	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-	"log"
 	"os"
 	"time"
 )
@@ -53,7 +52,6 @@ func (s *Save) WriteAll() (err error) {
 		if err = s.writer.WriteByte('\n'); err != nil {
 			return
 		}
-		log.Println(s.strg, s.srl)
 	}
 
 	s.srl.MType = "counter"
@@ -72,7 +70,6 @@ func (s *Save) WriteAll() (err error) {
 		if err = s.writer.WriteByte('\n'); err != nil {
 			return
 		}
-		log.Println(s.strg, s.srl)
 	}
 
 	return s.writer.Flush()

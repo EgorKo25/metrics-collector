@@ -6,7 +6,6 @@ import (
 	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-	"io"
 	"os"
 )
 
@@ -48,10 +47,7 @@ func (r *Read) ReadAll() (data []byte, err error) {
 		if r.srl.MType == "counter" {
 			r.strg.MetricsCounter[r.srl.ID] = *r.srl.Delta
 			r.srl.Clean()
-		}
-		_, isEnd := r.file.Read(data)
-		if isEnd == io.EOF {
-			return
+			break
 		}
 
 	}
