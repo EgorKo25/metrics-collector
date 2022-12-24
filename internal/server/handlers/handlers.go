@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/compress"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/go-chi/chi/v5"
@@ -16,15 +15,13 @@ import (
 type Handler struct {
 	storage    *storage.MetricStorage
 	serializer *serializer.Serialize
-	compressor *compress.Compressor
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, srl *serializer.Serialize, cpr *compress.Compressor) *Handler {
+func NewHandler(storage *storage.MetricStorage, srl *serializer.Serialize) *Handler {
 	return &Handler{
 		storage:    storage,
 		serializer: srl,
-		compressor: cpr,
 	}
 }
 
@@ -48,13 +45,8 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	h.serializer.Clean()
-
 	w.Header().Add("Content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
-
-	if r.Header.Get("Accept-Encoding") == "gzip" {
-		b, _ = h.compressor.Decompress(b)
-	}
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
@@ -64,51 +56,32 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	log.Println(stat, h.serializer, h.storage)
 	switch h.serializer.MType {
 	case "gauge":
-
 		if stat == nil {
-
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-
 		if stat != nil {
-
 			tmp := stat.(storage.Gauge)
-
 			h.serializer.Value = &tmp
 			h.serializer.Delta = nil
-
+			log.Printf("%f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
 		}
 	case "counter":
 		if stat == nil {
-
 			w.WriteHeader(http.StatusNotFound)
-
 			return
 		}
 		if stat != nil {
-
 			tmp := stat.(storage.Counter)
-
 			h.serializer.Delta = &tmp
 			h.serializer.Value = nil
-
+			log.Printf(" In Block Counter: %d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
 		}
 	}
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
-
 		w.WriteHeader(http.StatusOK)
-
 		w.Header().Add("Content-Type", "application/json")
-
-		if r.Header.Get("Accept-Encoding") == "gzip" {
-
-			w.Header().Add("Accept-Encoding", "gzip")
-			dataJSON, _ = h.compressor.Compress(dataJSON)
-
-		}
-
 		_, _ = w.Write(dataJSON)
 	}
 
@@ -116,15 +89,9 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
-
 	h.serializer.Clean()
-
 	w.Header().Add("content-Type", "application/json")
 	b, _ := io.ReadAll(r.Body)
-
-	if r.Header.Get("Accept-Encoding") == "gzip" {
-		b, _ = h.compressor.Decompress(b)
-	}
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
@@ -168,18 +135,8 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
-
 		w.WriteHeader(http.StatusOK)
-
-		w.Header().Add("Content-Type", "application/json")
-
-		if r.Header.Get("Accept-Encoding") == "gzip" {
-
-			w.Header().Add("Accept-Encoding", "gzip")
-			dataJSON, _ = h.compressor.Compress(dataJSON)
-
-		}
-
+		w.Header().Add("content-Type", "application/json")
 		_, _ = w.Write(dataJSON)
 	}
 
