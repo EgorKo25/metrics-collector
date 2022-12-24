@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/compress"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"github.com/go-chi/chi/v5"
@@ -15,13 +16,15 @@ import (
 type Handler struct {
 	storage    *storage.MetricStorage
 	serializer *serializer.Serialize
+	compressor *compress.Compressor
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, srl *serializer.Serialize) *Handler {
+func NewHandler(storage *storage.MetricStorage, srl *serializer.Serialize, compressor *compress.Compressor) *Handler {
 	return &Handler{
 		storage:    storage,
 		serializer: srl,
+		compressor: compressor,
 	}
 }
 
@@ -32,10 +35,12 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	_, err := w.Write([]byte(fmt.Sprintf("%v\n", res)))
 	if err != nil {
 		log.Printf("Cannot write reqeust: %s", err)
 	}
+
 	w.WriteHeader(http.StatusOK)
 	return
 
@@ -45,7 +50,7 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	h.serializer.Clean()
-	w.Header().Add("Content-Type", "application/json")
+
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
@@ -64,7 +69,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 			tmp := stat.(storage.Gauge)
 			h.serializer.Value = &tmp
 			h.serializer.Delta = nil
-			log.Printf("%f, %s, %s", *h.serializer.Value, h.serializer.ID, h.serializer.MType)
+
 		}
 	case "counter":
 		if stat == nil {
@@ -80,8 +85,9 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
-		w.WriteHeader(http.StatusOK)
 		w.Header().Add("Content-Type", "application/json")
+
+		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(dataJSON)
 	}
 
@@ -90,7 +96,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	h.serializer.Clean()
-	w.Header().Add("content-Type", "application/json")
+
 	b, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
@@ -135,8 +141,9 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if dataJSON, err := h.serializer.Run(); err == nil {
-		w.WriteHeader(http.StatusOK)
 		w.Header().Add("content-Type", "application/json")
+
+		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(dataJSON)
 	}
 

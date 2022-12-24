@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/compress"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
@@ -16,8 +17,9 @@ func TestNewRouter(t *testing.T) {
 
 	mem := storage.NewStorage()
 	srl := serializer.NewSerialize()
+	cpr := compress.NewCompressor()
 
-	handler := handlers.NewHandler(mem, srl)
+	handler := handlers.NewHandler(mem, srl, cpr)
 
 	r := NewRouter(handler)
 	ts := httptest.NewServer(r)
