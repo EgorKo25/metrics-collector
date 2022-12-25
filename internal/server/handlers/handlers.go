@@ -202,7 +202,7 @@ func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Encoding", "gzip")
 		}
 
-		w.Header().Add("Content-Encoding", "text/html")
+		w.Header().Add("Content-Encoding", "gzip")
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(tmp)
 	}
