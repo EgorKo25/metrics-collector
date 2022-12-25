@@ -98,7 +98,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Header.Get("Content-Encoding") == "gzip" {
+	if r.Header.Get("Accept-Encoding") == "gzip" {
 		dataJSON, err = h.compressor.Compress(dataJSON)
 		if err != nil {
 			log.Println("Compress fail")
@@ -173,7 +173,7 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Header.Get("Content-Encoding") == "gzip" {
+	if r.Header.Get("Accept-Encoding") == "gzip" {
 		dataJSON, err = h.compressor.Compress(dataJSON)
 		if err != nil {
 			log.Println("Compress fail")
