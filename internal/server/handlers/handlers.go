@@ -105,10 +105,10 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		w.Header().Add("Content-Encoding", "gzip")
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	w.Header().Add("Content-Encoding", "gzip")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(dataJSON)
 	return
@@ -180,10 +180,10 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		w.Header().Add("Content-Encoding", "gzip")
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	w.Header().Add("Content-Encoding", "gzip")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(dataJSON)
 	return
