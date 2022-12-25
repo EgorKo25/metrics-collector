@@ -197,32 +197,28 @@ func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
 		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%f", v) + "\n")
 
-		if r.Header.Get("Content-Encoding") == "gzip" {
+		if r.Header.Get("Accept-Encoding") == "gzip" {
 			h.compressor.Compress(tmp)
 			w.Header().Add("Content-Encoding", "gzip")
 		}
 
-		_, err := w.Write(tmp)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Fatalln(err)
-		}
+		w.Header().Add("Content-Type", "text/html")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(tmp)
 	}
 
 	for k, v := range h.storage.MetricsCounter {
 
 		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%d", v) + "\n")
 
-		if r.Header.Get("Content-Encoding") == "gzip" {
+		if r.Header.Get("Accept-Encoding") == "gzip" {
 			h.compressor.Compress(tmp)
 			w.Header().Add("Content-Encoding", "gzip")
 		}
 
-		_, err := w.Write(tmp)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Fatalln(err)
-		}
+		w.Header().Add("Content-Type", "text/html")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(tmp)
 	}
 }
 
