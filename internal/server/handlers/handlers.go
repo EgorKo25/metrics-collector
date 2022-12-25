@@ -193,33 +193,37 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 // GetAllStats returns the values of all metrics
 func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
+	var res string
+	var err error
+
 	for k, v := range h.storage.MetricsGauge {
 
-		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%f", v) + "\n")
+		res += "> " + k + ":  " + fmt.Sprintf("%f", v) + "\n"
 
-		if r.Header.Get("Accept-Encoding") == "gzip" {
-			h.compressor.Compress(tmp)
-			w.Header().Add("Content-Encoding", "gzip")
-		}
-
-		w.Header().Add("Content-Type", "text/html")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(tmp)
 	}
 
 	for k, v := range h.storage.MetricsCounter {
 
-		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%d", v) + "\n")
+		res += "> " + k + ":  " + fmt.Sprintf("%d", v) + "\n"
 
-		if r.Header.Get("Accept-Encoding") == "gzip" {
-			h.compressor.Compress(tmp)
-			w.Header().Add("Content-Encoding", "gzip")
+	}
+
+	tmp := []byte(res)
+
+	if r.Header.Get("Accept-Encoding") == "gzip" {
+		tmp, err = h.compressor.Compress(tmp)
+		if err != nil {
+			log.Println("Compressed error: ", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 
-		w.Header().Add("Content-Type", "text/html")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(tmp)
+		w.Header().Add("Content-Encoding", "gzip")
 	}
+
+	w.Header().Add("Content-Type", "text/html")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(tmp)
 }
 
 // SetMetricValue sets the value of the specified metric
