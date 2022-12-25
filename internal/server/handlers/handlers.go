@@ -84,8 +84,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Println(r.Header.Get("Accept-Encoding"))
-	if r.Header.Get("Accept-Encoding") == "gzip" {
+	if r.Header.Get("Content-Encoding") == "gzip" {
 		dataJSON, err := h.serializer.Run()
 		if err != nil {
 			log.Println("Serialize fail")
@@ -100,7 +99,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		w.Header().Add("Accept-Encoding", "gzip")
+		w.Header().Add("Content-Encoding", "gzip, ")
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(dataJSON)
 		return
