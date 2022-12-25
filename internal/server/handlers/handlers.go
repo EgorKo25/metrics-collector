@@ -58,59 +58,60 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType)
-	log.Println(stat, h.serializer, h.storage)
+
 	switch h.serializer.MType {
+
 	case "gauge":
 		if stat == nil {
+
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 		if stat != nil {
+
 			tmp := stat.(storage.Gauge)
+
 			h.serializer.Value = &tmp
 			h.serializer.Delta = nil
 
 		}
 	case "counter":
 		if stat == nil {
+
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 		if stat != nil {
+
 			tmp := stat.(storage.Counter)
+
 			h.serializer.Delta = &tmp
 			h.serializer.Value = nil
-			log.Printf(" In Block Counter: %d, %s, %s", *h.serializer.Delta, h.serializer.ID, h.serializer.MType)
+
 		}
 	}
 
-	if r.Header.Get("Content-Encoding") == "gzip" {
-		dataJSON, err := h.serializer.Run()
-		if err != nil {
-			log.Println("Serialize fail")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
+	dataJSON, err := h.serializer.Run()
+	if err != nil {
+		log.Println("Serialize fail")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
+	if r.Header.Get("Content-Encoding") == "gzip" {
 		dataJSON, err = h.compressor.Compress(dataJSON)
 		if err != nil {
 			log.Println("Compress fail")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-
-		w.Header().Add("Content-Encoding", "gzip, ")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(dataJSON)
-		return
 	}
 
-	if dataJSON, err := h.serializer.Run(); err == nil {
-		w.Header().Add("Content-Type", "application/json")
-
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(dataJSON)
-	}
+	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Encoding", "gzip")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(dataJSON)
+	return
 
 }
 
@@ -119,6 +120,10 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	h.serializer.Clean()
 
 	b, _ := io.ReadAll(r.Body)
+
+	if r.Header.Get("Content-Encoding") == "gzip" {
+		b, _ = h.compressor.Decompress(b)
+	}
 
 	if err := json.Unmarshal(b, h.serializer); err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
@@ -161,12 +166,27 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	if dataJSON, err := h.serializer.Run(); err == nil {
-		w.Header().Add("content-Type", "application/json")
-
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(dataJSON)
+	dataJSON, err := h.serializer.Run()
+	if err != nil {
+		log.Println("Serialize fail")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+
+	if r.Header.Get("Content-Encoding") == "gzip" {
+		dataJSON, err = h.compressor.Compress(dataJSON)
+		if err != nil {
+			log.Println("Compress fail")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Encoding", "gzip")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(dataJSON)
+	return
 
 }
 
