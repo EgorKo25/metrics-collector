@@ -191,14 +191,17 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetAllStats returns the values of all metrics
-func (h Handler) GetAllStats(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
+func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
 	for k, v := range h.storage.MetricsGauge {
 
-		tmp := "> " + k + ":  " + fmt.Sprintf("%f", v) + "\n"
+		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%d", v) + "\n")
 
-		_, err := w.Write([]byte(tmp))
+		if r.Header.Get("Content-Encoding") == "gzip" {
+			h.compressor.Compress(tmp)
+		}
+
+		_, err := w.Write(tmp)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			log.Fatalln(err)
@@ -207,9 +210,13 @@ func (h Handler) GetAllStats(w http.ResponseWriter, _ *http.Request) {
 
 	for k, v := range h.storage.MetricsCounter {
 
-		tmp := "> " + k + ":  " + fmt.Sprintf("%d", v) + "\n"
+		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%d", v) + "\n")
 
-		_, err := w.Write([]byte(tmp))
+		if r.Header.Get("Content-Encoding") == "gzip" {
+			h.compressor.Compress(tmp)
+		}
+
+		_, err := w.Write(tmp)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			log.Fatalln(err)
