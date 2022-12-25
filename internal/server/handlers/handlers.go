@@ -195,10 +195,11 @@ func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
 	for k, v := range h.storage.MetricsGauge {
 
-		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%d", v) + "\n")
+		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%f", v) + "\n")
 
 		if r.Header.Get("Content-Encoding") == "gzip" {
 			h.compressor.Compress(tmp)
+			w.Header().Add("Content-Encoding", "gzip")
 		}
 
 		_, err := w.Write(tmp)
@@ -214,6 +215,7 @@ func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
 		if r.Header.Get("Content-Encoding") == "gzip" {
 			h.compressor.Compress(tmp)
+			w.Header().Add("Content-Encoding", "gzip")
 		}
 
 		_, err := w.Write(tmp)
