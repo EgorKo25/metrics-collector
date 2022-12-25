@@ -197,7 +197,7 @@ func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
 		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%f", v) + "\n")
 
-		if r.Header.Get("Content-Encoding") == "gzip" {
+		if r.Header.Get("Accept-Encoding") == "gzip" {
 			h.compressor.Compress(tmp)
 			w.Header().Add("Content-Encoding", "gzip")
 		}
@@ -211,7 +211,7 @@ func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
 		tmp := []byte("> " + k + ":  " + fmt.Sprintf("%d", v) + "\n")
 
-		if r.Header.Get("Content-Encoding") == "gzip" {
+		if r.Header.Get("Accept-Encoding") == "gzip" {
 			h.compressor.Compress(tmp)
 			w.Header().Add("Content-Encoding", "gzip")
 		}
