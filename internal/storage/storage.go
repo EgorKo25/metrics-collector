@@ -67,12 +67,12 @@ func (m *MetricStorage) GetAllStats() (map[string]Gauge, map[string]Counter) {
 func (m *MetricStorage) StatStatusM(name, mType string) (value any) {
 	if mType == "gauge" {
 		if _, ok := m.Metrics[name]; ok {
-			return m.Metrics[name].Value
+			return *m.Metrics[name].Value
 		}
 	}
 	if mType == "counter" {
 		if _, ok := m.Metrics[name]; ok {
-			return m.Metrics[name].Delta
+			return *m.Metrics[name].Delta
 		}
 	}
 
