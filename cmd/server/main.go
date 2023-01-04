@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/compress"
-	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"log"
+	"net/http"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/reader"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/saver"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-	"log"
-	"net/http"
 )
 
 func main() {
@@ -19,17 +20,17 @@ func main() {
 
 	srl := serializer.NewSerialize()
 
-	strg := storage.NewStorage()
+	storage := storage.NewStorage()
 
-	cpr := compress.NewCompressor()
+	compressor := middleware.NewCompressor()
 
-	handler := handlers.NewHandler(strg, srl, cpr)
+	handler := handlers.NewHandler(storage, srl, compressor)
 
 	router := routers.NewRouter(handler)
 
-	save := saver.NewSave(cfg, strg, srl)
+	save := saver.NewSave(cfg, storage, srl)
 
-	read, _ := reader.NewRead(cfg, strg, srl)
+	read, _ := reader.NewRead(cfg, storage, srl)
 
 	if cfg.Restore {
 		read.ReadAll()

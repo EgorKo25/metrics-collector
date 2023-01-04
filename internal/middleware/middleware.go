@@ -1,4 +1,4 @@
-package compress
+package middleware
 
 import (
 	"bytes"
@@ -19,11 +19,11 @@ func (c *Compressor) Compress(data []byte) ([]byte, error) {
 	w := gzip.NewWriter(&b)
 
 	if _, err := w.Write(data); err != nil {
-		return nil, fmt.Errorf("failed write data to compress temporary buffer: %v", err)
+		return nil, fmt.Errorf("failed write data to middleware temporary buffer: %v", err)
 	}
 
 	if err := w.Close(); err != nil {
-		return nil, fmt.Errorf("failed compress data: %v", err)
+		return nil, fmt.Errorf("failed middleware data: %v", err)
 	}
 
 	return b.Bytes(), nil

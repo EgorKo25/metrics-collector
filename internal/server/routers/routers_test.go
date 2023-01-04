@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/compress"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
@@ -17,16 +17,26 @@ func TestNewRouter(t *testing.T) {
 
 	mem := storage.NewStorage()
 	srl := serializer.NewSerialize()
-	cpr := compress.NewCompressor()
-
+	cpr := middleware.NewCompressor()
 	handler := handlers.NewHandler(mem, srl, cpr)
+
+	value := storage.Gauge(123)
+	metric := storage.Metric{
+		ID:    "Alloc",
+		MType: "gauge",
+		Delta: nil,
+		Value: &value,
+	}
 
 	r := NewRouter(handler)
 	ts := httptest.NewServer(r)
 	defer ts.Close()
 
-	mem.SetGaugeStat("Alloc", storage.Gauge(123), "gauge")
+	mem.SetStat(&metric)
 
+	/*
+		mem.SetGaugeStat("Alloc", storage.Gauge(123), "gauge")
+	*/
 	statusCode, body := testRequest(t, ts, "GET", "/")
 	assert.Equal(t, http.StatusOK, statusCode)
 	assert.Equal(t, "> Alloc:  123.000000\n", body)
