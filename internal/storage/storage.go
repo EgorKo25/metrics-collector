@@ -37,7 +37,12 @@ func NewStorage() *MetricStorage {
 
 // SetStat storing metrics in storage
 func (m *MetricStorage) SetStat(metric *Metric) {
-	m.Metrics[metric.ID] = *metric
+	if metric.MType == "gauge" {
+		m.Metrics[metric.ID] = *metric
+	}
+	if metric.MType == "counter" {
+		*m.Metrics[metric.ID].Delta += *metric.Delta
+	}
 }
 
 /*
