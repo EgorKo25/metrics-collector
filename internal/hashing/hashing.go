@@ -4,7 +4,6 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"fmt"
-
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
@@ -23,10 +22,10 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 	var src []byte
 
 	if metric.MType == "gauge" {
-		src = []byte(fmt.Sprintf("%s:guage:%f", metric.ID, metric.Value))
+		src = []byte(fmt.Sprintf("%s:guage:%f", metric.ID, *metric.Value))
 	}
 	if metric.MType == "counter" {
-		src = []byte(fmt.Sprintf("%s:counter:%d", metric.ID, metric.Delta))
+		src = []byte(fmt.Sprintf("%s:counter:%d", metric.ID, *metric.Delta))
 	}
 
 	if h.Key == nil {
@@ -37,11 +36,8 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 	hm.Write(src)
 	hash = fmt.Sprintf("%x", hm.Sum(nil))
 
-	if metric.Hash != "" {
-		if hmac.Equal([]byte(metric.Hash), []byte(hash)) {
-			return "", fmt.Errorf("not equal hash")
-		}
-
+	if metric.Hash != "" && !hmac.Equal([]byte(metric.Hash), []byte(hash)) {
+		return "", fmt.Errorf("not equal hash")
 	}
 
 	return

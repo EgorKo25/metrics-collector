@@ -36,9 +36,6 @@ func TestNewRouter(t *testing.T) {
 
 	mem.SetStat(&metric)
 
-	/*
-		mem.SetGaugeStat("Alloc", storage.Gauge(123), "gauge")
-	*/
 	statusCode, body := testRequest(t, ts, "GET", "/")
 	assert.Equal(t, http.StatusOK, statusCode)
 	assert.Equal(t, "> Alloc:  123.000000\n", body)
