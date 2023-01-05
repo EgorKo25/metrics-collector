@@ -23,10 +23,10 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 	var src []byte
 
 	if metric.MType == "gauge" {
-		src = []byte(fmt.Sprintf("%s:guage:%f", metric.ID, *metric.Value))
+		src = []byte(fmt.Sprintf("%s:guage:%f", metric.ID, metric.Value))
 	}
 	if metric.MType == "counter" {
-		src = []byte(fmt.Sprintf("%s:counter:%d", metric.ID, *metric.Delta))
+		src = []byte(fmt.Sprintf("%s:counter:%d", metric.ID, metric.Delta))
 	}
 
 	if h.Key == nil {
