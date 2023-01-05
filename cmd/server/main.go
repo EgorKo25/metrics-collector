@@ -1,13 +1,12 @@
 package main
 
 import (
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
 	"log"
 	"net/http"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/reader"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/saver"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
@@ -20,17 +19,17 @@ func main() {
 
 	srl := serializer.NewSerialize()
 
-	storage := storage.NewStorage()
+	str := storage.NewStorage()
 
 	compressor := middleware.NewCompressor()
 
-	handler := handlers.NewHandler(storage, srl, compressor)
+	handler := handlers.NewHandler(str, srl, compressor)
 
 	router := routers.NewRouter(handler)
 
-	save := saver.NewSave(cfg, storage, srl)
+	save := file.NewSave(cfg, str)
 
-	read, _ := reader.NewRead(cfg, storage, srl)
+	read, _ := file.NewRead(cfg, str)
 
 	if cfg.Restore {
 		read.ReadAll()
