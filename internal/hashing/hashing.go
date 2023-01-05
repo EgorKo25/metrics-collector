@@ -35,7 +35,7 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 
 	hm := hmac.New(sha256.New, h.Key)
 	hm.Write(src)
-	hash = fmt.Sprintf("%b", hm.Sum(nil))
+	hash = fmt.Sprintf("%x", hm.Sum(nil))
 
 	if metric.Hash != "" {
 		if hmac.Equal([]byte(metric.Hash), []byte(hash)) {
