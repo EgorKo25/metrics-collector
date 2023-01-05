@@ -41,7 +41,8 @@ func (m *MetricStorage) SetStat(metric *Metric) {
 		m.Metrics[metric.ID] = *metric
 	}
 	if metric.MType == "counter" {
-		*m.Metrics[metric.ID].Delta += *metric.Delta
+		*metric.Delta += *m.Metrics[metric.ID].Delta
+		m.Metrics[metric.ID] = *metric
 	}
 }
 
