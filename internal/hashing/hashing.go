@@ -4,8 +4,9 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"fmt"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"log"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
 type Hash struct {
