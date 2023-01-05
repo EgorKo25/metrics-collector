@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 
@@ -17,13 +18,15 @@ import (
 type Handler struct {
 	storage    *storage.MetricStorage
 	compressor *middleware.Compressor
+	hasher     *hashing.Hash
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor) *Handler {
+func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash) *Handler {
 	return &Handler{
 		storage:    storage,
 		compressor: compressor,
+		hasher:     hasher,
 	}
 }
 
@@ -89,6 +92,8 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 		}
 	}
+
+	metric.Hash = h.hasher.Run(&metric)
 
 	dataJSON, err := json.Marshal(metric)
 	if err != nil {
@@ -170,6 +175,8 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+
+	metric.Hash = h.hasher.Run(&metric)
 
 	dataJSON, err := json.Marshal(metric)
 	if err != nil {

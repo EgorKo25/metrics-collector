@@ -10,7 +10,7 @@ func main() {
 
 	cfg := config.NewAgentConfig()
 
-	hsr := hashing.MewHash(cfg)
+	hsr := hashing.MewHash(cfg.Key)
 
 	monitor := agent.NewMonitor(cfg, hsr)
 

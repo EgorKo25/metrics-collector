@@ -4,7 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"fmt"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
@@ -12,9 +12,9 @@ type Hash struct {
 	Key []byte
 }
 
-func MewHash(cfg *config.ConfigurationAgent) *Hash {
+func MewHash(cfg string) *Hash {
 	return &Hash{
-		Key: []byte(cfg.Key),
+		Key: []byte(cfg),
 	}
 }
 
