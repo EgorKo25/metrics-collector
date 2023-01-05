@@ -27,11 +27,12 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 	case "gauge":
 		src = []byte(fmt.Sprintf("%s:%s:%f", metric.ID, metric.MType, *metric.Value))
 	case "counter":
+		fmt.Println(metric.ID, metric.MType, *metric.Delta)
 		src = []byte(fmt.Sprintf("%s:%s:%d", metric.ID, metric.MType, *metric.Delta))
 	}
 
 	if h.Key == nil {
-		return
+		return "", nil
 	}
 
 	hm := hmac.New(sha256.New, h.Key)
@@ -41,8 +42,9 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 	log.Println("Вычисленный ", hash)
 	log.Println("Имеющийся ", metric.Hash)
 	if metric.Hash != "" && !hmac.Equal([]byte(metric.Hash), []byte(hash)) {
+		log.Println("not equal hash")
 		return "", fmt.Errorf("not equal hash")
 	}
 
-	return
+	return hash, nil
 }
