@@ -3,28 +3,26 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"io"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 
 	"github.com/go-chi/chi/v5"
 )
 
 type Handler struct {
 	storage    *storage.MetricStorage
-	serializer *serializer.Serialize
 	compressor *middleware.Compressor
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, srl *serializer.Serialize, compressor *middleware.Compressor) *Handler {
+func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor) *Handler {
 	return &Handler{
 		storage:    storage,
-		serializer: srl,
 		compressor: compressor,
 	}
 }
@@ -117,152 +115,6 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	return
 
 }
-
-/*
-// GetJSONValue go dock
-func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
-
-	h.serializer.Clean()
-
-	b, _ := io.ReadAll(r.Body)
-
-	if err := json.Unmarshal(b, h.serializer); err != nil {
-		fmt.Printf("Unmarshal went wrong:  %s\n", err)
-	}
-
-	stat := h.storage.StatStatusM(h.serializer.ID, h.serializer.MType)
-
-	switch h.serializer.MType {
-
-	case "gauge":
-		if stat == nil {
-
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		if stat != nil {
-
-			tmp := stat.(storage.Gauge)
-
-			h.serializer.Value = &tmp
-			h.serializer.Delta = nil
-
-		}
-	case "counter":
-		if stat == nil {
-
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		if stat != nil {
-
-			tmp := stat.(storage.Counter)
-
-			h.serializer.Delta = &tmp
-			h.serializer.Value = nil
-
-		}
-	}
-
-	dataJSON, err := h.serializer.Run()
-	if err != nil {
-		log.Println("Failed to serialize")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	if r.Header.Get("Accept-Encoding") == "gzip" {
-		dataJSON, err = h.compressor.Compress(dataJSON)
-		if err != nil {
-			log.Println("Failed to middleware")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.Header().Add("Content-Encoding", "gzip")
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(dataJSON)
-	return
-
-}
-// SetJSONValue go dock
-func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
-	h.serializer.Clean()
-
-	b, _ := io.ReadAll(r.Body)
-
-	if r.Header.Get("Content-Encoding") == "gzip" {
-		b, _ = h.compressor.Decompress(b)
-	}
-
-	if err := json.Unmarshal(b, h.serializer); err != nil {
-		fmt.Printf("Unmarshal went wrong:  %s\n", err)
-	}
-
-	if h.serializer.Value == nil && h.serializer.Delta == nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	switch h.serializer.MType {
-	case "gauge":
-		if h.serializer.Delta == nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		if h.serializer.Value != nil {
-			h.storage.SetGaugeStat(h.serializer.ID, *h.serializer.Value, h.serializer.MType)
-
-		}
-		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil {
-
-			tmp := stat.(storage.Gauge)
-			h.serializer.Value = &tmp
-		}
-	case "counter":
-		if h.serializer.Delta == nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		if h.serializer.Delta != nil {
-			h.storage.SetCounterStat(h.serializer.ID, *h.serializer.Delta, h.serializer.MType)
-		}
-		if stat := h.storage.StatStatus(h.serializer.ID, h.serializer.MType); stat != nil && stat.(storage.Counter) != 0 {
-
-			tmp := stat.(storage.Counter)
-			h.serializer.Delta = &tmp
-		}
-
-	}
-
-	dataJSON, err := h.serializer.Run()
-	if err != nil {
-
-		log.Println("Failed to serialize")
-
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	if r.Header.Get("Accept-Encoding") == "gzip" {
-		dataJSON, err = h.compressor.Compress(dataJSON)
-		if err != nil {
-			log.Println("Failed to middleware")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.Header().Add("Content-Encoding", "gzip")
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(dataJSON)
-	return
-
-}
-*/
 
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
@@ -427,37 +279,3 @@ func (h Handler) SetMetricValue(w http.ResponseWriter, r *http.Request) {
 	return
 
 }
-
-/*
-// SetMetricValue sets the value of the specified metric
-func (h Handler) SetMetricValue(w http.ResponseWriter, r *http.Request) {
-
-	if mType := chi.URLParam(r, "type"); mType == "gauge" {
-
-		value, err := strconv.ParseFloat(chi.URLParam(r, "value"), 64)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			log.Printf("Somethings went wrong: %s", err)
-			return
-		}
-
-		h.storage.SetGaugeStat(chi.URLParam(r, "name"), storage.Gauge(value), mType)
-		w.WriteHeader(http.StatusOK)
-	}
-	if mType := chi.URLParam(r, "type"); mType == "counter" {
-
-		value, err := strconv.Atoi(chi.URLParam(r, "value"))
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			log.Printf("Somethings went wrong: %s", err)
-			return
-		}
-
-		h.storage.SetCounterStat(chi.URLParam(r, "name"), storage.Counter(value), mType)
-		w.WriteHeader(http.StatusOK)
-	}
-	w.WriteHeader(http.StatusNotImplemented)
-	return
-
-}
-*/

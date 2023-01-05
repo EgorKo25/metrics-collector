@@ -7,7 +7,6 @@ import (
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
@@ -17,13 +16,11 @@ func main() {
 
 	cfg := config.NewServerConfig()
 
-	srl := serializer.NewSerialize()
-
 	str := storage.NewStorage()
 
 	compressor := middleware.NewCompressor()
 
-	handler := handlers.NewHandler(str, srl, compressor)
+	handler := handlers.NewHandler(str, compressor)
 
 	router := routers.NewRouter(handler)
 

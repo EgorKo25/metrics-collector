@@ -1,24 +1,24 @@
 package routers
 
 import (
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewRouter(t *testing.T) {
 
 	mem := storage.NewStorage()
-	srl := serializer.NewSerialize()
 	cpr := middleware.NewCompressor()
-	handler := handlers.NewHandler(mem, srl, cpr)
+	handler := handlers.NewHandler(mem, cpr)
 
 	value := storage.Gauge(123)
 	metric := storage.Metric{

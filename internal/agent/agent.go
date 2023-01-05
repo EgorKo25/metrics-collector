@@ -2,48 +2,50 @@ package agent
 
 import (
 	"bytes"
-	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/serializer"
-	"math/rand"
-
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
+	"encoding/json"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"runtime"
 	"time"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
 type Monitor struct {
-	serializer *serializer.Serialize
-	config     *config.ConfigurationAgent
+	config *config.ConfigurationAgent
 
 	pollCount storage.Counter
 }
 
-func NewMonitor(cfg *config.ConfigurationAgent, srl *serializer.Serialize) *Monitor {
+func NewMonitor(cfg *config.ConfigurationAgent) *Monitor {
 	var mon Monitor
 	mon.config = cfg
-	mon.serializer = srl
 	return &mon
 
 }
-func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
-	m.serializer.Clean()
 
-	m.serializer.ID = name
-	m.serializer.MType = Mtype
+// sendData go dock
+func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
+	var metric storage.Metric
+
+	metric.ID = name
+	metric.MType = Mtype
 
 	switch Mtype {
+
 	case "counter":
 		tmp := storage.Counter(value)
-		m.serializer.Delta = &tmp
+		metric.Delta = &tmp
 
 	case "gauge":
-		m.serializer.Value = &value
+		metric.Value = &value
+
 	}
 
-	dataJSON, err := m.serializer.Run()
+	dataJSON, err := json.Marshal(metric)
 	if err != nil {
 		log.Printf("Somethings went wrong: %s", err)
 	}
