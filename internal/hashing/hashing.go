@@ -22,7 +22,12 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 
 	var src []byte
 
-	src = []byte(fmt.Sprintf("%s:%s:%f", metric.ID, metric.MType, *metric.Value))
+	switch metric.MType {
+	case "gauge":
+		src = []byte(fmt.Sprintf("%s:%s:%f", metric.ID, metric.MType, *metric.Value))
+	case "counter":
+		src = []byte(fmt.Sprintf("%s:%s:%d", metric.ID, metric.MType, *metric.Delta))
+	}
 
 	if h.Key == nil {
 		return
