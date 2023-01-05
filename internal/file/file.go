@@ -111,11 +111,11 @@ func (r *Read) ReadAll() (data []byte, err error) {
 		}
 
 		if metric.MType == "gauge" {
-			r.strg.MetricsGauge[metric.ID] = *metric.Value
+			r.strg.Metrics[metric.ID] = metric
 		}
 
 		if metric.MType == "counter" {
-			r.strg.MetricsCounter[metric.ID] = *metric.Delta
+			r.strg.Metrics[metric.ID] = metric
 
 		}
 
