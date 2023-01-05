@@ -287,7 +287,7 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	switch metric.MType {
 	case "gauge":
 
-		if metric.Delta == nil {
+		if metric.Value == nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
