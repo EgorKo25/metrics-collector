@@ -19,8 +19,8 @@ func NewAgentConfig() *ConfigurationAgent {
 		"a", "127.0.0.1:8080",
 		"listening address of the server",
 	)
-	flag.StringVar(&cfg.Address,
-		"k", "key",
+	flag.StringVar(&cfg.Key,
+		"k", "",
 		"traffic encryption key",
 	)
 	flag.DurationVar(&cfg.PollInterval,
@@ -51,7 +51,7 @@ func NewServerConfig() *ConfigurationServer {
 		"a", "127.0.0.1:8080",
 		"listening address of the server",
 	)
-	flag.StringVar(&cfg.Address,
+	flag.StringVar(&cfg.Key,
 		"k", "",
 		"traffic encryption key",
 	)

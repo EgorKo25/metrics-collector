@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
 	"log"
 	"net/http"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
