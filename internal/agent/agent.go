@@ -48,7 +48,7 @@ func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
 
 	}
 
-	metric.Hash = m.hasher.Run(&metric)
+	metric.Hash, _ = m.hasher.Run(&metric)
 
 	dataJSON, err := json.Marshal(metric)
 	if err != nil {

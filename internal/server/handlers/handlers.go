@@ -51,6 +51,7 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 // GetJSONValue go dock
 func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
+	var err error
 	var metric storage.Metric
 
 	b, _ := io.ReadAll(r.Body)
@@ -93,7 +94,10 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	metric.Hash = h.hasher.Run(&metric)
+	if metric.Hash, err = h.hasher.Run(&metric); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	dataJSON, err := json.Marshal(metric)
 	if err != nil {
@@ -124,6 +128,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 // SetJSONValue go dock
 func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
+	var err error
 	var metric storage.Metric
 
 	b, _ := io.ReadAll(r.Body)
@@ -176,7 +181,10 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	metric.Hash = h.hasher.Run(&metric)
+	if metric.Hash, err = h.hasher.Run(&metric); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	dataJSON, err := json.Marshal(metric)
 	if err != nil {

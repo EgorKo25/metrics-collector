@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
@@ -18,7 +19,8 @@ func TestNewRouter(t *testing.T) {
 
 	mem := storage.NewStorage()
 	cpr := middleware.NewCompressor()
-	handler := handlers.NewHandler(mem, cpr)
+	hsr := hashing.MewHash("")
+	handler := handlers.NewHandler(mem, cpr, hsr)
 
 	value := storage.Gauge(123)
 	metric := storage.Metric{

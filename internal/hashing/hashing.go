@@ -18,7 +18,7 @@ func MewHash(cfg string) *Hash {
 	}
 }
 
-func (h *Hash) Run(metric *storage.Metric) (hash string) {
+func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 
 	var src []byte
 
@@ -35,6 +35,14 @@ func (h *Hash) Run(metric *storage.Metric) (hash string) {
 
 	hm := hmac.New(sha256.New, h.Key)
 	hm.Write(src)
-	hash = string(hm.Sum(nil))
+	hash = fmt.Sprintf("%s", hm.Sum(nil))
+
+	if metric.Hash != "" {
+		if hmac.Equal([]byte(metric.Hash), []byte(hash)) {
+			return "", fmt.Errorf("not equal hash")
+		}
+
+	}
+
 	return
 }
