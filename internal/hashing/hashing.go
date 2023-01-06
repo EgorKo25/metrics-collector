@@ -43,7 +43,7 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 	log.Println("Имеющийся ", metric.Hash)
 	if metric.Hash != "" && !hmac.Equal([]byte(metric.Hash), []byte(hash)) {
 		log.Println("not  equal hash")
-		return "", fmt.Errorf("not equal hash")
+		return metric.Hash, fmt.Errorf("not equal hash")
 	}
 
 	return hash, nil
