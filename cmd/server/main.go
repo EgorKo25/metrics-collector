@@ -43,10 +43,10 @@ func main() {
 		}
 
 		go save.Run()
-
+		log.Println(http.ListenAndServe(cfg.Address, router))
 	}
 
 	db.CreateTable()
-
 	log.Println(http.ListenAndServe(cfg.Address, router))
+
 }

@@ -36,7 +36,7 @@ func (d *DB) CreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
-	d.DB.ExecContext(ctx, "CREATE TABLE metrics (ID SERIAL PRIMARY KEY,"+
+	d.DB.ExecContext(ctx, "CREATE TABLE metrics (ID SERIAL PRIMARY KEY, "+
 		"NAME CHARACTER VARYING(30), "+
 		"TYPE CHARACTER VARYING(10), "+
 		"HASH CHARACTER VARYING(100), "+
