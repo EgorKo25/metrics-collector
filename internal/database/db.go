@@ -11,6 +11,9 @@ type DB struct {
 }
 
 func NewDB(cfg *config.ConfigurationServer) *DB {
+	if cfg.DB == "" {
+		return nil
+	}
 	db, err := sql.Open("pgx",
 		cfg.DB)
 	if err != nil {
