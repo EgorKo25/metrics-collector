@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
+	"context"
 	"log"
 	"net/http"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
@@ -16,17 +17,19 @@ import (
 
 func main() {
 
+	ctx := context.Background()
+
 	cfg := config.NewServerConfig()
 
 	str := storage.NewStorage()
 
 	hsr := hashing.MewHash(cfg.Key)
 
-	db := database.NewDB(cfg)
+	db := database.NewDB(cfg, ctx)
 
 	compressor := middleware.NewCompressor()
 
-	handler := handlers.NewHandler(str, compressor, hsr, db)
+	handler := handlers.NewHandler(str, compressor, hsr, db, ctx)
 
 	router := routers.NewRouter(handler)
 

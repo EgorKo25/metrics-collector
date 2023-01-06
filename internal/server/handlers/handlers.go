@@ -27,13 +27,13 @@ type Handler struct {
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB) *Handler {
+func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB, ctx context.Context) *Handler {
 	return &Handler{
 		storage:    storage,
 		compressor: compressor,
 		hasher:     hasher,
 		db:         db,
-		ctx:        context.Background(),
+		ctx:        ctx,
 	}
 }
 
@@ -42,7 +42,7 @@ func (h *Handler) PingDB(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(h.ctx, 5*time.Second)
 	defer cancel()
 
-	if err := h.db.DB.PingContext(ctx); err != nil {
+	if err := h.db.DB.Ping(ctx); err != nil {
 		log.Println("database didn't open")
 		w.WriteHeader(http.StatusInternalServerError)
 	}

@@ -1,29 +1,34 @@
 package database
 
 import (
-	"database/sql"
+	"context"
+	"log"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+
+	"github.com/jackc/pgx/v5"
 )
 
 type DB struct {
-	DB *sql.DB
+	DB  *pgx.Conn
+	ctx context.Context
 }
 
-func NewDB(cfg *config.ConfigurationServer) *DB {
+func NewDB(cfg *config.ConfigurationServer, ctx context.Context) *DB {
 	if cfg.DB == "" {
 		return nil
 	}
-	db, err := sql.Open("pgx",
-		cfg.DB)
+
+	conn, err := pgx.Connect(ctx, cfg.DB)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	return &DB{
-		DB: db,
+		DB:  conn,
+		ctx: ctx,
 	}
 }
 
 func (d *DB) Close() {
-	d.DB.Close()
+	d.DB.Close(d.ctx)
 }
