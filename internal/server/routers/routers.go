@@ -13,7 +13,7 @@ func NewRouter(handler *handlers.Handler) chi.Router {
 
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", handler.GetAllStats)
-		r.Get("/ping/", handler.PingDB)
+		r.Get("/ping", handler.PingDB)
 		r.Get("/value/{type}/{name}", handler.GetValueStat)
 		r.Post("/update/{type}/{name}/{value}", handler.SetMetricValue)
 
