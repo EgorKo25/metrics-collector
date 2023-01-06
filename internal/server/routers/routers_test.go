@@ -1,6 +1,8 @@
 package routers
 
 import (
+	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -17,10 +19,12 @@ import (
 
 func TestNewRouter(t *testing.T) {
 
+	cfg := config.NewServerConfig()
 	mem := storage.NewStorage()
 	cpr := middleware.NewCompressor()
-	hsr := hashing.MewHash("")
-	handler := handlers.NewHandler(mem, cpr, hsr)
+	hsr := hashing.MewHash(cfg.Key)
+	db := database.NewDB(cfg)
+	handler := handlers.NewHandler(mem, cpr, hsr, db)
 
 	value := storage.Gauge(123)
 	metric := storage.Metric{
