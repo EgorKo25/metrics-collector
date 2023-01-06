@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"log"
 	"net/http"
 
@@ -21,9 +22,11 @@ func main() {
 
 	hsr := hashing.MewHash(cfg.Key)
 
+	db := database.NewDB(cfg)
+
 	compressor := middleware.NewCompressor()
 
-	handler := handlers.NewHandler(str, compressor, hsr)
+	handler := handlers.NewHandler(str, compressor, hsr, db)
 
 	router := routers.NewRouter(handler)
 

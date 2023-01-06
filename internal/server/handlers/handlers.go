@@ -2,17 +2,18 @@ package handlers
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"io"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -21,12 +22,12 @@ type Handler struct {
 	storage    *storage.MetricStorage
 	compressor *middleware.Compressor
 	hasher     *hashing.Hash
-	db         *sql.DB
+	db         *database.DB
 	ctx        context.Context
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *sql.DB) *Handler {
+func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB) *Handler {
 	return &Handler{
 		storage:    storage,
 		compressor: compressor,
@@ -41,7 +42,7 @@ func (h *Handler) PingDB(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(h.ctx, 5*time.Second)
 	defer cancel()
 
-	if err := h.db.PingContext(ctx); err != nil {
+	if err := h.db.DB.PingContext(ctx); err != nil {
 		log.Println("database didn't open")
 		w.WriteHeader(http.StatusInternalServerError)
 	}

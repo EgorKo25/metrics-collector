@@ -10,7 +10,7 @@ type DB struct {
 	DB *sql.DB
 }
 
-func NewDB(cfg config.ConfigurationServer) *DB {
+func NewDB(cfg *config.ConfigurationServer) *DB {
 	db, err := sql.Open("pgx",
 		cfg.DB)
 	if err != nil {
