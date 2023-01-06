@@ -4,16 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"log"
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
+	"io"
+	"log"
+	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -39,10 +37,8 @@ func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compresso
 
 // PingDB go dock
 func (h *Handler) PingDB(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(h.ctx, 5*time.Second)
-	defer cancel()
 
-	if err := h.db.DB.Ping(ctx); err != nil {
+	if err := h.db.DB.Ping(); err != nil {
 		log.Println("database didn't open")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
