@@ -43,6 +43,7 @@ type ConfigurationServer struct {
 	StoreFile     string        `env:"STORE_FILE"`
 	Restore       bool          `env:"RESTORE"`
 	Key           string        `env:"KEY"`
+	DB            string        `env:"DATABASE_DSN"`
 }
 
 func NewServerConfig() *ConfigurationServer {
@@ -54,6 +55,10 @@ func NewServerConfig() *ConfigurationServer {
 	flag.StringVar(&cfg.Key,
 		"k", "",
 		"traffic encryption key",
+	)
+	flag.StringVar(&cfg.DB,
+		"d", "",
+		"string with the address of the connection to the database",
 	)
 	flag.DurationVar(&cfg.StoreInterval,
 		"i", time.Second*300,

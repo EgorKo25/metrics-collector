@@ -1,16 +1,18 @@
 package handlers
 
 import (
+	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"io"
 	"log"
 	"net/http"
 	"strconv"
-
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -19,19 +21,35 @@ type Handler struct {
 	storage    *storage.MetricStorage
 	compressor *middleware.Compressor
 	hasher     *hashing.Hash
+	db         *sql.DB
+	ctx        context.Context
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash) *Handler {
+func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *sql.DB) *Handler {
 	return &Handler{
 		storage:    storage,
 		compressor: compressor,
 		hasher:     hasher,
+		db:         db,
+		ctx:        context.Background(),
 	}
 }
 
+// PingDB go dock
+func (h *Handler) PingDB(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(h.ctx, 5*time.Second)
+	defer cancel()
+
+	if err := h.db.PingContext(ctx); err != nil {
+		log.Println("database didn't open")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 // GetValueStat a handler that returns the value of a specific metric
-func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 	res := h.storage.StatStatusM(chi.URLParam(r, "name"), chi.URLParam(r, "type"))
 	if res == nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -49,7 +67,7 @@ func (h Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetJSONValue go dock
-func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	var metric storage.Metric
@@ -126,7 +144,7 @@ func (h Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 }
 
 // SetJSONValue go dock
-func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	var metric storage.Metric
@@ -214,7 +232,7 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetAllStats returns the values of all metrics
-func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
 	var res string
 	var err error
@@ -249,7 +267,7 @@ func (h Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 }
 
 // SetMetricValue sets the value of the specified metric
-func (h Handler) SetMetricValue(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) SetMetricValue(w http.ResponseWriter, r *http.Request) {
 
 	var metric storage.Metric
 
