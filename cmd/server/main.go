@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
 	"log"
 	"net/http"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
@@ -25,7 +25,7 @@ func main() {
 
 	hsr := hashing.MewHash(cfg.Key)
 
-	db := database.NewDB(cfg, ctx)
+	db := database.NewDB(cfg, ctx, str)
 
 	compressor := middleware.NewCompressor()
 
@@ -33,20 +33,19 @@ func main() {
 
 	router := routers.NewRouter(handler)
 
-	if cfg.DB == "" {
-		save := file.NewSave(cfg, str)
-
-		read, _ := file.NewRead(cfg, str)
-
-		if cfg.Restore {
-			read.ReadAll()
-		}
-
-		go save.Run()
-		log.Println(http.ListenAndServe(cfg.Address, router))
+	if cfg.DB != "" {
+		db.CreateTable()
+		go db.Run()
 	}
 
-	db.CreateTable()
-	log.Println(http.ListenAndServe(cfg.Address, router))
+	save := file.NewSave(cfg, str)
 
+	read, _ := file.NewRead(cfg, str)
+
+	if cfg.Restore {
+		read.ReadAll()
+	}
+
+	go save.Run()
+	log.Println(http.ListenAndServe(cfg.Address, router))
 }
