@@ -39,10 +39,10 @@ func (d *DB) CreateTable() {
 	d.DB.ExecContext(ctx, "CREATE TABLE metrics (ID SERIAL PRIMARY KEY,"+
 		"NAME CHARACTER VARYING(30), "+
 		"TYPE CHARACTER VARYING(10), "+
-		"HASH CHARACTER VARYING(100) "+
-		"VALUE DOUBLE PRECISION "+
+		"HASH CHARACTER VARYING(100), "+
+		"VALUE DOUBLE PRECISION, "+
 		"DELTA INTEGER"+
-		")")
+		");")
 }
 func (d *DB) Close() {
 	d.DB.Close()
