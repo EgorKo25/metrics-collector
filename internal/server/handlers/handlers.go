@@ -148,7 +148,6 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	metric.Hash, err = h.hasher.Run(&metric)
 	if err != nil {
-		log.Println("Что-то не так ", err, metric.Hash)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
