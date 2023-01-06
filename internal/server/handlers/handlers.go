@@ -146,6 +146,13 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	metric.Hash, err = h.hasher.Run(&metric)
+	if err != nil {
+		log.Println("Что-то не так ", err, metric.Hash)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	switch metric.MType {
 	case "gauge":
 
@@ -179,13 +186,6 @@ func (h Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 			metric.Delta = &tmp
 		}
 
-	}
-
-	metric.Hash, err = h.hasher.Run(&metric)
-	if err != nil {
-		log.Println("Что-то не так ", err, metric.Hash)
-		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 
 	dataJSON, err := json.Marshal(metric)
