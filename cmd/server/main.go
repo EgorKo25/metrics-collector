@@ -36,6 +36,7 @@ func main() {
 	if cfg.DB != "" {
 		db.CreateTable()
 		go db.Run()
+		log.Println(http.ListenAndServe(cfg.Address, router))
 	}
 
 	save := file.NewSave(cfg, str)
