@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -38,7 +39,10 @@ func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compresso
 // PingDB go dock
 func (h *Handler) PingDB(w http.ResponseWriter, r *http.Request) {
 
-	if err := h.db.DB.Ping(); err != nil {
+	ctx, cancel := context.WithTimeout(h.ctx, 3*time.Second)
+	defer cancel()
+
+	if err := h.db.DB.PingContext(ctx); err != nil {
 		log.Println("database didn't open")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
