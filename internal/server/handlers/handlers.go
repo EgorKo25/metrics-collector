@@ -4,15 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"io"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 
 	"github.com/go-chi/chi/v5"
 )
