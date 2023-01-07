@@ -42,7 +42,7 @@ func (d *DB) CreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
-	query := "CREATE TABLE metrics (name VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta INTEGER);"
+	query := "CREATE TABLE metrics (id VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta INTEGER);"
 
 	_, err := d.DB.ExecContext(ctx, query)
 	if err != nil {
@@ -73,11 +73,11 @@ func (d *DB) WriteAll() (err error) {
 			metric.Delta = v.Delta
 		}
 
-		query := `insert into metrics (NAME, TYPE, HASH, VALUE, DELTA) values (@name, @type, @hash, @value, @delta)`
+		query := `insert into metrics (id, type, hash, value, delta) values (@id, @type, @hash, @value, @delta)`
 
 		_, err = d.DB.ExecContext(ctx,
 			query,
-			sql.Named("name", metric.ID),
+			sql.Named("id", metric.ID),
 			sql.Named("hash", metric.Hash),
 			sql.Named("type", metric.MType),
 			sql.Named("value", metric.Value),
