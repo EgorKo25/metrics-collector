@@ -26,7 +26,6 @@ func main() {
 	hsr := hashing.MewHash(cfg.Key)
 
 	db := database.NewDB(cfg, ctx, str)
-	log.Println(db)
 
 	compressor := middleware.NewCompressor()
 
@@ -34,7 +33,7 @@ func main() {
 
 	router := routers.NewRouter(handler)
 
-	if db != nil && cfg.StoreFile == "" {
+	if db != nil {
 
 		log.Println(cfg.DB)
 		db.CreateTable()
