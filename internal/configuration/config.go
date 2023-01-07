@@ -48,6 +48,9 @@ type ConfigurationServer struct {
 
 func NewServerConfig() *ConfigurationServer {
 	var cfg ConfigurationServer
+
+	_ = env.Parse(&cfg)
+
 	flag.StringVar(&cfg.Address,
 		"a", "127.0.0.1:8080",
 		"listening address of the server",
@@ -74,8 +77,6 @@ func NewServerConfig() *ConfigurationServer {
 	)
 
 	flag.Parse()
-
-	_ = env.Parse(&cfg)
 
 	return &cfg
 }
