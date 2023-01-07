@@ -39,7 +39,7 @@ func NewDB(cfg *config.ConfigurationServer, ctx context.Context, str *storage.Me
 }
 
 func (d *DB) CreateTable() {
-	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(d.ctx, 10*time.Second)
 	defer cancel()
 
 	query := "CREATE TABLE metrics (id VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta INTEGER);"
@@ -55,7 +55,7 @@ func (d *DB) Close() error {
 func (d *DB) WriteAll() (err error) {
 	var metric storage.Metric
 
-	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(d.ctx, 10*time.Second)
 	defer cancel()
 
 	for k, v := range d.str.Metrics {
