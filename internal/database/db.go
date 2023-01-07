@@ -66,26 +66,33 @@ func (d *DB) WriteAll() (err error) {
 		if v.MType == "gauge" {
 			metric.Value = v.Value
 			metric.Delta = nil
+
+			_, err = d.DB.ExecContext(ctx,
+				`INSERT INTO metrics 
+    				(id, type, hash, value) 
+					VALUES ($1, $2, $3, $4)`,
+				metric.ID, metric.Hash, metric.MType, metric.Value,
+			)
+			if err != nil {
+				log.Println("insert row into table went wrong, ", err)
+				return
+			}
 		}
 
 		if v.MType == "counter" {
 			metric.Value = nil
 			metric.Delta = v.Delta
-		}
 
-		_, err = d.DB.ExecContext(ctx,
-			`INSERT INTO metrics 
-    				(id, type, hash, value, delta) 
-					VALUES ($1, $2, $3, $4, $5)`,
-			"%"+metric.ID+"%",
-			"%"+metric.MType+"%",
-			"%"+metric.Hash+"%",
-			metric.Value,
-			metric.Delta,
-		)
-		if err != nil {
-			log.Println("insert row into table went wrong, ", err)
-			return
+			_, err = d.DB.ExecContext(ctx,
+				`INSERT INTO metrics 
+    				(id, type, hash, delta) 
+					VALUES ($1, $2, $3, $5)`,
+				metric.ID, metric.Hash, metric.MType, metric.Delta,
+			)
+			if err != nil {
+				log.Println("insert row into table went wrong, ", err)
+				return
+			}
 		}
 
 	}
