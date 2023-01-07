@@ -35,6 +35,7 @@ func main() {
 
 	if db != nil {
 
+		db.CreateDB()
 		db.CreateTable()
 
 		go db.Run()
