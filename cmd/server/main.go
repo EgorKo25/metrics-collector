@@ -33,14 +33,22 @@ func main() {
 
 	router := routers.NewRouter(handler)
 
-	save := file.NewSave(cfg, str)
+	if cfg.DB == "" {
+		save := file.NewSave(cfg, str)
 
-	read, _ := file.NewRead(cfg, str)
+		read, _ := file.NewRead(cfg, str)
 
-	if cfg.Restore {
-		read.ReadAll()
+		if cfg.Restore {
+			read.ReadAll()
+		}
+
+		go save.Run()
+		log.Println(http.ListenAndServe(cfg.Address, router))
+		return
 	}
 
-	go save.Run()
+	db.CreateTable()
+	go db.Run()
 	log.Println(http.ListenAndServe(cfg.Address, router))
+
 }

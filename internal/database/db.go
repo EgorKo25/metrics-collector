@@ -41,13 +41,13 @@ func (d *DB) CreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
-	d.DB.ExecContext(ctx, "CREATE TABLE metrics (ID SERIAL PRIMARY KEY, "+
-		"NAME CHARACTER VARYING(30), "+
-		"TYPE CHARACTER VARYING(10), "+
-		"HASH CHARACTER VARYING(100), "+
-		"VALUE DOUBLE PRECISION, "+
-		"DELTA INTEGER"+
-		");")
+	d.DB.ExecContext(ctx, `CREATE TABLE metrics (ID PRIMARY KEY, 
+		name varchar(30), 
+		type varchar(10), 
+		hash varchar(100), 
+		value double precision, 
+		delta integer
+		);`)
 }
 func (d *DB) Close() error {
 	return d.DB.Close()
@@ -74,10 +74,10 @@ func (d *DB) WriteAll() (err error) {
 		}
 
 		d.DB.ExecContext(ctx,
-			"INSERT INTO metrics (NAME, TYPE, HASH, VALUE, DELTA) VALUES (@name, @type, @hash, @value, @delta)",
+			`INSERT INTO metrics (NAME, TYPE, HASH, VALUE, DELTA) VALUES (@name, @type, @hash, @value, @delta)`,
 			sql.Named("name", metric.ID),
-			sql.Named("type", metric.MType),
 			sql.Named("hash", metric.Hash),
+			sql.Named("type", metric.MType),
 			sql.Named("value", metric.Value),
 			sql.Named("delta", metric.Delta),
 		)
