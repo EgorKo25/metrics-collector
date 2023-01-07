@@ -43,14 +43,17 @@ func main() {
 
 	}
 
-	save := file.NewSave(cfg, str)
+	if db == nil {
+		save := file.NewSave(cfg, str)
 
-	read, _ := file.NewRead(cfg, str)
+		read, _ := file.NewRead(cfg, str)
 
-	if cfg.Restore {
-		read.ReadAll()
+		if cfg.Restore {
+			read.ReadAll()
+		}
+
+		go save.Run()
+		log.Println(http.ListenAndServe(cfg.Address, router))
 	}
 
-	go save.Run()
-	log.Println(http.ListenAndServe(cfg.Address, router))
 }
