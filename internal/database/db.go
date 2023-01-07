@@ -73,7 +73,7 @@ func (d *DB) WriteAll() (err error) {
 			metric.Delta = v.Delta
 		}
 
-		query := `insert into metrics (id, type, hash, value, delta) values (@id, @type, @hash, @value, @delta)`
+		query := "INSERT INTO metrics (id, type, hash, value, delta) VALUES (@id, @type, @hash, @value, @delta)"
 
 		_, err = d.DB.ExecContext(ctx,
 			query,

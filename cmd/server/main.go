@@ -36,6 +36,7 @@ func main() {
 
 	if db != nil {
 
+		log.Println(cfg.DB)
 		db.CreateTable()
 
 		go db.Run()
