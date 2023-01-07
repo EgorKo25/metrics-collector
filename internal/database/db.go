@@ -63,7 +63,9 @@ func (d *DB) WriteAll() (err error) {
 		metric.ID = k
 		metric.MType = v.MType
 
-		if v.MType == "gauge" {
+		switch v.MType {
+
+		case "gauge":
 			metric.Value = v.Value
 			metric.Delta = nil
 
@@ -71,15 +73,14 @@ func (d *DB) WriteAll() (err error) {
 				`INSERT INTO metrics 
     				(id, type, hash, value) 
 					VALUES ($1, $2, $3, $4)`,
-				metric.ID, metric.Hash, metric.MType, metric.Value,
+				metric.ID, metric.Hash, metric.MType, *metric.Value,
 			)
 			if err != nil {
 				log.Println("insert row into table went wrong, ", err)
 				return
 			}
-		}
 
-		if v.MType == "counter" {
+		case "counter":
 			metric.Value = nil
 			metric.Delta = v.Delta
 
@@ -87,14 +88,14 @@ func (d *DB) WriteAll() (err error) {
 				`INSERT INTO metrics 
     				(id, type, hash, delta) 
 					VALUES ($1, $2, $3, $5)`,
-				metric.ID, metric.Hash, metric.MType, metric.Delta,
+				metric.ID, metric.Hash, metric.MType, *metric.Delta,
 			)
 			if err != nil {
 				log.Println("insert row into table went wrong, ", err)
 				return
 			}
-		}
 
+		}
 	}
 
 	return d.Close()
