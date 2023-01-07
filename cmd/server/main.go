@@ -26,6 +26,7 @@ func main() {
 	hsr := hashing.MewHash(cfg.Key)
 
 	db := database.NewDB(cfg, ctx, str)
+	db.CreateTable()
 
 	compressor := middleware.NewCompressor()
 
@@ -33,24 +34,13 @@ func main() {
 
 	router := routers.NewRouter(handler)
 
+	save := file.NewSave(cfg, str)
+
 	read, _ := file.NewRead(cfg, str)
 
 	if cfg.Restore {
 		read.ReadAll()
 	}
-
-	if db != nil {
-
-		log.Println(cfg.DB)
-		db.CreateTable()
-		log.Println("Table is already exists")
-
-		go db.Run()
-		log.Println(http.ListenAndServe(cfg.Address, router))
-
-	}
-
-	save := file.NewSave(cfg, str)
 
 	go save.Run()
 	log.Println(http.ListenAndServe(cfg.Address, router))

@@ -207,6 +207,10 @@ func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	if h.db != nil {
+		h.db.Run(&metric)
+	}
+
 	dataJSON, err := json.Marshal(metric)
 	if err != nil {
 		log.Println("Failed to serialize")

@@ -39,7 +39,7 @@ func NewDB(cfg *config.ConfigurationServer, ctx context.Context, str *storage.Me
 }
 
 func (d *DB) CreateTable() {
-	ctx, cancel := context.WithTimeout(d.ctx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
 	query := "CREATE TABLE IF NOT EXISTS metrics (id VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta BIGINT);"
@@ -52,64 +52,40 @@ func (d *DB) CreateTable() {
 func (d *DB) Close() error {
 	return d.DB.Close()
 }
-func (d *DB) WriteAll() (err error) {
-	var metric storage.Metric
+func (d *DB) Run(metric *storage.Metric) (err error) {
 
-	ctx, cancel := context.WithTimeout(d.ctx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
-	for k, v := range d.str.Metrics {
+	log.Println("! ! ! Отправка в БД ! ! ! ")
+	switch metric.MType {
 
-		metric.ID = k
-		metric.MType = v.MType
-
-		log.Println("! ! ! Отправка в БД ! ! ! ")
-		switch v.MType {
-
-		case "gauge":
-			metric.Value = v.Value
-			metric.Delta = nil
-
-			r, err := d.DB.ExecContext(ctx,
-				`INSERT INTO metrics 
+	case "gauge":
+		r, err := d.DB.ExecContext(ctx,
+			`INSERT INTO metrics 
     				(id, type, hash, value) 
 					VALUES ($1, $2, $3, $4)`,
-				metric.ID, metric.MType, metric.Hash, float64(*metric.Value),
-			)
-			if err != nil {
-				log.Println("insert row into table went wrong, ", err, r)
+			metric.ID, metric.MType, metric.Hash, float64(*metric.Value),
+		)
+		if err != nil {
+			log.Println("insert row into table went wrong, ", err, r)
+			return err
 
-			}
-
-		case "counter":
-			metric.Value = nil
-			metric.Delta = v.Delta
-
-			r, err := d.DB.ExecContext(ctx,
-				`INSERT INTO metrics 
-    				(id, type, hash, delta) 
-					VALUES ($1, $2, $3, $4)`,
-				metric.ID, metric.MType, metric.Hash, int(*metric.Delta),
-			)
-			if err != nil {
-				log.Println("insert row into table went wrong, ", err, r)
-			}
 		}
 
+	case "counter":
+
+		r, err := d.DB.ExecContext(ctx,
+			`INSERT INTO metrics 
+    				(id, type, hash, delta) 
+					VALUES ($1, $2, $3, $4)`,
+			metric.ID, metric.MType, metric.Hash, int(*metric.Delta),
+		)
+		if err != nil {
+			log.Println("insert row into table went wrong, ", err, r)
+			return err
+		}
 	}
 
 	return nil
-}
-
-func (d *DB) Run() error {
-	tickerSave := time.NewTicker(d.cfg.StoreInterval)
-
-	for {
-		select {
-		case <-tickerSave.C:
-			if err := d.WriteAll(); err != nil {
-				return err
-			}
-		}
-	}
 }
