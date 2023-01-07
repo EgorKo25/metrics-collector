@@ -26,7 +26,10 @@ func main() {
 	hsr := hashing.MewHash(cfg.Key)
 
 	db := database.NewDB(cfg, ctx, str)
-	db.CreateTable()
+
+	if db != nil {
+		db.СreateTable()
+	}
 
 	compressor := middleware.NewCompressor()
 

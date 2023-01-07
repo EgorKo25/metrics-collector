@@ -38,7 +38,7 @@ func NewDB(cfg *config.ConfigurationServer, ctx context.Context, str *storage.Me
 	}
 }
 
-func (d *DB) CreateTable() {
+func (d *DB) СreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
