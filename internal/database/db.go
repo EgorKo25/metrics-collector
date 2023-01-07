@@ -29,6 +29,7 @@ func NewDB(cfg *config.ConfigurationServer, ctx context.Context, str *storage.Me
 	if err != nil {
 		log.Println(err)
 	}
+
 	return &DB{
 		DB:  conn,
 		ctx: ctx,
@@ -41,14 +42,7 @@ func (d *DB) CreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
-	query := `create table metrics ( 
-		name varchar(30),
-		type varchar(10), 
-
-		value double precision, 
-
-		);
-	`
+	query := "CREATE TABLE metrics (name VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta INTEGER);"
 
 	_, err := d.DB.ExecContext(ctx, query)
 	if err != nil {
@@ -79,12 +73,15 @@ func (d *DB) WriteAll() (err error) {
 			metric.Delta = v.Delta
 		}
 
-		_, err = d.DB.ExecContext(ctx,
-			`insert into metrics (NAME, TYPE, VALUE ) values (@name, @type, @value )`,
-			sql.Named("name", metric.ID),
+		query := `insert into metrics (NAME, TYPE, HASH, VALUE, DELTA) values (@name, @type, @hash, @value, @delta)`
 
+		_, err = d.DB.ExecContext(ctx,
+			query,
+			sql.Named("name", metric.ID),
+			sql.Named("hash", metric.Hash),
 			sql.Named("type", metric.MType),
 			sql.Named("value", metric.Value),
+			sql.Named("delta", metric.Delta),
 		)
 		if err != nil {
 			log.Println("insert row into table went wrong, ", err)
