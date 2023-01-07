@@ -33,10 +33,17 @@ func main() {
 
 	router := routers.NewRouter(handler)
 
+	read, _ := file.NewRead(cfg, str)
+
+	if cfg.Restore {
+		read.ReadAll()
+	}
+
 	if db != nil {
 
 		log.Println(cfg.DB)
 		db.CreateTable()
+		log.Println("Table is already exists")
 
 		go db.Run()
 		log.Println(http.ListenAndServe(cfg.Address, router))
@@ -44,12 +51,6 @@ func main() {
 	}
 
 	save := file.NewSave(cfg, str)
-
-	read, _ := file.NewRead(cfg, str)
-
-	if cfg.Restore {
-		read.ReadAll()
-	}
 
 	go save.Run()
 	log.Println(http.ListenAndServe(cfg.Address, router))

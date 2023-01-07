@@ -42,7 +42,7 @@ func (d *DB) CreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 10*time.Second)
 	defer cancel()
 
-	query := "CREATE TABLE IF NOT EXISTS metrics (id VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta INTEGER);"
+	query := "CREATE TABLE IF NOT EXISTS metrics (id VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta BIGINT);"
 
 	r, err := d.DB.ExecContext(ctx, query)
 	if err != nil {
@@ -70,14 +70,14 @@ func (d *DB) WriteAll() (err error) {
 			metric.Value = v.Value
 			metric.Delta = nil
 
-			_, err = d.DB.ExecContext(ctx,
+			r, err := d.DB.ExecContext(ctx,
 				`INSERT INTO metrics 
     				(id, type, hash, value) 
 					VALUES ($1, $2, $3, $4)`,
 				metric.ID, metric.MType, metric.Hash, float64(*metric.Value),
 			)
 			if err != nil {
-				log.Println("insert row into table went wrong, ", err)
+				log.Println("insert row into table went wrong, ", err, r)
 				return
 			}
 
@@ -85,21 +85,20 @@ func (d *DB) WriteAll() (err error) {
 			metric.Value = nil
 			metric.Delta = v.Delta
 
-			_, err = d.DB.ExecContext(ctx,
+			r, err := d.DB.ExecContext(ctx,
 				`INSERT INTO metrics 
     				(id, type, hash, delta) 
 					VALUES ($1, $2, $3, $4)`,
 				metric.ID, metric.MType, metric.Hash, int(*metric.Delta),
 			)
 			if err != nil {
-				log.Println("insert row into table went wrong, ", err)
-				return
+				log.Println("insert row into table went wrong, ", err, r)
 			}
 		}
 
 	}
 
-	return d.Close()
+	return nil
 }
 
 func (d *DB) Run() error {
