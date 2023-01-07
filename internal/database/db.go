@@ -63,6 +63,7 @@ func (d *DB) WriteAll() (err error) {
 		metric.ID = k
 		metric.MType = v.MType
 
+		log.Println("! ! ! Отправка в БД ! ! ! ")
 		switch v.MType {
 
 		case "gauge":
@@ -94,8 +95,8 @@ func (d *DB) WriteAll() (err error) {
 				log.Println("insert row into table went wrong, ", err)
 				return
 			}
-
 		}
+
 	}
 
 	return d.Close()
