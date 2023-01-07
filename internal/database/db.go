@@ -41,13 +41,16 @@ func (d *DB) CreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
-	_, err := d.DB.ExecContext(ctx, `create table metrics ( 
-		name varchar(30), 
+	query := `create table metrics ( 
+		name varchar(30),
 		type varchar(10), 
-		hash varchar(100), 
+
 		value double precision, 
-		delta integer
-		);`)
+
+		);
+	`
+
+	_, err := d.DB.ExecContext(ctx, query)
 	if err != nil {
 		log.Println("Field to create db table")
 	}
@@ -77,12 +80,11 @@ func (d *DB) WriteAll() (err error) {
 		}
 
 		_, err = d.DB.ExecContext(ctx,
-			`insert into metrics (NAME, TYPE, HASH, VALUE, DELTA) values (@name, @type, @hash, @value, @delta)`,
+			`insert into metrics (NAME, TYPE, VALUE ) values (@name, @type, @value )`,
 			sql.Named("name", metric.ID),
-			sql.Named("hash", metric.Hash),
+
 			sql.Named("type", metric.MType),
 			sql.Named("value", metric.Value),
-			sql.Named("delta", metric.Delta),
 		)
 		if err != nil {
 			log.Println("insert row into table went wrong, ", err)
