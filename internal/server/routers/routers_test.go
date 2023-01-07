@@ -25,7 +25,7 @@ func TestNewRouter(t *testing.T) {
 	mem := storage.NewStorage()
 	cpr := middleware.NewCompressor()
 	hsr := hashing.MewHash(cfg.Key)
-	db := database.NewDB(cfg, ctx)
+	db := database.NewDB(cfg, ctx, mem)
 	handler := handlers.NewHandler(mem, cpr, hsr, db, ctx)
 
 	value := storage.Gauge(123)
