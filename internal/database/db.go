@@ -78,7 +78,7 @@ func (d *DB) WriteAll() (err error) {
 			)
 			if err != nil {
 				log.Println("insert row into table went wrong, ", err, r)
-				return
+
 			}
 
 		case "counter":
