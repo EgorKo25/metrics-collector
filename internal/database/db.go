@@ -38,27 +38,15 @@ func NewDB(cfg *config.ConfigurationServer, ctx context.Context, str *storage.Me
 	}
 }
 
-func (d *DB) CreateDB() {
-	ctx, cancel := context.WithTimeout(d.ctx, 10*time.Second)
-	defer cancel()
-
-	query := "CREATE DATABASE Storage"
-
-	_, err := d.DB.ExecContext(ctx, query)
-	if err != nil {
-		log.Println("Field to create db")
-	}
-}
-
 func (d *DB) CreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 10*time.Second)
 	defer cancel()
 
 	query := "CREATE TABLE metrics (id VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta INTEGER);"
 
-	_, err := d.DB.ExecContext(ctx, query)
+	r, err := d.DB.ExecContext(ctx, query)
 	if err != nil {
-		log.Println("Field to create db table")
+		log.Println("Field to create db table ", err, r)
 	}
 }
 func (d *DB) Close() error {

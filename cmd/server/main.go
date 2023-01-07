@@ -26,6 +26,7 @@ func main() {
 	hsr := hashing.MewHash(cfg.Key)
 
 	db := database.NewDB(cfg, ctx, str)
+	log.Println(db)
 
 	compressor := middleware.NewCompressor()
 
@@ -35,7 +36,6 @@ func main() {
 
 	if db != nil {
 
-		db.CreateDB()
 		db.CreateTable()
 
 		go db.Run()
@@ -43,17 +43,15 @@ func main() {
 
 	}
 
-	if db == nil {
-		save := file.NewSave(cfg, str)
+	save := file.NewSave(cfg, str)
 
-		read, _ := file.NewRead(cfg, str)
+	read, _ := file.NewRead(cfg, str)
 
-		if cfg.Restore {
-			read.ReadAll()
-		}
-
-		go save.Run()
-		log.Println(http.ListenAndServe(cfg.Address, router))
+	if cfg.Restore {
+		read.ReadAll()
 	}
+
+	go save.Run()
+	log.Println(http.ListenAndServe(cfg.Address, router))
 
 }
