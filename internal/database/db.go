@@ -74,7 +74,7 @@ func (d *DB) WriteAll() (err error) {
 		}
 
 		d.DB.ExecContext(ctx,
-			"INSERT INTO metrics (@name, @type, @hash, @value, @delta)",
+			"INSERT INTO metrics (NAME, TYPE, HASH, VALUE, DELTA) VALUES (@name, @type, @hash, @value, @delta)",
 			sql.Named("name", metric.ID),
 			sql.Named("type", metric.MType),
 			sql.Named("hash", metric.Hash),
