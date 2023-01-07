@@ -34,7 +34,7 @@ func main() {
 
 	router := routers.NewRouter(handler)
 
-	if db != nil {
+	if db != nil && cfg.StoreFile == "" {
 
 		log.Println(cfg.DB)
 		db.CreateTable()

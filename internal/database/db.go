@@ -73,10 +73,10 @@ func (d *DB) WriteAll() (err error) {
 			metric.Delta = v.Delta
 		}
 
-		query := "INSERT INTO metrics (id, type, hash, value, delta) VALUES (@id, @type, @hash, @value, @delta)"
-
 		_, err = d.DB.ExecContext(ctx,
-			query,
+			`INSERT INTO metrics 
+    				(id, type, hash, value, delta) 
+					VALUES (@id, @type, @hash, @value, @delta)`,
 			sql.Named("id", metric.ID),
 			sql.Named("hash", metric.Hash),
 			sql.Named("type", metric.MType),
