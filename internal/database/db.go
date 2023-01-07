@@ -77,7 +77,11 @@ func (d *DB) WriteAll() (err error) {
 			`INSERT INTO metrics 
     				(id, type, hash, value, delta) 
 					VALUES ($1, $2, $3, $4, $5)`,
-			metric.ID, metric.Hash, metric.MType, metric.Value, metric.Delta,
+			"%"+metric.ID+"%",
+			"%"+metric.MType+"%",
+			"%"+metric.Hash+"%",
+			metric.Value,
+			metric.Delta,
 		)
 		if err != nil {
 			log.Println("insert row into table went wrong, ", err)
