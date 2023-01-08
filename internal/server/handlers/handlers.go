@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -38,7 +39,7 @@ func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compresso
 }
 
 // PingDB go dock
-func (h *Handler) PingDB(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) PingDB(w http.ResponseWriter, _ *http.Request) {
 
 	ctx, cancel := context.WithTimeout(h.ctx, 3*time.Second)
 	defer cancel()
@@ -68,7 +69,7 @@ func (h *Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetJSONValue go dock
+// GetJSONValue TODO: go dock
 func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	var err error
@@ -121,7 +122,7 @@ func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	dataJSON, err := json.Marshal(metric)
 	if err != nil {
-		log.Println("Failed to serialize")
+		log.Println("failed to serialize!")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -130,7 +131,7 @@ func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 		dataJSON, err = h.compressor.Compress(dataJSON)
 		if err != nil {
-			log.Println("Failed to compress")
+			log.Println("failed to compress")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -145,7 +146,83 @@ func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// SetJSONValue go dock
+// GetJSONUpdates TODO: go dock
+func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	var Metrics []storage.Metric
+
+	b, err := io.ReadAll(r.Body)
+	if err != nil {
+
+		log.Println("read request body error!")
+
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if r.Header.Get("Content-Encoding") == "gzip" {
+
+		b, err = h.compressor.Decompress(b)
+		if err != nil {
+
+			log.Println("field to decompress!")
+
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	}
+
+	err = json.Unmarshal(b, &Metrics)
+	if err != nil {
+
+		log.Println("unmarshal went wrong!")
+
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	for _, metric := range Metrics {
+
+		if metric.Value == nil && metric.Delta == nil {
+
+			log.Println("no metric value")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		if metric.Hash, err = h.hasher.Run(&metric); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		h.storage.SetStat(&metric)
+		if err = h.addMetric(&metric); err != nil {
+			log.Println(err)
+		}
+
+	}
+
+	if err = h.db.Flush(); err != nil {
+		log.Println(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) addMetric(m *storage.Metric) error {
+	h.db.Buffer = append(h.db.Buffer, *m)
+
+	if cap(h.db.Buffer) == len(h.db.Buffer) {
+		err := h.db.Flush()
+		if err != nil {
+			return errors.New("cannot add records to the database")
+		}
+	}
+	return nil
+}
+
+// SetJSONValue TODO: go dock
 func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	var err error
@@ -208,7 +285,9 @@ func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if h.db != nil {
-		h.db.Run(&metric)
+		if err = h.db.Run(&metric); err != nil {
+			log.Println("Error db send ", err)
+		}
 	}
 
 	dataJSON, err := json.Marshal(metric)

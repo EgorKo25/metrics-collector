@@ -28,7 +28,7 @@ func main() {
 	db := database.NewDB(cfg, ctx, str)
 
 	if db != nil {
-		db.СreateTable()
+		db.CreateTable()
 	}
 
 	compressor := middleware.NewCompressor()

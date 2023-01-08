@@ -12,9 +12,6 @@ type Storagier interface {
 
 // MetricStorage storage for runtime metric
 type MetricStorage struct {
-	MetricsGauge   map[string]Gauge
-	MetricsCounter map[string]Counter
-
 	Metrics map[string]Metric
 }
 
@@ -29,8 +26,6 @@ type Metric struct {
 // NewStorage storage type constructor
 func NewStorage() *MetricStorage {
 	var m MetricStorage
-	m.MetricsCounter = make(map[string]Counter)
-	m.MetricsGauge = make(map[string]Gauge)
 
 	m.Metrics = make(map[string]Metric)
 	return &m
@@ -51,11 +46,6 @@ func (m *MetricStorage) SetStat(metric *Metric) {
 		*metric.Delta = *tmp + *metric.Delta
 		m.Metrics[metric.ID] = *metric
 	}
-}
-
-// GetAllStats () return: all stats from storage
-func (m *MetricStorage) GetAllStats() (map[string]Gauge, map[string]Counter) {
-	return m.MetricsGauge, m.MetricsCounter
 }
 
 // StatStatusM (name) return: value

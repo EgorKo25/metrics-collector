@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 	"log"
 	"time"
@@ -18,6 +19,8 @@ type DB struct {
 	ctx context.Context
 	cfg *config.ConfigurationServer
 	str *storage.MetricStorage
+
+	Buffer []storage.Metric
 }
 
 func NewDB(cfg *config.ConfigurationServer, ctx context.Context, str *storage.MetricStorage) *DB {
@@ -31,14 +34,15 @@ func NewDB(cfg *config.ConfigurationServer, ctx context.Context, str *storage.Me
 	}
 
 	return &DB{
-		DB:  conn,
-		ctx: ctx,
-		cfg: cfg,
-		str: str,
+		DB:     conn,
+		ctx:    ctx,
+		cfg:    cfg,
+		str:    str,
+		Buffer: make([]storage.Metric, 0, 29),
 	}
 }
 
-func (d *DB) СreateTable() {
+func (d *DB) CreateTable() {
 	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
@@ -52,12 +56,82 @@ func (d *DB) СreateTable() {
 func (d *DB) Close() error {
 	return d.DB.Close()
 }
+
+// Flush TODO: go dock
+func (d *DB) Flush() (err error) {
+
+	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
+	defer cancel()
+
+	if d.DB == nil {
+		return errors.New("you haven`t opened the database connection")
+	}
+
+	tx, err := d.DB.Begin()
+	if err != nil {
+		return err
+	}
+
+	var stmt *sql.Stmt
+	defer stmt.Close()
+
+	for _, v := range d.Buffer {
+
+		switch v.MType {
+		case "gauge":
+			query := `INSERT INTO metrics 
+    				(id, type, hash, value) 
+					VALUES ($1, $2, $3, $4)`
+
+			stmt, err = tx.PrepareContext(ctx, query)
+			if err != nil {
+				return err
+			}
+
+			if _, err = stmt.ExecContext(ctx, v.ID, v.MType, v.Hash, float64(*v.Value)); err != nil {
+				if err = tx.Rollback(); err != nil {
+					log.Printf("update drivers: unable to rollback: %v", err)
+				}
+				return err
+			}
+
+		case "counter":
+			query := `INSERT INTO metrics 
+    				(id, type, hash, delta) 
+					VALUES ($1, $2, $3, $4)`
+
+			stmt, err = tx.PrepareContext(ctx, query)
+			if err != nil {
+				return err
+			}
+
+			if _, err = stmt.ExecContext(ctx, v.ID, v.MType, v.Hash, int(*v.Delta)); err != nil {
+				if err = tx.Rollback(); err != nil {
+					log.Printf("update drivers: unable to rollback: %v", err)
+				}
+				return err
+			}
+
+		}
+
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Printf("update drivers: unable to commit: %v", err)
+		return err
+	}
+
+	d.Buffer = d.Buffer[:0]
+	return nil
+
+}
+
+// Run TODO: go dock
 func (d *DB) Run(metric *storage.Metric) (err error) {
 
 	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
 	defer cancel()
 
-	log.Println("! ! ! Отправка в БД ! ! ! ")
 	switch metric.MType {
 
 	case "gauge":
