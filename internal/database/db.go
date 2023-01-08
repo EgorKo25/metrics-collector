@@ -116,7 +116,7 @@ func (d *DB) Flush() (err error) {
 
 	}
 
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		log.Printf("update drivers: unable to commit: %v", err)
 		return err
 	}
