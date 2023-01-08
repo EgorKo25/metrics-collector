@@ -90,7 +90,7 @@ func (d *DB) Flush() (err error) {
 
 			if _, err = stmt.ExecContext(ctx, v.ID, v.MType, v.Hash, float64(*v.Value)); err != nil {
 				if err = tx.Rollback(); err != nil {
-					log.Printf("update drivers: unable to rollback: %v", err)
+					log.Println("update drivers: unable to rollback: ", err)
 				}
 				return err
 			}
@@ -107,7 +107,7 @@ func (d *DB) Flush() (err error) {
 
 			if _, err = stmt.ExecContext(ctx, v.ID, v.MType, v.Hash, int(*v.Delta)); err != nil {
 				if err = tx.Rollback(); err != nil {
-					log.Printf("update drivers: unable to rollback: %v", err)
+					log.Println("update drivers: unable to rollback: ", err)
 				}
 				return err
 			}
@@ -117,7 +117,7 @@ func (d *DB) Flush() (err error) {
 	}
 
 	if err = tx.Commit(); err != nil {
-		log.Printf("update drivers: unable to commit: %v", err)
+		log.Println("update drivers: unable to commit: ", err)
 		return err
 	}
 
@@ -135,28 +135,28 @@ func (d *DB) Run(metric *storage.Metric) (err error) {
 	switch metric.MType {
 
 	case "gauge":
-		r, err := d.DB.ExecContext(ctx,
+		_, err = d.DB.ExecContext(ctx,
 			`INSERT INTO metrics 
     				(id, type, hash, value) 
 					VALUES ($1, $2, $3, $4)`,
 			metric.ID, metric.MType, metric.Hash, float64(*metric.Value),
 		)
 		if err != nil {
-			log.Println("insert row into table went wrong, ", err, r)
+			log.Println("insert row into table went wrong, ", err)
 			return err
 
 		}
 
 	case "counter":
 
-		r, err := d.DB.ExecContext(ctx,
+		_, err = d.DB.ExecContext(ctx,
 			`INSERT INTO metrics 
     				(id, type, hash, delta) 
 					VALUES ($1, $2, $3, $4)`,
 			metric.ID, metric.MType, metric.Hash, int(*metric.Delta),
 		)
 		if err != nil {
-			log.Println("insert row into table went wrong, ", err, r)
+			log.Println("insert row into table went wrong, ", err)
 			return err
 		}
 	}
