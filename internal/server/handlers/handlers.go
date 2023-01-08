@@ -203,10 +203,6 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	if err = h.db.Flush(); err != nil {
-		log.Println(err)
-	}
-
 	w.WriteHeader(http.StatusOK)
 }
 
