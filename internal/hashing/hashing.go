@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
+	"log"
 )
 
 type Hash struct {
@@ -27,6 +28,9 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 	case "counter":
 		src = fmt.Sprintf("%s:%s:%d", metric.ID, metric.MType, *metric.Delta)
 	}
+
+	log.Println("Data: ", src)
+	log.Println("Key: ", h.Key)
 
 	if h.Key == nil {
 		return "", nil
