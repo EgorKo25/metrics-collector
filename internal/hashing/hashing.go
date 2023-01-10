@@ -30,7 +30,7 @@ func (h *Hash) Run(metric *storage.Metric) (hash string, err error) {
 	}
 
 	log.Println("Data: ", src)
-	log.Println("Key: ", h.Key)
+	log.Printf("Key: %x", h.Key)
 
 	if h.Key == nil {
 		return "", nil
