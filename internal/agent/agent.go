@@ -3,7 +3,6 @@ package agent
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"log"
 	"math/rand"
 	"net/http"
@@ -12,6 +11,7 @@ import (
 	"time"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
@@ -23,10 +23,10 @@ type Monitor struct {
 }
 
 func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash) *Monitor {
-	var mon Monitor
-	mon.config = cfg
-	mon.hasher = hsr
-	return &mon
+	return &Monitor{
+		config: cfg,
+		hasher: hsr,
+	}
 
 }
 
