@@ -61,7 +61,7 @@ func (d *DB) Close() error {
 	return d.DB.Close()
 }
 
-// FlushWithContext TODO: go dock
+// FlushWithContext sends a transaction to the database
 func (d *DB) FlushWithContext(ctx context.Context) (err error) {
 
 	childCtx, cancel := context.WithTimeout(ctx, 3*time.Second)
@@ -135,16 +135,16 @@ func (d *DB) FlushWithContext(ctx context.Context) (err error) {
 
 }
 
-// Run TODO: go dock
+// Run inserts a metric into db
 func (d *DB) Run(ctx context.Context, metric *storage.Metric) (err error) {
 
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	childCtx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	switch metric.MType {
 
 	case "gauge":
-		_, err = d.DB.ExecContext(ctx,
+		_, err = d.DB.ExecContext(childCtx,
 			`INSERT INTO metrics 
     				(id, type, hash, value) 
 					VALUES ($1, $2, $3, $4)`,
@@ -158,7 +158,7 @@ func (d *DB) Run(ctx context.Context, metric *storage.Metric) (err error) {
 
 	case "counter":
 
-		_, err = d.DB.ExecContext(ctx,
+		_, err = d.DB.ExecContext(childCtx,
 			`INSERT INTO metrics 
     				(id, type, hash, delta) 
 					VALUES ($1, $2, $3, $4)`,
