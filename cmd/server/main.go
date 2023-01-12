@@ -1,11 +1,13 @@
 package main
 
 import (
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
 	"log"
 	"net/http"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
@@ -13,14 +15,17 @@ import (
 )
 
 func main() {
-
 	cfg := config.NewServerConfig()
 
 	str := storage.NewStorage()
 
+	hsr := hashing.NewHash(cfg.Key)
+
+	db := database.NewDB(cfg, str)
+
 	compressor := middleware.NewCompressor()
 
-	handler := handlers.NewHandler(str, compressor)
+	handler := handlers.NewHandler(str, compressor, hsr, db)
 
 	router := routers.NewRouter(handler)
 
@@ -29,9 +34,19 @@ func main() {
 	read, _ := file.NewRead(cfg, str)
 
 	if cfg.Restore {
-		read.ReadAll()
+		_, err := read.ReadAll()
+		if err != nil {
+			log.Println("file read error: ", err)
+		}
 	}
 
-	go save.Run()
+	go func() {
+		err := save.Run()
+		if err != nil {
+			log.Println("save file error: ", err)
+		}
+	}()
+
 	log.Println(http.ListenAndServe(cfg.Address, router))
+
 }

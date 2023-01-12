@@ -1,11 +1,14 @@
 package routers
 
 import (
+	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
@@ -16,9 +19,12 @@ import (
 
 func TestNewRouter(t *testing.T) {
 
+	cfg := config.NewServerConfig()
 	mem := storage.NewStorage()
 	cpr := middleware.NewCompressor()
-	handler := handlers.NewHandler(mem, cpr)
+	hsr := hashing.NewHash(cfg.Key)
+	db := database.NewDB(cfg, mem)
+	handler := handlers.NewHandler(mem, cpr, hsr, db)
 
 	value := storage.Gauge(123)
 	metric := storage.Metric{
@@ -34,9 +40,6 @@ func TestNewRouter(t *testing.T) {
 
 	mem.SetStat(&metric)
 
-	/*
-		mem.SetGaugeStat("Alloc", storage.Gauge(123), "gauge")
-	*/
 	statusCode, body := testRequest(t, ts, "GET", "/")
 	assert.Equal(t, http.StatusOK, statusCode)
 	assert.Equal(t, "> Alloc:  123.000000\n", body)
