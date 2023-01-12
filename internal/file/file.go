@@ -3,6 +3,7 @@ package file
 import (
 	"bufio"
 	"encoding/json"
+	"io"
 	"log"
 	"os"
 	"time"
@@ -120,6 +121,10 @@ func (r *Read) readAll() (err error) {
 		}
 
 		if err = json.Unmarshal(data, &metric); err != nil {
+			if err == io.EOF {
+				break
+			}
+
 			return err
 		}
 
@@ -134,4 +139,5 @@ func (r *Read) readAll() (err error) {
 
 	}
 
+	return nil
 }
