@@ -31,13 +31,13 @@ func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash) *Monitor {
 }
 
 // sendData go dock
-func (m *Monitor) sendData(value storage.Gauge, name, Mtype string) {
+func (m *Monitor) sendData(value storage.Gauge, name, mtype string) {
 	var metric storage.Metric
 
 	metric.ID = name
-	metric.MType = Mtype
+	metric.MType = mtype
 
-	switch Mtype {
+	switch mtype {
 
 	case "counter":
 		tmp := storage.Counter(value)

@@ -12,7 +12,7 @@ type Hash struct {
 	Key []byte
 }
 
-func MewHash(cfg string) *Hash {
+func NewHash(cfg string) *Hash {
 	return &Hash{
 		Key: []byte(cfg),
 	}

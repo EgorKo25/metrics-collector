@@ -16,39 +16,43 @@ import (
 
 type DB struct {
 	DB  *sql.DB
-	ctx context.Context
 	cfg *config.ConfigurationServer
 	str *storage.MetricStorage
 
 	Buffer []storage.Metric
 }
 
-func NewDB(cfg *config.ConfigurationServer, ctx context.Context, str *storage.MetricStorage) *DB {
+func NewDB(cfg *config.ConfigurationServer, str *storage.MetricStorage) *DB {
+
+	ctx := context.Background()
+
 	if cfg.DB == "" {
 		return nil
 	}
 
-	conn, err := sql.Open("pgx", cfg.DB)
+	db, err := sql.Open("pgx", cfg.DB)
 	if err != nil {
 		log.Println(err)
 	}
 
+	createTableWithContext(ctx, db)
+
 	return &DB{
-		DB:     conn,
-		ctx:    ctx,
+		DB:     db,
 		cfg:    cfg,
 		str:    str,
 		Buffer: make([]storage.Metric, 0, 29),
 	}
 }
 
-func (d *DB) CreateTable() {
-	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
+func createTableWithContext(ctx context.Context, db *sql.DB) {
+
+	childCtx, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
 
 	query := "CREATE TABLE IF NOT EXISTS metrics (id VARCHAR(30), type VARCHAR(10), hash VARCHAR(100), value DOUBLE PRECISION, delta BIGINT);"
 
-	r, err := d.DB.ExecContext(ctx, query)
+	r, err := db.ExecContext(childCtx, query)
 	if err != nil {
 		log.Println("Field to create db table ", err, r)
 	}
@@ -57,10 +61,10 @@ func (d *DB) Close() error {
 	return d.DB.Close()
 }
 
-// Flush TODO: go dock
-func (d *DB) Flush() (err error) {
+// FlushWithContext TODO: go dock
+func (d *DB) FlushWithContext(ctx context.Context) (err error) {
 
-	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
+	childCtx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	if d.DB == nil {
@@ -73,7 +77,12 @@ func (d *DB) Flush() (err error) {
 	}
 
 	var stmt *sql.Stmt
-	defer stmt.Close()
+	defer func() {
+		err = stmt.Close()
+		if err != nil {
+			log.Println("Statement error: ", err)
+		}
+	}()
 
 	for _, v := range d.Buffer {
 
@@ -83,12 +92,12 @@ func (d *DB) Flush() (err error) {
     				(id, type, hash, value) 
 					VALUES ($1, $2, $3, $4)`
 
-			stmt, err = tx.PrepareContext(ctx, query)
+			stmt, err = tx.PrepareContext(childCtx, query)
 			if err != nil {
 				return err
 			}
 
-			if _, err = stmt.ExecContext(ctx, v.ID, v.MType, v.Hash, float64(*v.Value)); err != nil {
+			if _, err = stmt.ExecContext(childCtx, v.ID, v.MType, v.Hash, float64(*v.Value)); err != nil {
 				if err = tx.Rollback(); err != nil {
 					log.Println("update drivers: unable to rollback: ", err)
 				}
@@ -100,12 +109,12 @@ func (d *DB) Flush() (err error) {
     				(id, type, hash, delta) 
 					VALUES ($1, $2, $3, $4)`
 
-			stmt, err = tx.PrepareContext(ctx, query)
+			stmt, err = tx.PrepareContext(childCtx, query)
 			if err != nil {
 				return err
 			}
 
-			if _, err = stmt.ExecContext(ctx, v.ID, v.MType, v.Hash, int(*v.Delta)); err != nil {
+			if _, err = stmt.ExecContext(childCtx, v.ID, v.MType, v.Hash, int(*v.Delta)); err != nil {
 				if err = tx.Rollback(); err != nil {
 					log.Println("update drivers: unable to rollback: ", err)
 				}
@@ -127,9 +136,9 @@ func (d *DB) Flush() (err error) {
 }
 
 // Run TODO: go dock
-func (d *DB) Run(metric *storage.Metric) (err error) {
+func (d *DB) Run(ctx context.Context, metric *storage.Metric) (err error) {
 
-	ctx, cancel := context.WithTimeout(d.ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	switch metric.MType {

@@ -9,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
@@ -24,25 +23,22 @@ type Handler struct {
 	compressor *middleware.Compressor
 	hasher     *hashing.Hash
 	db         *database.DB
-	ctx        context.Context
 }
 
 // NewHandler handler type constructor
-func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB, ctx context.Context) *Handler {
+func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB) *Handler {
 	return &Handler{
 		storage:    storage,
 		compressor: compressor,
 		hasher:     hasher,
 		db:         db,
-		ctx:        ctx,
 	}
 }
 
 // PingDB go dock
 func (h *Handler) PingDB(w http.ResponseWriter, _ *http.Request) {
 
-	ctx, cancel := context.WithTimeout(h.ctx, 3*time.Second)
-	defer cancel()
+	ctx := context.Background()
 
 	if err := h.db.DB.PingContext(ctx); err != nil {
 		log.Println("database didn't open")
@@ -149,6 +145,8 @@ func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 // GetJSONUpdates TODO: go dock
 func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 
+	ctx := context.Background()
+
 	var err error
 	var Metrics []storage.Metric
 
@@ -197,7 +195,7 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 		}
 
 		h.storage.SetStat(&metric)
-		if err = h.addMetric(&metric); err != nil {
+		if err = h.addMetric(ctx, &metric); err != nil {
 			log.Println(err)
 		}
 
@@ -206,11 +204,12 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *Handler) addMetric(m *storage.Metric) error {
+func (h *Handler) addMetric(ctx context.Context, m *storage.Metric) error {
+
 	h.db.Buffer = append(h.db.Buffer, *m)
 
 	if cap(h.db.Buffer) == len(h.db.Buffer) {
-		err := h.db.Flush()
+		err := h.db.FlushWithContext(ctx)
 		if err != nil {
 			return errors.New("cannot add records to the database")
 		}
@@ -220,6 +219,8 @@ func (h *Handler) addMetric(m *storage.Metric) error {
 
 // SetJSONValue TODO: go dock
 func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
+
+	ctx := context.Background()
 
 	var err error
 	var metric storage.Metric
@@ -281,7 +282,7 @@ func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if h.db != nil {
-		if err = h.db.Run(&metric); err != nil {
+		if err = h.db.Run(ctx, &metric); err != nil {
 			log.Println("Error db send ", err)
 		}
 	}
