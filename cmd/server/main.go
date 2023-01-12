@@ -31,17 +31,13 @@ func main() {
 
 	save := file.NewSave(cfg, str)
 
-	read, _ := file.NewRead(cfg, str)
-
-	if cfg.Restore {
-		_, err := read.ReadAll()
-		if err != nil {
-			log.Println("file read error: ", err)
-		}
+	_, err := file.NewRead(cfg, str)
+	if err != nil {
+		log.Println("file read error: ", err)
 	}
 
 	go func() {
-		err := save.Run()
+		err = save.Run()
 		if err != nil {
 			log.Println("save file error: ", err)
 		}
