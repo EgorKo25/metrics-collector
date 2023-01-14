@@ -113,7 +113,8 @@ func (m *Monitor) Run() {
 			m.sendData(storage.Gauge(mem.Sys), "Sys", "gauge")
 			m.sendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
 			m.sendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
-			m.sendData(storage.Gauge(stats.Free), "TotalMemory", "gauge")
+			m.sendData(storage.Gauge(stats.Free), "FreeMemory", "gauge")
+			log.Println(cpuinfo[1].CPU)
 			m.sendData(storage.Gauge(cpuinfo[0].CPU), "CPUutilization1", "gauge")
 		}
 	}
