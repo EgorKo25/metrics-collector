@@ -111,10 +111,9 @@ func NewRead(cfg *config.ConfigurationServer, strg *storage.MetricStorage) (*Rea
 
 func (r *Read) readAll() (err error) {
 
-	var data []byte
-	var metric storage.Metric
-
 	for {
+		var data []byte
+		var metric storage.Metric
 
 		if data, err = r.reader.ReadBytes('\n'); err != nil {
 			return err
@@ -127,17 +126,11 @@ func (r *Read) readAll() (err error) {
 		}
 
 		if err != io.EOF {
+			log.Println("/", err, "/", err == io.EOF)
 			return err
 		}
 
-		if metric.MType == "gauge" {
-			r.strg.Metrics[metric.ID] = metric
-		}
-
-		if metric.MType == "counter" {
-			r.strg.Metrics[metric.ID] = metric
-
-		}
+		r.strg.Metrics[metric.ID] = metric
 
 	}
 
