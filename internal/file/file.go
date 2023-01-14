@@ -124,10 +124,9 @@ func (r *Read) readAll() (err error) {
 		if err != nil {
 
 			if err == io.EOF {
-				break
+				return nil
 			}
 
-			log.Println("/", err, "/", err == io.EOF)
 			return err
 		}
 
@@ -135,5 +134,4 @@ func (r *Read) readAll() (err error) {
 
 	}
 
-	return nil
 }

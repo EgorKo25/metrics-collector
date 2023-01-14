@@ -19,6 +19,11 @@ func main() {
 
 	str := storage.NewStorage()
 
+	_, err := file.NewRead(cfg, str)
+	if err != nil {
+		log.Println("file read error: ", err)
+	}
+
 	hsr := hashing.NewHash(cfg.Key)
 
 	db := database.NewDB(cfg, str)
@@ -30,11 +35,6 @@ func main() {
 	router := routers.NewRouter(handler)
 
 	save := file.NewSave(cfg, str)
-
-	_, err := file.NewRead(cfg, str)
-	if err != nil {
-		log.Println("file read error: ", err)
-	}
 
 	go func() {
 		err = save.Run()
