@@ -121,11 +121,12 @@ func (r *Read) readAll() (err error) {
 
 		err = json.Unmarshal(data, &metric)
 
-		if err == io.EOF {
-			break
-		}
+		if err != nil {
 
-		if err != io.EOF {
+			if err == io.EOF {
+				break
+			}
+
 			log.Println("/", err, "/", err == io.EOF)
 			return err
 		}
