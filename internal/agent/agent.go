@@ -3,6 +3,8 @@ package agent
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/shirou/gopsutil/v3/cpu"
+	mems "github.com/shirou/gopsutil/v3/mem"
 	"log"
 	"math/rand"
 	"net/http"
@@ -65,13 +67,18 @@ func (m *Monitor) sendData(value storage.Gauge, name, mtype string) {
 }
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
+	var stats *mems.VirtualMemoryStat
+	var cpuinfo []cpu.InfoStat
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
 
 	for {
 		select {
+
 		case <-tickerPoll.C:
+			stats, _ = mems.VirtualMemory()
+			cpuinfo, _ = cpu.Info()
 			runtime.ReadMemStats(&mem)
 			m.pollCount++
 
@@ -105,7 +112,9 @@ func (m *Monitor) Run() {
 			m.sendData(storage.Gauge(mem.StackSys), "StackSys", "gauge")
 			m.sendData(storage.Gauge(mem.Sys), "Sys", "gauge")
 			m.sendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
-
+			m.sendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
+			m.sendData(storage.Gauge(stats.Free), "TotalMemory", "gauge")
+			m.sendData(storage.Gauge(cpuinfo[0].CPU), "CPUutilization1", "gauge")
 		}
 	}
 }
