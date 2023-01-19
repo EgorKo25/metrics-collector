@@ -78,10 +78,16 @@ func (m *Monitor) Run() {
 		select {
 
 		case <-tickerPoll.C:
-			stats, _ = mems.VirtualMemory()
-			cpuinfo, _ = cpu.Percent(0, false)
-			runtime.ReadMemStats(&mem)
-			m.pollCount++
+			go func() {
+				runtime.ReadMemStats(&mem)
+				m.pollCount++
+			}()
+
+			go func() {
+				stats, _ = mems.VirtualMemory()
+				cpuinfo, _ = cpu.Percent(0, false)
+				m.pollCount++
+			}()
 
 		case <-tickerReport.C:
 			m.sendData(storage.Gauge(m.pollCount), "PollCount", "counter")
