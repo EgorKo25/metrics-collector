@@ -3,6 +3,8 @@ package file
 import (
 	"bufio"
 	"encoding/json"
+	"io"
+	"log"
 	"os"
 	"time"
 
@@ -87,39 +89,49 @@ type Read struct {
 }
 
 func NewRead(cfg *config.ConfigurationServer, strg *storage.MetricStorage) (*Read, error) {
+
 	file, err := os.OpenFile(cfg.StoreFile, os.O_RDONLY|os.O_CREATE, 0777)
-	return &Read{
+
+	reader := &Read{
 		cfg:    cfg,
 		strg:   strg,
 		file:   file,
 		reader: bufio.NewReader(file),
-	}, err
+	}
+
+	if cfg.Restore {
+		err = reader.readAll()
+		if err != nil {
+			log.Println("file read error: ", err)
+		}
+	}
+
+	return reader, err
 }
 
-func (r *Read) ReadAll() (data []byte, err error) {
+func (r *Read) readAll() (err error) {
 
 	for {
-
+		var data []byte
 		var metric storage.Metric
 
 		if data, err = r.reader.ReadBytes('\n'); err != nil {
-			return nil, err
+			return err
 		}
 
-		if err = json.Unmarshal(data, &metric); err != nil {
-			return nil, err
+		err = json.Unmarshal(data, &metric)
+
+		if err != nil {
+
+			if err == io.EOF {
+				return nil
+			}
+
+			return err
 		}
 
-		if metric.MType == "gauge" {
-			r.strg.Metrics[metric.ID] = metric
-		}
-
-		if metric.MType == "counter" {
-			r.strg.Metrics[metric.ID] = metric
-
-		}
+		r.strg.Metrics[metric.ID] = metric
 
 	}
 
-	return
 }

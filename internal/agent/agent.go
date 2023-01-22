@@ -3,7 +3,6 @@ package agent
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"log"
 	"math/rand"
 	"net/http"
@@ -11,7 +10,11 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/shirou/gopsutil/v3/cpu"
+	mems "github.com/shirou/gopsutil/v3/mem"
+
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
@@ -23,10 +26,10 @@ type Monitor struct {
 }
 
 func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash) *Monitor {
-	var mon Monitor
-	mon.config = cfg
-	mon.hasher = hsr
-	return &mon
+	return &Monitor{
+		config: cfg,
+		hasher: hsr,
+	}
 
 }
 
@@ -65,15 +68,26 @@ func (m *Monitor) sendData(value storage.Gauge, name, mtype string) {
 }
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
+	var stats *mems.VirtualMemoryStat
+	var cpuinfo []float64
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
 
 	for {
 		select {
+
 		case <-tickerPoll.C:
-			runtime.ReadMemStats(&mem)
-			m.pollCount++
+			go func() {
+				runtime.ReadMemStats(&mem)
+				m.pollCount++
+			}()
+
+			go func() {
+				stats, _ = mems.VirtualMemory()
+				cpuinfo, _ = cpu.Percent(0, false)
+				m.pollCount++
+			}()
 
 		case <-tickerReport.C:
 			m.sendData(storage.Gauge(m.pollCount), "PollCount", "counter")
@@ -105,7 +119,9 @@ func (m *Monitor) Run() {
 			m.sendData(storage.Gauge(mem.StackSys), "StackSys", "gauge")
 			m.sendData(storage.Gauge(mem.Sys), "Sys", "gauge")
 			m.sendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
-
+			m.sendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
+			m.sendData(storage.Gauge(stats.Free), "FreeMemory", "gauge")
+			m.sendData(storage.Gauge(cpuinfo[0]), "CPUutilization1", "gauge")
 		}
 	}
 }
