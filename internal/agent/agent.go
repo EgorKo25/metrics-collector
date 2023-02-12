@@ -66,10 +66,22 @@ func (m *Monitor) sendData(value storage.Gauge, name, mtype string) {
 		log.Printf("Somethings went wrong: %s", err)
 	}
 }
+
+func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
+	runtime.ReadMemStats(mem)
+	m.pollCount++
+}
+
+func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
+	stats, _ = mems.VirtualMemory()
+	*cpuInfo, _ = cpu.Percent(0, false)
+	m.pollCount++
+}
+
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
 	var stats *mems.VirtualMemoryStat
-	var cpuinfo []float64
+	var cpuInfo []float64
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
@@ -78,16 +90,8 @@ func (m *Monitor) Run() {
 		select {
 
 		case <-tickerPoll.C:
-			go func() {
-				runtime.ReadMemStats(&mem)
-				m.pollCount++
-			}()
-
-			go func() {
-				stats, _ = mems.VirtualMemory()
-				cpuinfo, _ = cpu.Percent(0, false)
-				m.pollCount++
-			}()
+			go m.RunMemStatListener(&mem)
+			go m.RunVirtMemCpuListener(stats, &cpuInfo)
 
 		case <-tickerReport.C:
 			m.sendData(storage.Gauge(m.pollCount), "PollCount", "counter")
@@ -121,7 +125,7 @@ func (m *Monitor) Run() {
 			m.sendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
 			m.sendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
 			m.sendData(storage.Gauge(stats.Free), "FreeMemory", "gauge")
-			m.sendData(storage.Gauge(cpuinfo[0]), "CPUutilization1", "gauge")
+			m.sendData(storage.Gauge(cpuInfo[0]), "CPUutilization1", "gauge")
 		}
 	}
 }
