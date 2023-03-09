@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - inc-15
 
 jobs:
 
@@ -44,7 +45,7 @@ jobs:
 
       - name: Build agent binary
         run: |
-          cd cmd/agent
+          cd cmd/agent -buildvcs=false
           go build -buildvcs=false -o agent
 
 # Соглашение:
