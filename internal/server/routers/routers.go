@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
