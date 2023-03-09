@@ -1,0 +1,954 @@
+heap profile: 138: 409296 [206: 2179320] @ heap/1048576
+29: 118784 [29: 118784] @ 0x653c69 0x653c2e 0x6516f0 0x46b301
+#	0x653c68	bufio.NewWriterSize+0x1648		/usr/lib/go/src/bufio/bufio.go:593
+#	0x653c2d	net/http.(*Transport).dialConn+0x160d	/usr/lib/go/src/net/http/transport.go:1749
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+26: 106496 [26: 106496] @ 0x653afd 0x653a8b 0x6516f0 0x46b301
+#	0x653afc	bufio.NewReaderSize+0x14dc		/usr/lib/go/src/bufio/bufio.go:57
+#	0x653a8a	net/http.(*Transport).dialConn+0x146a	/usr/lib/go/src/net/http/transport.go:1748
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+22: 90112 [22: 90112] @ 0x637e77 0x637e22 0x637f2d 0x63d445 0x46b301
+#	0x637e76	bufio.NewReaderSize+0x1f6	/usr/lib/go/src/bufio/bufio.go:57
+#	0x637e21	bufio.NewReader+0x1a1		/usr/lib/go/src/bufio/bufio.go:63
+#	0x637f2c	net/http.newBufioReader+0x2ac	/usr/lib/go/src/net/http/server.go:831
+#	0x63d444	net/http.(*conn).serve+0x284	/usr/lib/go/src/net/http/server.go:1912
+
+21: 86016 [21: 86016] @ 0x638285 0x63825b 0x63d487 0x46b301
+#	0x638284	bufio.NewWriterSize+0x1a4		/usr/lib/go/src/bufio/bufio.go:593
+#	0x63825a	net/http.newBufioWriterSize+0x17a	/usr/lib/go/src/net/http/server.go:848
+#	0x63d486	net/http.(*conn).serve+0x2c6		/usr/lib/go/src/net/http/server.go:1913
+
+6: 2496 [6: 2496] @ 0x443428 0x4436de 0x443605 0x469149
+#	0x443427	runtime.malg+0x27		/usr/lib/go/src/runtime/proc.go:4076
+#	0x4436dd	runtime.newproc1+0x7d		/usr/lib/go/src/runtime/proc.go:4123
+#	0x443604	runtime.newproc.func1+0x24	/usr/lib/go/src/runtime/proc.go:4098
+#	0x469148	runtime.systemstack+0x48	/usr/lib/go/src/runtime/asm_amd64.s:492
+
+1: 1024 [1: 1024] @ 0x43e3de 0x43ec1b 0x43f28f 0x43f7fa 0x4411c5 0x441605 0x43dbcd 0x43dad9 0x469045
+#	0x43e3dd	runtime.allocm+0x9d		/usr/lib/go/src/runtime/proc.go:1759
+#	0x43ec1a	runtime.newm+0x3a		/usr/lib/go/src/runtime/proc.go:2109
+#	0x43f28e	runtime.startm+0xce		/usr/lib/go/src/runtime/proc.go:2325
+#	0x43f7f9	runtime.wakep+0x59		/usr/lib/go/src/runtime/proc.go:2430
+#	0x4411c4	runtime.resetspinning+0x44	/usr/lib/go/src/runtime/proc.go:3110
+#	0x441604	runtime.schedule+0xe4		/usr/lib/go/src/runtime/proc.go:3220
+#	0x43dbcc	runtime.mstart1+0xcc		/usr/lib/go/src/runtime/proc.go:1432
+#	0x43dad8	runtime.mstart0+0x78		/usr/lib/go/src/runtime/proc.go:1382
+#	0x469044	runtime.mstart+0x4		/usr/lib/go/src/runtime/asm_amd64.s:390
+
+2: 576 [2: 576] @ 0x6527c8 0x6516f0 0x46b301
+#	0x6527c7	net/http.(*Transport).dialConn+0x1a7	/usr/lib/go/src/net/http/transport.go:1565
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+3: 432 [3: 432] @ 0x410343 0x48a80b 0x48a605 0x63957e 0x63d505 0x46b301
+#	0x48a80a	context.propagateCancel+0x10a		/usr/lib/go/src/context/context.go:273
+#	0x48a604	context.WithCancel+0xc4			/usr/lib/go/src/context/context.go:237
+#	0x63957d	net/http.(*conn).readRequest+0x77d	/usr/lib/go/src/net/http/server.go:1029
+#	0x63d504	net/http.(*conn).serve+0x344		/usr/lib/go/src/net/http/server.go:1916
+
+3: 288 [3: 288] @ 0x656010 0x46b301
+#	0x65600f	net/http.(*persistConn).readLoop+0xef	/usr/lib/go/src/net/http/transport.go:2082
+
+1: 288 [1: 288] @ 0x40f518 0x4147d3 0x5d6b79 0x471d22 0x5d6a2a 0x5d6a0d 0x5d63a5 0x633f1c 0x63904a 0x63d505 0x46b301
+#	0x5d6b78	net/textproto.initCommonHeader+0xb8		/usr/lib/go/src/net/textproto/reader.go:704
+#	0x471d21	sync.(*Once).doSlow+0xc1			/usr/lib/go/src/sync/once.go:74
+#	0x5d6a29	sync.(*Once).Do+0xc9				/usr/lib/go/src/sync/once.go:65
+#	0x5d6a0c	net/textproto.canonicalMIMEHeaderKey+0xac	/usr/lib/go/src/net/textproto/reader.go:646
+#	0x5d63a4	net/textproto.(*Reader).ReadMIMEHeader+0x1c4	/usr/lib/go/src/net/textproto/reader.go:515
+#	0x633f1b	net/http.readRequest+0x31b			/usr/lib/go/src/net/http/request.go:1083
+#	0x639049	net/http.(*conn).readRequest+0x249		/usr/lib/go/src/net/http/server.go:994
+#	0x63d504	net/http.(*conn).serve+0x344			/usr/lib/go/src/net/http/server.go:1916
+
+1: 256 [1: 256] @ 0x64c437 0x64c507 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f311 0x46b301
+#	0x64c436	net/http.setupRewindBody+0x276								/usr/lib/go/src/net/http/transport.go:654
+#	0x64c506	net/http.(*Transport).roundTrip+0x346							/usr/lib/go/src/net/http/transport.go:537
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f310	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x170		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:98
+
+1: 256 [1: 256] @ 0x64c437 0x64c507 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67fc90 0x46b301
+#	0x64c436	net/http.setupRewindBody+0x276								/usr/lib/go/src/net/http/transport.go:654
+#	0x64c506	net/http.(*Transport).roundTrip+0x346							/usr/lib/go/src/net/http/transport.go:537
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67fc8f	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0xaef		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:126
+
+1: 256 [1: 256] @ 0x64c437 0x64c507 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f610 0x46b301
+#	0x64c436	net/http.setupRewindBody+0x276								/usr/lib/go/src/net/http/transport.go:654
+#	0x64c506	net/http.(*Transport).roundTrip+0x346							/usr/lib/go/src/net/http/transport.go:537
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f60f	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x46f		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:107
+
+1: 256 [1: 256] @ 0x64c437 0x64c507 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f9a5 0x46b301
+#	0x64c436	net/http.setupRewindBody+0x276								/usr/lib/go/src/net/http/transport.go:654
+#	0x64c506	net/http.(*Transport).roundTrip+0x346							/usr/lib/go/src/net/http/transport.go:537
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f9a4	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x804		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:117
+
+2: 256 [2: 256] @ 0x56ddf0 0x56dda1 0x57f468 0x57e7bd 0x641b85 0x6417bd 0x6c3da5 0x6c3d77 0x43af32 0x46b301
+#	0x56ddef	net.newFD+0x16f				/usr/lib/go/src/net/fd_unix.go:27
+#	0x56dda0	net.(*netFD).accept+0x120		/usr/lib/go/src/net/fd_unix.go:180
+#	0x57f467	net.(*TCPListener).accept+0x27		/usr/lib/go/src/net/tcpsock_posix.go:142
+#	0x57e7bc	net.(*TCPListener).Accept+0x3c		/usr/lib/go/src/net/tcpsock.go:288
+#	0x641b84	net/http.(*Server).Serve+0x384		/usr/lib/go/src/net/http/server.go:3070
+#	0x6417bc	net/http.(*Server).ListenAndServe+0x7c	/usr/lib/go/src/net/http/server.go:2999
+#	0x6c3da4	net/http.ListenAndServe+0x144		/usr/lib/go/src/net/http/server.go:3255
+#	0x6c3d76	main.main+0x116				/home/eko/MyProjects/Golang/DevOps-Track-Yandex/cmd/agent/main.go:22
+#	0x43af31	runtime.main+0x211			/usr/lib/go/src/runtime/proc.go:250
+
+3: 192 [3: 192] @ 0x4758f7 0x475b95 0x4c3bce 0x4c2e65 0x56dcb5 0x57f468 0x57e7bd 0x641b85 0x6417bd 0x6c3da5 0x6c3d77 0x43af32 0x46b301
+#	0x4758f6	syscall.anyToSockaddr+0x176		/usr/lib/go/src/syscall/syscall_linux.go:623
+#	0x475b94	syscall.Accept4+0x94			/usr/lib/go/src/syscall/syscall_linux.go:658
+#	0x4c3bcd	internal/poll.accept+0x2d		/usr/lib/go/src/internal/poll/sock_cloexec.go:17
+#	0x4c2e64	internal/poll.(*FD).Accept+0x1c4	/usr/lib/go/src/internal/poll/fd_unix.go:605
+#	0x56dcb4	net.(*netFD).accept+0x34		/usr/lib/go/src/net/fd_unix.go:172
+#	0x57f467	net.(*TCPListener).accept+0x27		/usr/lib/go/src/net/tcpsock_posix.go:142
+#	0x57e7bc	net.(*TCPListener).Accept+0x3c		/usr/lib/go/src/net/tcpsock.go:288
+#	0x641b84	net/http.(*Server).Serve+0x384		/usr/lib/go/src/net/http/server.go:3070
+#	0x6417bc	net/http.(*Server).ListenAndServe+0x7c	/usr/lib/go/src/net/http/server.go:2999
+#	0x6c3da4	net/http.ListenAndServe+0x144		/usr/lib/go/src/net/http/server.go:3255
+#	0x6c3d76	main.main+0x116				/home/eko/MyProjects/Golang/DevOps-Track-Yandex/cmd/agent/main.go:22
+#	0x43af31	runtime.main+0x211			/usr/lib/go/src/runtime/proc.go:250
+
+2: 192 [2: 192] @ 0x658933 0x64c97a 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f311 0x46b301
+#	0x658932	net/http.(*persistConn).roundTrip+0x692							/usr/lib/go/src/net/http/transport.go:2603
+#	0x64c979	net/http.(*Transport).roundTrip+0x7b9							/usr/lib/go/src/net/http/transport.go:595
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f310	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x170		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:98
+
+1: 160 [1: 160] @ 0x641bf6 0x641bea 0x6417bd 0x6c3da5 0x6c3d77 0x43af32 0x46b301
+#	0x641bf5	net/http.(*Server).newConn+0x3f5	/usr/lib/go/src/net/http/server.go:620
+#	0x641be9	net/http.(*Server).Serve+0x3e9		/usr/lib/go/src/net/http/server.go:3100
+#	0x6417bc	net/http.(*Server).ListenAndServe+0x7c	/usr/lib/go/src/net/http/server.go:2999
+#	0x6c3da4	net/http.ListenAndServe+0x144		/usr/lib/go/src/net/http/server.go:3255
+#	0x6c3d76	main.main+0x116				/home/eko/MyProjects/Golang/DevOps-Track-Yandex/cmd/agent/main.go:22
+#	0x43af31	runtime.main+0x211			/usr/lib/go/src/runtime/proc.go:250
+
+1: 144 [1: 144] @ 0x5877e9 0x58746e 0x632f54 0x601e16 0x601de6 0x67eff5 0x67efc6 0x67f44e 0x46b301
+#	0x5877e8	net/url.parse+0xc8									/usr/lib/go/src/net/url/url.go:507
+#	0x58746d	net/url.Parse+0x4d									/usr/lib/go/src/net/url/url.go:466
+#	0x632f53	net/http.NewRequestWithContext+0x113							/usr/lib/go/src/net/http/request.go:874
+#	0x601e15	net/http.NewRequest+0x75								/usr/lib/go/src/net/http/request.go:836
+#	0x601de5	net/http.(*Client).Post+0x45								/usr/lib/go/src/net/http/client.go:843
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f44d	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x2ad		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:102
+
+1: 96 [1: 96] @ 0x43b677 0x44adaa 0x67f286 0x46b301
+#	0x67f285	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0xe5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:90
+
+1: 96 [1: 96] @ 0x637e5e 0x637e22 0x637f2d 0x63d445 0x46b301
+#	0x637e5d	bufio.NewReaderSize+0x1dd	/usr/lib/go/src/bufio/bufio.go:56
+#	0x637e21	bufio.NewReader+0x1a1		/usr/lib/go/src/bufio/bufio.go:63
+#	0x637f2c	net/http.newBufioReader+0x2ac	/usr/lib/go/src/net/http/server.go:831
+#	0x63d444	net/http.(*conn).serve+0x284	/usr/lib/go/src/net/http/server.go:1912
+
+1: 96 [1: 96] @ 0x43b677 0x44adaa 0x657d55 0x46b301
+#	0x657d54	net/http.(*persistConn).writeLoop+0xf4	/usr/lib/go/src/net/http/transport.go:2392
+
+1: 96 [1: 96] @ 0x48aed3 0x48a735 0x48a605 0x63957e 0x63d505 0x46b301
+#	0x48aed2	context.(*cancelCtx).Done+0x152		/usr/lib/go/src/context/context.go:367
+#	0x48a734	context.propagateCancel+0x34		/usr/lib/go/src/context/context.go:251
+#	0x48a604	context.WithCancel+0xc4			/usr/lib/go/src/context/context.go:237
+#	0x63957d	net/http.(*conn).readRequest+0x77d	/usr/lib/go/src/net/http/server.go:1029
+#	0x63d504	net/http.(*conn).serve+0x344		/usr/lib/go/src/net/http/server.go:1916
+
+1: 96 [1: 96] @ 0x652785 0x6516f0 0x46b301
+#	0x652784	net/http.(*Transport).dialConn+0x164	/usr/lib/go/src/net/http/transport.go:1570
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+1: 96 [1: 96] @ 0x658933 0x64c97a 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f945 0x46b301
+#	0x658932	net/http.(*persistConn).roundTrip+0x692							/usr/lib/go/src/net/http/transport.go:2603
+#	0x64c979	net/http.(*Transport).roundTrip+0x7b9							/usr/lib/go/src/net/http/transport.go:595
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f944	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x7a4		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:116
+
+1: 64 [1: 64] @ 0x4758f7 0x475cf3 0x56de7a 0x57f468 0x57e7bd 0x641b85 0x6417bd 0x6c3da5 0x6c3d77 0x43af32 0x46b301
+#	0x4758f6	syscall.anyToSockaddr+0x176		/usr/lib/go/src/syscall/syscall_linux.go:623
+#	0x475cf2	syscall.Getsockname+0x92		/usr/lib/go/src/syscall/syscall_linux.go:672
+#	0x56de79	net.(*netFD).accept+0x1f9		/usr/lib/go/src/net/fd_unix.go:188
+#	0x57f467	net.(*TCPListener).accept+0x27		/usr/lib/go/src/net/tcpsock_posix.go:142
+#	0x57e7bc	net.(*TCPListener).Accept+0x3c		/usr/lib/go/src/net/tcpsock.go:288
+#	0x641b84	net/http.(*Server).Serve+0x384		/usr/lib/go/src/net/http/server.go:3070
+#	0x6417bc	net/http.(*Server).ListenAndServe+0x7c	/usr/lib/go/src/net/http/server.go:2999
+#	0x6c3da4	net/http.ListenAndServe+0x144		/usr/lib/go/src/net/http/server.go:3255
+#	0x6c3d76	main.main+0x116				/home/eko/MyProjects/Golang/DevOps-Track-Yandex/cmd/agent/main.go:22
+#	0x43af31	runtime.main+0x211			/usr/lib/go/src/runtime/proc.go:250
+
+1: 48 [1: 48] @ 0x57ecb1 0x56dfb7 0x57f468 0x57e7bd 0x641b85 0x6417bd 0x6c3da5 0x6c3d77 0x43af32 0x46b301
+#	0x57ecb0	net.sockaddrToTCP+0xf0			/usr/lib/go/src/net/tcpsock_posix.go:21
+#	0x56dfb6	net.(*netFD).accept+0x336		/usr/lib/go/src/net/fd_unix.go:189
+#	0x57f467	net.(*TCPListener).accept+0x27		/usr/lib/go/src/net/tcpsock_posix.go:142
+#	0x57e7bc	net.(*TCPListener).Accept+0x3c		/usr/lib/go/src/net/tcpsock.go:288
+#	0x641b84	net/http.(*Server).Serve+0x384		/usr/lib/go/src/net/http/server.go:3070
+#	0x6417bc	net/http.(*Server).ListenAndServe+0x7c	/usr/lib/go/src/net/http/server.go:2999
+#	0x6c3da4	net/http.ListenAndServe+0x144		/usr/lib/go/src/net/http/server.go:3255
+#	0x6c3d76	main.main+0x116				/home/eko/MyProjects/Golang/DevOps-Track-Yandex/cmd/agent/main.go:22
+#	0x43af31	runtime.main+0x211			/usr/lib/go/src/runtime/proc.go:250
+
+1: 48 [1: 48] @ 0x57ec19 0x57cb30 0x57c4d2 0x575498 0x57f085 0x57ef69 0x564f74 0x564932 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x57ec18	net.sockaddrToTCP+0x58			/usr/lib/go/src/net/tcpsock_posix.go:19
+#	0x57cb2f	net.(*netFD).dial+0x54f			/usr/lib/go/src/net/sock_posix.go:166
+#	0x57c4d1	net.socket+0x2b1			/usr/lib/go/src/net/sock_posix.go:70
+#	0x575497	net.internetSocket+0xf7			/usr/lib/go/src/net/ipsock_posix.go:142
+#	0x57f084	net.(*sysDialer).doDialTCP+0xa4		/usr/lib/go/src/net/tcpsock_posix.go:68
+#	0x57ef68	net.(*sysDialer).dialTCP+0x68		/usr/lib/go/src/net/tcpsock_posix.go:64
+#	0x564f73	net.(*sysDialer).dialSingle+0x213	/usr/lib/go/src/net/dial.go:582
+#	0x564931	net.(*sysDialer).dialSerial+0x311	/usr/lib/go/src/net/dial.go:550
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+1: 48 [1: 48] @ 0x57ec19 0x57ca83 0x57c4d2 0x575498 0x57f085 0x57ef69 0x564f74 0x564932 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x57ec18	net.sockaddrToTCP+0x58			/usr/lib/go/src/net/tcpsock_posix.go:19
+#	0x57ca82	net.(*netFD).dial+0x4a2			/usr/lib/go/src/net/sock_posix.go:166
+#	0x57c4d1	net.socket+0x2b1			/usr/lib/go/src/net/sock_posix.go:70
+#	0x575497	net.internetSocket+0xf7			/usr/lib/go/src/net/ipsock_posix.go:142
+#	0x57f084	net.(*sysDialer).doDialTCP+0xa4		/usr/lib/go/src/net/tcpsock_posix.go:68
+#	0x57ef68	net.(*sysDialer).dialTCP+0x68		/usr/lib/go/src/net/tcpsock_posix.go:64
+#	0x564f73	net.(*sysDialer).dialSingle+0x213	/usr/lib/go/src/net/dial.go:582
+#	0x564931	net.(*sysDialer).dialSerial+0x311	/usr/lib/go/src/net/dial.go:550
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+1: 32 [1: 32] @ 0x4757e5 0x475cf3 0x57c9e5 0x57c4d2 0x575498 0x57f085 0x57ef69 0x564f74 0x564932 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x4757e4	syscall.anyToSockaddr+0x64		/usr/lib/go/src/syscall/syscall_linux.go:615
+#	0x475cf2	syscall.Getsockname+0x92		/usr/lib/go/src/syscall/syscall_linux.go:672
+#	0x57c9e4	net.(*netFD).dial+0x404			/usr/lib/go/src/net/sock_posix.go:164
+#	0x57c4d1	net.socket+0x2b1			/usr/lib/go/src/net/sock_posix.go:70
+#	0x575497	net.internetSocket+0xf7			/usr/lib/go/src/net/ipsock_posix.go:142
+#	0x57f084	net.(*sysDialer).doDialTCP+0xa4		/usr/lib/go/src/net/tcpsock_posix.go:68
+#	0x57ef68	net.(*sysDialer).dialTCP+0x68		/usr/lib/go/src/net/tcpsock_posix.go:64
+#	0x564f73	net.(*sysDialer).dialSingle+0x213	/usr/lib/go/src/net/dial.go:582
+#	0x564931	net.(*sysDialer).dialSerial+0x311	/usr/lib/go/src/net/dial.go:550
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [1: 5376] @ 0x499325 0x6a8f27 0x6c293e 0x6c2196 0x6c1fad 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x499324	io.ReadAll+0xa4					/usr/lib/go/src/io/io.go:659
+#	0x6a8f26	internal/profile.Parse+0x26			/usr/lib/go/src/internal/profile/profile.go:127
+#	0x6c293d	net/http/pprof.collectProfile+0x9d		/usr/lib/go/src/net/http/pprof/pprof.go:327
+#	0x6c2195	net/http/pprof.handler.serveDeltaProfile+0x155	/usr/lib/go/src/net/http/pprof/pprof.go:276
+#	0x6c1fac	net/http/pprof.handler.ServeHTTP+0x4ec		/usr/lib/go/src/net/http/pprof/pprof.go:239
+#	0x6c2afd	net/http/pprof.Index+0x13d			/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e		/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148		/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b		/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606			/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [1: 16] @ 0x5d63dd 0x635d15 0x65753a 0x6562ca 0x46b301
+#	0x5d63dc	net/textproto.(*Reader).ReadMIMEHeader+0x1fc	/usr/lib/go/src/net/textproto/reader.go:525
+#	0x635d14	net/http.ReadResponse+0x2d4			/usr/lib/go/src/net/http/response.go:188
+#	0x657539	net/http.(*persistConn).readResponse+0xd9	/usr/lib/go/src/net/http/transport.go:2286
+#	0x6562c9	net/http.(*persistConn).readLoop+0x3a9		/usr/lib/go/src/net/http/transport.go:2108
+
+0: 0 [1: 512] @ 0x6713c8 0x675727 0x675719 0x675677 0x675681 0x67f125 0x46b301
+#	0x6713c7	github.com/shirou/gopsutil/v3/internal/common.ReadLinesOffsetN+0x347				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:140
+#	0x675726	github.com/shirou/gopsutil/v3/internal/common.ReadLines+0x86					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:111
+#	0x675718	github.com/shirou/gopsutil/v3/mem.fillFromMeminfoWithContext+0x78				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:60
+#	0x675676	github.com/shirou/gopsutil/v3/mem.VirtualMemoryWithContext+0x16					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:39
+#	0x675680	github.com/shirou/gopsutil/v3/mem.VirtualMemory+0x20						/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:35
+#	0x67f124	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).RunVirtMemCpuListener+0x24	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:76
+
+0: 0 [1: 64] @ 0x4cda6c 0x67eb96 0x67ee55 0x67fa71 0x46b301
+#	0x4cda6b	fmt.Sprintf+0x6b									/usr/lib/go/src/fmt/print.go:220
+#	0x67eb95	github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing.(*Hash).Run+0x315		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/hashing/hashing.go:38
+#	0x67ee54	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x174	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:54
+#	0x67fa70	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x8d0		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:120
+
+0: 0 [1: 96] @ 0x56d046 0x57c965 0x57c4d2 0x575498 0x57f085 0x57ef69 0x564f74 0x564932 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x56d045	net.(*netFD).connect+0x205		/usr/lib/go/src/net/fd_unix.go:102
+#	0x57c964	net.(*netFD).dial+0x384			/usr/lib/go/src/net/sock_posix.go:149
+#	0x57c4d1	net.socket+0x2b1			/usr/lib/go/src/net/sock_posix.go:70
+#	0x575497	net.internetSocket+0xf7			/usr/lib/go/src/net/ipsock_posix.go:142
+#	0x57f084	net.(*sysDialer).doDialTCP+0xa4		/usr/lib/go/src/net/tcpsock_posix.go:68
+#	0x57ef68	net.(*sysDialer).dialTCP+0x68		/usr/lib/go/src/net/tcpsock_posix.go:64
+#	0x564f73	net.(*sysDialer).dialSingle+0x213	/usr/lib/go/src/net/dial.go:582
+#	0x564931	net.(*sysDialer).dialSerial+0x311	/usr/lib/go/src/net/dial.go:550
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [3: 768] @ 0x633c6a 0x63904a 0x63d505 0x46b301
+#	0x633c69	net/http.readRequest+0x69		/usr/lib/go/src/net/http/request.go:1032
+#	0x639049	net/http.(*conn).readRequest+0x249	/usr/lib/go/src/net/http/server.go:994
+#	0x63d504	net/http.(*conn).serve+0x344		/usr/lib/go/src/net/http/server.go:1916
+
+0: 0 [1: 96] @ 0x406bea 0x650909 0x64c91e 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f945 0x46b301
+#	0x650908	net/http.(*Transport).getConn+0x468							/usr/lib/go/src/net/http/transport.go:1369
+#	0x64c91d	net/http.(*Transport).roundTrip+0x75d							/usr/lib/go/src/net/http/transport.go:582
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f944	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x7a4		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:116
+
+0: 0 [1: 32] @ 0x5d3498 0x5d3480 0x5d34f9 0x671345 0x675727 0x675719 0x675677 0x675681 0x67f125 0x46b301
+#	0x5d3497	strings.(*Builder).grow+0xb7									/usr/lib/go/src/strings/builder.go:68
+#	0x5d347f	strings.(*Builder).Grow+0x9f									/usr/lib/go/src/strings/builder.go:82
+#	0x5d34f8	bufio.(*Reader).ReadString+0x118								/usr/lib/go/src/bufio/bufio.go:498
+#	0x671344	github.com/shirou/gopsutil/v3/internal/common.ReadLinesOffsetN+0x2c4				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:130
+#	0x675726	github.com/shirou/gopsutil/v3/internal/common.ReadLines+0x86					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:111
+#	0x675718	github.com/shirou/gopsutil/v3/mem.fillFromMeminfoWithContext+0x78				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:60
+#	0x675676	github.com/shirou/gopsutil/v3/mem.VirtualMemoryWithContext+0x16					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:39
+#	0x675680	github.com/shirou/gopsutil/v3/mem.VirtualMemory+0x20						/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:35
+#	0x67f124	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).RunVirtMemCpuListener+0x24	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:76
+
+0: 0 [1: 48] @ 0x58abc5 0x58ae85 0x67ef78 0x67f945 0x46b301
+#	0x58abc4	net/url.(*URL).JoinPath+0x84								/usr/lib/go/src/net/url/url.go:1194
+#	0x58ae84	net/url.JoinPath+0x64									/usr/lib/go/src/net/url/url.go:1263
+#	0x67ef77	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x297	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:61
+#	0x67f944	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x7a4		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:116
+
+0: 0 [1: 24] @ 0x4bf8f1 0x58ac8c 0x58ae85 0x67ef78 0x67f55e 0x46b301
+#	0x4bf8f0	path.Join+0x70										/usr/lib/go/src/path/path.go:170
+#	0x58ac8b	net/url.(*URL).JoinPath+0x14b								/usr/lib/go/src/net/url/url.go:1200
+#	0x58ae84	net/url.JoinPath+0x64									/usr/lib/go/src/net/url/url.go:1263
+#	0x67ef77	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x297	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:61
+#	0x67f55d	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x3bd		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:105
+
+0: 0 [2: 288] @ 0x5877e9 0x58764c 0x633ea5 0x63904a 0x63d505 0x46b301
+#	0x5877e8	net/url.parse+0xc8			/usr/lib/go/src/net/url/url.go:507
+#	0x58764b	net/url.ParseRequestURI+0x2b		/usr/lib/go/src/net/url/url.go:485
+#	0x633ea4	net/http.readRequest+0x2a4		/usr/lib/go/src/net/http/request.go:1073
+#	0x639049	net/http.(*conn).readRequest+0x249	/usr/lib/go/src/net/http/server.go:994
+#	0x63d504	net/http.(*conn).serve+0x344		/usr/lib/go/src/net/http/server.go:1916
+
+0: 0 [1: 144] @ 0x58ad69 0x58ae85 0x67ef78 0x67fc90 0x46b301
+#	0x58ad68	net/url.(*URL).JoinPath+0x228								/usr/lib/go/src/net/url/url.go:1209
+#	0x58ae84	net/url.JoinPath+0x64									/usr/lib/go/src/net/url/url.go:1263
+#	0x67ef77	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x297	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:61
+#	0x67fc8f	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0xaef		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:126
+
+0: 0 [1: 352] @ 0x414553 0x6026f9 0x602547 0x6014c5 0x600496 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f44e 0x46b301
+#	0x6026f8	net/http.Header.Clone+0x1d8								/usr/lib/go/src/net/http/header.go:114
+#	0x602546	net/http.cloneOrMakeHeader+0x26								/usr/lib/go/src/net/http/clone.go:69
+#	0x6014c4	net/http.(*Client).makeHeadersCopier+0x44						/usr/lib/go/src/net/http/client.go:744
+#	0x600495	net/http.(*Client).do+0x275								/usr/lib/go/src/net/http/client.go:602
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f44d	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x2ad		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:102
+
+0: 0 [2: 2048] @ 0x6713c8 0x675727 0x675719 0x675677 0x675681 0x67f125 0x46b301
+#	0x6713c7	github.com/shirou/gopsutil/v3/internal/common.ReadLinesOffsetN+0x347				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:140
+#	0x675726	github.com/shirou/gopsutil/v3/internal/common.ReadLines+0x86					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:111
+#	0x675718	github.com/shirou/gopsutil/v3/mem.fillFromMeminfoWithContext+0x78				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:60
+#	0x675676	github.com/shirou/gopsutil/v3/mem.VirtualMemoryWithContext+0x16					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:39
+#	0x675680	github.com/shirou/gopsutil/v3/mem.VirtualMemory+0x20						/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:35
+#	0x67f124	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).RunVirtMemCpuListener+0x24	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:76
+
+0: 0 [1: 64] @ 0x53dba6 0x67eaf9 0x67ee55 0x67f4a8 0x46b301
+#	0x53dba5	crypto/hmac.New+0xe5									/usr/lib/go/src/crypto/hmac/hmac.go:154
+#	0x67eaf8	github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing.(*Hash).Run+0x278		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/hashing/hashing.go:36
+#	0x67ee54	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x174	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:54
+#	0x67f4a7	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x307		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:103
+
+0: 0 [1: 262144] @ 0x5e01c5 0x5e0928 0x5ea3b9 0x6b7250 0x6bbf17 0x6ba9b5 0x6bfa1a 0x6b4b25 0x6b4787 0x6b2d8b 0x6c28e5 0x6c2375 0x6c1fad 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x5e01c4	compress/flate.(*compressor).init+0x4a4				/usr/lib/go/src/compress/flate/deflate.go:586
+#	0x5e0927	compress/flate.NewWriter+0x47					/usr/lib/go/src/compress/flate/deflate.go:667
+#	0x5ea3b8	compress/gzip.(*Writer).Write+0x2d8				/usr/lib/go/src/compress/gzip/gzip.go:191
+#	0x6b724f	runtime/pprof.(*profileBuilder).flush+0x4f			/usr/lib/go/src/runtime/pprof/proto.go:146
+#	0x6bbf16	runtime/pprof.(*profileBuilder).emitLocation+0xdd6		/usr/lib/go/src/runtime/pprof/proto.go:639
+#	0x6ba9b4	runtime/pprof.(*profileBuilder).appendLocsForStack+0x514	/usr/lib/go/src/runtime/pprof/proto.go:459
+#	0x6bfa19	runtime/pprof.writeHeapProto+0x559				/usr/lib/go/src/runtime/pprof/protomem.go:46
+#	0x6b4b24	runtime/pprof.writeHeapInternal+0x304				/usr/lib/go/src/runtime/pprof/pprof.go:575
+#	0x6b4786	runtime/pprof.writeHeap+0x26					/usr/lib/go/src/runtime/pprof/pprof.go:535
+#	0x6b2d8a	runtime/pprof.(*Profile).WriteTo+0x14a				/usr/lib/go/src/runtime/pprof/pprof.go:330
+#	0x6c28e4	net/http/pprof.collectProfile+0x44				/usr/lib/go/src/net/http/pprof/pprof.go:323
+#	0x6c2374	net/http/pprof.handler.serveDeltaProfile+0x334			/usr/lib/go/src/net/http/pprof/pprof.go:297
+#	0x6c1fac	net/http/pprof.handler.ServeHTTP+0x4ec				/usr/lib/go/src/net/http/pprof/pprof.go:239
+#	0x6c2afd	net/http/pprof.Index+0x13d					/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e				/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148				/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b				/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606					/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [1: 663552] @ 0x5e090f 0x5ea3b9 0x6b7250 0x6bbf17 0x6ba9b5 0x6bfa1a 0x6b4b25 0x6b4787 0x6b2d8b 0x6c28e5 0x6c2375 0x6c1fad 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x5e090e	compress/flate.NewWriter+0x2e					/usr/lib/go/src/compress/flate/deflate.go:666
+#	0x5ea3b8	compress/gzip.(*Writer).Write+0x2d8				/usr/lib/go/src/compress/gzip/gzip.go:191
+#	0x6b724f	runtime/pprof.(*profileBuilder).flush+0x4f			/usr/lib/go/src/runtime/pprof/proto.go:146
+#	0x6bbf16	runtime/pprof.(*profileBuilder).emitLocation+0xdd6		/usr/lib/go/src/runtime/pprof/proto.go:639
+#	0x6ba9b4	runtime/pprof.(*profileBuilder).appendLocsForStack+0x514	/usr/lib/go/src/runtime/pprof/proto.go:459
+#	0x6bfa19	runtime/pprof.writeHeapProto+0x559				/usr/lib/go/src/runtime/pprof/protomem.go:46
+#	0x6b4b24	runtime/pprof.writeHeapInternal+0x304				/usr/lib/go/src/runtime/pprof/pprof.go:575
+#	0x6b4786	runtime/pprof.writeHeap+0x26					/usr/lib/go/src/runtime/pprof/pprof.go:535
+#	0x6b2d8a	runtime/pprof.(*Profile).WriteTo+0x14a				/usr/lib/go/src/runtime/pprof/pprof.go:330
+#	0x6c28e4	net/http/pprof.collectProfile+0x44				/usr/lib/go/src/net/http/pprof/pprof.go:323
+#	0x6c2374	net/http/pprof.handler.serveDeltaProfile+0x334			/usr/lib/go/src/net/http/pprof/pprof.go:297
+#	0x6c1fac	net/http/pprof.handler.ServeHTTP+0x4ec				/usr/lib/go/src/net/http/pprof/pprof.go:239
+#	0x6c2afd	net/http/pprof.Index+0x13d					/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e				/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148				/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b				/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606					/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [2: 32] @ 0x63eb33 0x63eb0c 0x63ead9 0x63ed34 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x63eb32	net/textproto.MIMEHeader.Set+0x72	/usr/lib/go/src/net/textproto/header.go:22
+#	0x63eb0b	net/http.Header.Set+0x4b		/usr/lib/go/src/net/http/header.go:40
+#	0x63ead8	net/http.Error+0x18			/usr/lib/go/src/net/http/server.go:2119
+#	0x63ed33	net/http.NotFound+0x33			/usr/lib/go/src/net/http/server.go:2126
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e	/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148	/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b	/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606		/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [0: 0] @ 0x40fb4e 0x411419 0x4145a7 0x6bc0ff 0x6bbfce 0x6ba9b5 0x6bfa1a 0x6b4b25 0x6b4787 0x6b2d8b 0x6c1f65 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x6bc0fe	runtime/pprof.(*profileBuilder).stringIndex+0xfbe		/usr/lib/go/src/runtime/pprof/proto.go:138
+#	0x6bbfcd	runtime/pprof.(*profileBuilder).emitLocation+0xe8d		/usr/lib/go/src/runtime/pprof/proto.go:633
+#	0x6ba9b4	runtime/pprof.(*profileBuilder).appendLocsForStack+0x514	/usr/lib/go/src/runtime/pprof/proto.go:459
+#	0x6bfa19	runtime/pprof.writeHeapProto+0x559				/usr/lib/go/src/runtime/pprof/protomem.go:46
+#	0x6b4b24	runtime/pprof.writeHeapInternal+0x304				/usr/lib/go/src/runtime/pprof/pprof.go:575
+#	0x6b4786	runtime/pprof.writeHeap+0x26					/usr/lib/go/src/runtime/pprof/pprof.go:535
+#	0x6b2d8a	runtime/pprof.(*Profile).WriteTo+0x14a				/usr/lib/go/src/runtime/pprof/pprof.go:330
+#	0x6c1f64	net/http/pprof.handler.ServeHTTP+0x4a4				/usr/lib/go/src/net/http/pprof/pprof.go:253
+#	0x6c2afd	net/http/pprof.Index+0x13d					/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e				/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148				/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b				/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606					/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [1: 139264] @ 0x5e0145 0x5e017b 0x5e0928 0x5ea3b9 0x6b7250 0x6bbf17 0x6ba9b5 0x6bfa1a 0x6b4b25 0x6b4787 0x6b2d8b 0x6c28e5 0x6c2196 0x6c1fad 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x5e0144	compress/flate.newDeflateFast+0x424				/usr/lib/go/src/compress/flate/deflatefast.go:64
+#	0x5e017a	compress/flate.(*compressor).init+0x45a				/usr/lib/go/src/compress/flate/deflate.go:585
+#	0x5e0927	compress/flate.NewWriter+0x47					/usr/lib/go/src/compress/flate/deflate.go:667
+#	0x5ea3b8	compress/gzip.(*Writer).Write+0x2d8				/usr/lib/go/src/compress/gzip/gzip.go:191
+#	0x6b724f	runtime/pprof.(*profileBuilder).flush+0x4f			/usr/lib/go/src/runtime/pprof/proto.go:146
+#	0x6bbf16	runtime/pprof.(*profileBuilder).emitLocation+0xdd6		/usr/lib/go/src/runtime/pprof/proto.go:639
+#	0x6ba9b4	runtime/pprof.(*profileBuilder).appendLocsForStack+0x514	/usr/lib/go/src/runtime/pprof/proto.go:459
+#	0x6bfa19	runtime/pprof.writeHeapProto+0x559				/usr/lib/go/src/runtime/pprof/protomem.go:46
+#	0x6b4b24	runtime/pprof.writeHeapInternal+0x304				/usr/lib/go/src/runtime/pprof/pprof.go:575
+#	0x6b4786	runtime/pprof.writeHeap+0x26					/usr/lib/go/src/runtime/pprof/pprof.go:535
+#	0x6b2d8a	runtime/pprof.(*Profile).WriteTo+0x14a				/usr/lib/go/src/runtime/pprof/pprof.go:330
+#	0x6c28e4	net/http/pprof.collectProfile+0x44				/usr/lib/go/src/net/http/pprof/pprof.go:323
+#	0x6c2195	net/http/pprof.handler.serveDeltaProfile+0x155			/usr/lib/go/src/net/http/pprof/pprof.go:276
+#	0x6c1fac	net/http/pprof.handler.ServeHTTP+0x4ec				/usr/lib/go/src/net/http/pprof/pprof.go:239
+#	0x6c2afd	net/http/pprof.Index+0x13d					/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e				/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148				/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b				/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606					/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [1: 663552] @ 0x5e090f 0x5ea3b9 0x6b7250 0x6bbf17 0x6ba9b5 0x6bfa1a 0x6b4b25 0x6b4787 0x6b2d8b 0x6c28e5 0x6c2196 0x6c1fad 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x5e090e	compress/flate.NewWriter+0x2e					/usr/lib/go/src/compress/flate/deflate.go:666
+#	0x5ea3b8	compress/gzip.(*Writer).Write+0x2d8				/usr/lib/go/src/compress/gzip/gzip.go:191
+#	0x6b724f	runtime/pprof.(*profileBuilder).flush+0x4f			/usr/lib/go/src/runtime/pprof/proto.go:146
+#	0x6bbf16	runtime/pprof.(*profileBuilder).emitLocation+0xdd6		/usr/lib/go/src/runtime/pprof/proto.go:639
+#	0x6ba9b4	runtime/pprof.(*profileBuilder).appendLocsForStack+0x514	/usr/lib/go/src/runtime/pprof/proto.go:459
+#	0x6bfa19	runtime/pprof.writeHeapProto+0x559				/usr/lib/go/src/runtime/pprof/protomem.go:46
+#	0x6b4b24	runtime/pprof.writeHeapInternal+0x304				/usr/lib/go/src/runtime/pprof/pprof.go:575
+#	0x6b4786	runtime/pprof.writeHeap+0x26					/usr/lib/go/src/runtime/pprof/pprof.go:535
+#	0x6b2d8a	runtime/pprof.(*Profile).WriteTo+0x14a				/usr/lib/go/src/runtime/pprof/pprof.go:330
+#	0x6c28e4	net/http/pprof.collectProfile+0x44				/usr/lib/go/src/net/http/pprof/pprof.go:323
+#	0x6c2195	net/http/pprof.handler.serveDeltaProfile+0x155			/usr/lib/go/src/net/http/pprof/pprof.go:276
+#	0x6c1fac	net/http/pprof.handler.ServeHTTP+0x4ec				/usr/lib/go/src/net/http/pprof/pprof.go:239
+#	0x6c2afd	net/http/pprof.Index+0x13d					/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e				/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148				/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b				/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606					/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [1: 4864] @ 0x40fb4e 0x411419 0x412efc 0x6bb451 0x6ba9b5 0x6bfa1a 0x6b4b25 0x6b4787 0x6b2d8b 0x6c28e5 0x6c2196 0x6c1fad 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x6bb450	runtime/pprof.(*profileBuilder).emitLocation+0x310		/usr/lib/go/src/runtime/pprof/proto.go:597
+#	0x6ba9b4	runtime/pprof.(*profileBuilder).appendLocsForStack+0x514	/usr/lib/go/src/runtime/pprof/proto.go:459
+#	0x6bfa19	runtime/pprof.writeHeapProto+0x559				/usr/lib/go/src/runtime/pprof/protomem.go:46
+#	0x6b4b24	runtime/pprof.writeHeapInternal+0x304				/usr/lib/go/src/runtime/pprof/pprof.go:575
+#	0x6b4786	runtime/pprof.writeHeap+0x26					/usr/lib/go/src/runtime/pprof/pprof.go:535
+#	0x6b2d8a	runtime/pprof.(*Profile).WriteTo+0x14a				/usr/lib/go/src/runtime/pprof/pprof.go:330
+#	0x6c28e4	net/http/pprof.collectProfile+0x44				/usr/lib/go/src/net/http/pprof/pprof.go:323
+#	0x6c2195	net/http/pprof.handler.serveDeltaProfile+0x155			/usr/lib/go/src/net/http/pprof/pprof.go:276
+#	0x6c1fac	net/http/pprof.handler.ServeHTTP+0x4ec				/usr/lib/go/src/net/http/pprof/pprof.go:239
+#	0x6c2afd	net/http/pprof.Index+0x13d					/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e				/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148				/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b				/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606					/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [1: 352] @ 0x414553 0x6026f9 0x602547 0x6014c5 0x600496 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f8e9 0x46b301
+#	0x6026f8	net/http.Header.Clone+0x1d8								/usr/lib/go/src/net/http/header.go:114
+#	0x602546	net/http.cloneOrMakeHeader+0x26								/usr/lib/go/src/net/http/clone.go:69
+#	0x6014c4	net/http.(*Client).makeHeadersCopier+0x44						/usr/lib/go/src/net/http/client.go:744
+#	0x600495	net/http.(*Client).do+0x275								/usr/lib/go/src/net/http/client.go:602
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f8e8	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x748		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:115
+
+0: 0 [1: 176] @ 0x650679 0x64c91e 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67fad0 0x46b301
+#	0x650678	net/http.(*Transport).getConn+0x1d8							/usr/lib/go/src/net/http/transport.go:1340
+#	0x64c91d	net/http.(*Transport).roundTrip+0x75d							/usr/lib/go/src/net/http/transport.go:582
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67facf	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x92f		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:121
+
+0: 0 [1: 32] @ 0x5d63dd 0x635d15 0x65753a 0x6562ca 0x46b301
+#	0x5d63dc	net/textproto.(*Reader).ReadMIMEHeader+0x1fc	/usr/lib/go/src/net/textproto/reader.go:525
+#	0x635d14	net/http.ReadResponse+0x2d4			/usr/lib/go/src/net/http/response.go:188
+#	0x657539	net/http.(*persistConn).readResponse+0xd9	/usr/lib/go/src/net/http/transport.go:2286
+#	0x6562c9	net/http.(*persistConn).readLoop+0x3a9		/usr/lib/go/src/net/http/transport.go:2108
+
+0: 0 [1: 64] @ 0x656445 0x46b301
+#	0x656444	net/http.(*persistConn).readLoop+0x524	/usr/lib/go/src/net/http/transport.go:2173
+
+0: 0 [1: 96] @ 0x53daf8 0x67eaf9 0x67ee55 0x67f945 0x46b301
+#	0x53daf7	crypto/hmac.New+0x37									/usr/lib/go/src/crypto/hmac/hmac.go:137
+#	0x67eaf8	github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing.(*Hash).Run+0x278		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/hashing/hashing.go:36
+#	0x67ee54	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x174	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:54
+#	0x67f944	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x7a4		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:116
+
+0: 0 [1: 64] @ 0x6491a7 0x634167 0x63904a 0x63d505 0x46b301
+#	0x6491a6	net/http.readTransfer+0x5c6		/usr/lib/go/src/net/http/transfer.go:568
+#	0x634166	net/http.readRequest+0x566		/usr/lib/go/src/net/http/request.go:1108
+#	0x639049	net/http.(*conn).readRequest+0x249	/usr/lib/go/src/net/http/server.go:994
+#	0x63d504	net/http.(*conn).serve+0x344		/usr/lib/go/src/net/http/server.go:1916
+
+0: 0 [1: 144] @ 0x58ad69 0x58ae85 0x67ef78 0x67f9de 0x46b301
+#	0x58ad68	net/url.(*URL).JoinPath+0x228								/usr/lib/go/src/net/url/url.go:1209
+#	0x58ae84	net/url.JoinPath+0x64									/usr/lib/go/src/net/url/url.go:1263
+#	0x67ef77	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x297	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:61
+#	0x67f9dd	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x83d		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:118
+
+0: 0 [1: 96] @ 0x53daf8 0x67eaf9 0x67ee55 0x67f77e 0x46b301
+#	0x53daf7	crypto/hmac.New+0x37									/usr/lib/go/src/crypto/hmac/hmac.go:137
+#	0x67eaf8	github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing.(*Hash).Run+0x278		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/hashing/hashing.go:36
+#	0x67ee54	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x174	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:54
+#	0x67f77d	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x5dd		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:111
+
+0: 0 [2: 192] @ 0x48aed3 0x5647e6 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x48aed2	context.(*cancelCtx).Done+0x152		/usr/lib/go/src/context/context.go:367
+#	0x5647e5	net.(*sysDialer).dialSerial+0x1c5	/usr/lib/go/src/net/dial.go:528
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [1: 96] @ 0x48b585 0x563271 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x48b584	context.WithDeadline+0x104		/usr/lib/go/src/context/context.go:442
+#	0x563270	net.(*Dialer).DialContext+0x1d0		/usr/lib/go/src/net/dial.go:383
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [0: 0] @ 0x6527b4 0x6516f0 0x46b301
+#	0x6527b3	net/http.(*Transport).dialConn+0x193	/usr/lib/go/src/net/http/transport.go:1572
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [1: 96] @ 0x53daf8 0x67eaf9 0x67ee55 0x67fd26 0x46b301
+#	0x53daf7	crypto/hmac.New+0x37									/usr/lib/go/src/crypto/hmac/hmac.go:137
+#	0x67eaf8	github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing.(*Hash).Run+0x278		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/hashing/hashing.go:36
+#	0x67ee54	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x174	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:54
+#	0x67fd25	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0xb85		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:128
+
+0: 0 [2: 704] @ 0x414553 0x63eb65 0x63eb0c 0x63ead9 0x63ed34 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x63eb64	net/textproto.MIMEHeader.Set+0xa4	/usr/lib/go/src/net/textproto/header.go:22
+#	0x63eb0b	net/http.Header.Set+0x4b		/usr/lib/go/src/net/http/header.go:40
+#	0x63ead8	net/http.Error+0x18			/usr/lib/go/src/net/http/server.go:2119
+#	0x63ed33	net/http.NotFound+0x33			/usr/lib/go/src/net/http/server.go:2126
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e	/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148	/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b	/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606		/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [2: 704] @ 0x414553 0x5d64bd 0x633f1c 0x63904a 0x63d505 0x46b301
+#	0x5d64bc	net/textproto.(*Reader).ReadMIMEHeader+0x2dc	/usr/lib/go/src/net/textproto/reader.go:535
+#	0x633f1b	net/http.readRequest+0x31b			/usr/lib/go/src/net/http/request.go:1083
+#	0x639049	net/http.(*conn).readRequest+0x249		/usr/lib/go/src/net/http/server.go:994
+#	0x63d504	net/http.(*conn).serve+0x344			/usr/lib/go/src/net/http/server.go:1916
+
+0: 0 [0: 0] @ 0x637435 0x64a7a5 0x64a505 0x498f05 0x4990d2 0x498ceb 0x498a5a 0x4989f7 0x63b678 0x6363bd 0x5d3b62 0x63cb09 0x63d80a 0x46b301
+#	0x637434	net/http.(*connReader).startBackgroundRead+0x94	/usr/lib/go/src/net/http/server.go:674
+#	0x64a7a4	net/http.(*body).readLocked+0x1a4		/usr/lib/go/src/net/http/transfer.go:884
+#	0x64a504	net/http.(*body).Read+0x124			/usr/lib/go/src/net/http/transfer.go:838
+#	0x498f04	io.(*LimitedReader).Read+0x44			/usr/lib/go/src/io/io.go:477
+#	0x4990d1	io.discard.ReadFrom+0x71			/usr/lib/go/src/io/io.go:611
+#	0x498cea	io.copyBuffer+0x14a				/usr/lib/go/src/io/io.go:413
+#	0x498a59	io.Copy+0x99					/usr/lib/go/src/io/io.go:386
+#	0x4989f6	io.CopyN+0x36					/usr/lib/go/src/io/io.go:362
+#	0x63b677	net/http.(*chunkWriter).writeHeader+0x817	/usr/lib/go/src/net/http/server.go:1395
+#	0x6363bc	net/http.(*chunkWriter).Write+0x3c		/usr/lib/go/src/net/http/server.go:375
+#	0x5d3b61	bufio.(*Writer).Flush+0x61			/usr/lib/go/src/bufio/bufio.go:629
+#	0x63cb08	net/http.(*response).finishRequest+0x48		/usr/lib/go/src/net/http/server.go:1653
+#	0x63d809	net/http.(*conn).serve+0x649			/usr/lib/go/src/net/http/server.go:1997
+
+0: 0 [0: 0] @ 0x56d05c 0x57c965 0x57c4d2 0x575498 0x57f085 0x57ef69 0x564f74 0x564932 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x56d05b	net.(*netFD).connect+0x21b		/usr/lib/go/src/net/fd_unix.go:103
+#	0x57c964	net.(*netFD).dial+0x384			/usr/lib/go/src/net/sock_posix.go:149
+#	0x57c4d1	net.socket+0x2b1			/usr/lib/go/src/net/sock_posix.go:70
+#	0x575497	net.internetSocket+0xf7			/usr/lib/go/src/net/ipsock_posix.go:142
+#	0x57f084	net.(*sysDialer).doDialTCP+0xa4		/usr/lib/go/src/net/tcpsock_posix.go:68
+#	0x57ef68	net.(*sysDialer).dialTCP+0x68		/usr/lib/go/src/net/tcpsock_posix.go:64
+#	0x564f73	net.(*sysDialer).dialSingle+0x213	/usr/lib/go/src/net/dial.go:582
+#	0x564931	net.(*sysDialer).dialSerial+0x311	/usr/lib/go/src/net/dial.go:550
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [2: 64] @ 0x4d8605 0x6758c5 0x6758a5 0x675677 0x675681 0x67f125 0x46b301
+#	0x4d8604	strings.genSplit+0x84										/usr/lib/go/src/strings/strings.go:250
+#	0x6758c4	strings.Split+0x224										/usr/lib/go/src/strings/strings.go:308
+#	0x6758a4	github.com/shirou/gopsutil/v3/mem.fillFromMeminfoWithContext+0x204				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:72
+#	0x675676	github.com/shirou/gopsutil/v3/mem.VirtualMemoryWithContext+0x16					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:39
+#	0x675680	github.com/shirou/gopsutil/v3/mem.VirtualMemory+0x20						/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:35
+#	0x67f124	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).RunVirtMemCpuListener+0x24	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:76
+
+0: 0 [1: 16] @ 0x571fa5 0x571f5e 0x572747 0x576267 0x57479a 0x5625fb 0x5634e8 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x571fa4	net.IPv4+0x164				/usr/lib/go/src/net/ip.go:52
+#	0x571f5d	net.parseIPv4+0x11d			/usr/lib/go/src/net/ip.go:590
+#	0x572746	net.parseIPZone+0x46			/usr/lib/go/src/net/ip.go:725
+#	0x576266	net.(*Resolver).lookupIPAddr+0x146	/usr/lib/go/src/net/lookup.go:295
+#	0x574799	net.(*Resolver).internetAddrList+0x679	/usr/lib/go/src/net/ipsock.go:288
+#	0x5625fa	net.(*Resolver).resolveAddrList+0x41a	/usr/lib/go/src/net/dial.go:222
+#	0x5634e7	net.(*Dialer).DialContext+0x447		/usr/lib/go/src/net/dial.go:410
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [0: 0] @ 0x576b32 0x57479a 0x5625fb 0x5634e8 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x576b31	net.(*Resolver).lookupIPAddr+0xa11	/usr/lib/go/src/net/lookup.go:296
+#	0x574799	net.(*Resolver).internetAddrList+0x679	/usr/lib/go/src/net/ipsock.go:288
+#	0x5625fa	net.(*Resolver).resolveAddrList+0x41a	/usr/lib/go/src/net/dial.go:222
+#	0x5634e7	net.(*Dialer).DialContext+0x447		/usr/lib/go/src/net/dial.go:410
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [2: 64] @ 0x575c92 0x57edfb 0x57c933 0x57c4d2 0x575498 0x57f085 0x57ef69 0x564f74 0x564932 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x575c91	net.ipToSockaddr+0x1f1			/usr/lib/go/src/net/ipsock_posix.go:186
+#	0x57edfa	net.(*TCPAddr).sockaddr+0x3a		/usr/lib/go/src/net/tcpsock_posix.go:40
+#	0x57c932	net.(*netFD).dial+0x352			/usr/lib/go/src/net/sock_posix.go:146
+#	0x57c4d1	net.socket+0x2b1			/usr/lib/go/src/net/sock_posix.go:70
+#	0x575497	net.internetSocket+0xf7			/usr/lib/go/src/net/ipsock_posix.go:142
+#	0x57f084	net.(*sysDialer).doDialTCP+0xa4		/usr/lib/go/src/net/tcpsock_posix.go:68
+#	0x57ef68	net.(*sysDialer).dialTCP+0x68		/usr/lib/go/src/net/tcpsock_posix.go:64
+#	0x564f73	net.(*sysDialer).dialSingle+0x213	/usr/lib/go/src/net/dial.go:582
+#	0x564931	net.(*sysDialer).dialSerial+0x311	/usr/lib/go/src/net/dial.go:550
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [1: 176] @ 0x650679 0x64c91e 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67fb85 0x46b301
+#	0x650678	net/http.(*Transport).getConn+0x1d8							/usr/lib/go/src/net/http/transport.go:1340
+#	0x64c91d	net/http.(*Transport).roundTrip+0x75d							/usr/lib/go/src/net/http/transport.go:582
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67fb84	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x9e4		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:123
+
+0: 0 [0: 0] @ 0x658933 0x64c97a 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67fa15 0x46b301
+#	0x658932	net/http.(*persistConn).roundTrip+0x692							/usr/lib/go/src/net/http/transport.go:2603
+#	0x64c979	net/http.(*Transport).roundTrip+0x7b9							/usr/lib/go/src/net/http/transport.go:595
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67fa14	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x874		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:119
+
+0: 0 [1: 16] @ 0x67ea47 0x67ee55 0x67f2e7 0x46b301
+#	0x67ea46	github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing.(*Hash).Run+0x1c6		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/hashing/hashing.go:29
+#	0x67ee54	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x174	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:54
+#	0x67f2e6	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x146		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:97
+
+0: 0 [0: 0] @ 0x64915b 0x64919c 0x635eb4 0x65753a 0x6562ca 0x46b301
+#	0x64915a	io.LimitReader+0x57a				/usr/lib/go/src/io/io.go:459
+#	0x64919b	net/http.readTransfer+0x5bb			/usr/lib/go/src/net/http/transfer.go:568
+#	0x635eb3	net/http.ReadResponse+0x473			/usr/lib/go/src/net/http/response.go:199
+#	0x657539	net/http.(*persistConn).readResponse+0xd9	/usr/lib/go/src/net/http/transport.go:2286
+#	0x6562c9	net/http.(*persistConn).readLoop+0x3a9		/usr/lib/go/src/net/http/transport.go:2108
+
+0: 0 [0: 0] @ 0x414553 0x6026f9 0x602547 0x6014c5 0x600496 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f4a8 0x46b301
+#	0x6026f8	net/http.Header.Clone+0x1d8								/usr/lib/go/src/net/http/header.go:114
+#	0x602546	net/http.cloneOrMakeHeader+0x26								/usr/lib/go/src/net/http/clone.go:69
+#	0x6014c4	net/http.(*Client).makeHeadersCopier+0x44						/usr/lib/go/src/net/http/client.go:744
+#	0x600495	net/http.(*Client).do+0x275								/usr/lib/go/src/net/http/client.go:602
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f4a7	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x307		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:103
+
+0: 0 [1: 96] @ 0x5d6235 0x633f1c 0x63904a 0x63d505 0x46b301
+#	0x5d6234	net/textproto.(*Reader).ReadMIMEHeader+0x54	/usr/lib/go/src/net/textproto/reader.go:490
+#	0x633f1b	net/http.readRequest+0x31b			/usr/lib/go/src/net/http/request.go:1083
+#	0x639049	net/http.(*conn).readRequest+0x249		/usr/lib/go/src/net/http/server.go:994
+#	0x63d504	net/http.(*conn).serve+0x344			/usr/lib/go/src/net/http/server.go:1916
+
+0: 0 [0: 0] @ 0x5e090f 0x5ea3b9 0x6b7250 0x6b7ba9 0x6bf93d 0x6b4b25 0x6b4787 0x6b2d8b 0x6c1f65 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x5e090e	compress/flate.NewWriter+0x2e			/usr/lib/go/src/compress/flate/deflate.go:666
+#	0x5ea3b8	compress/gzip.(*Writer).Write+0x2d8		/usr/lib/go/src/compress/gzip/gzip.go:191
+#	0x6b724f	runtime/pprof.(*profileBuilder).flush+0x4f	/usr/lib/go/src/runtime/pprof/proto.go:146
+#	0x6b7ba8	runtime/pprof.(*profileBuilder).pbSample+0xc8	/usr/lib/go/src/runtime/pprof/proto.go:168
+#	0x6bf93c	runtime/pprof.writeHeapProto+0x47c		/usr/lib/go/src/runtime/pprof/protomem.go:59
+#	0x6b4b24	runtime/pprof.writeHeapInternal+0x304		/usr/lib/go/src/runtime/pprof/pprof.go:575
+#	0x6b4786	runtime/pprof.writeHeap+0x26			/usr/lib/go/src/runtime/pprof/pprof.go:535
+#	0x6b2d8a	runtime/pprof.(*Profile).WriteTo+0x14a		/usr/lib/go/src/runtime/pprof/pprof.go:330
+#	0x6c1f64	net/http/pprof.handler.ServeHTTP+0x4a4		/usr/lib/go/src/net/http/pprof/pprof.go:253
+#	0x6c2afd	net/http/pprof.Index+0x13d			/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e		/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148		/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b		/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606			/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [0: 0] @ 0x6396e6 0x63d505 0x46b301
+#	0x6396e5	net/http.(*conn).readRequest+0x8e5	/usr/lib/go/src/net/http/server.go:1042
+#	0x63d504	net/http.(*conn).serve+0x344		/usr/lib/go/src/net/http/server.go:1916
+
+0: 0 [2: 704] @ 0x414553 0x63aaa5 0x63a2a7 0x63ec58 0x63ed34 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x63aaa4	net/http.Header.Clone+0x8a4		/usr/lib/go/src/net/http/header.go:114
+#	0x63a2a6	net/http.(*response).WriteHeader+0xa6	/usr/lib/go/src/net/http/server.go:1175
+#	0x63ec57	net/http.Error+0x197			/usr/lib/go/src/net/http/server.go:2121
+#	0x63ed33	net/http.NotFound+0x33			/usr/lib/go/src/net/http/server.go:2126
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e	/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148	/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b	/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606		/usr/lib/go/src/net/http/server.go:1991
+
+0: 0 [2: 288] @ 0x635aa5 0x65753a 0x6562ca 0x46b301
+#	0x635aa4	net/http.ReadResponse+0x64			/usr/lib/go/src/net/http/response.go:156
+#	0x657539	net/http.(*persistConn).readResponse+0xd9	/usr/lib/go/src/net/http/transport.go:2286
+#	0x6562c9	net/http.(*persistConn).readLoop+0x3a9		/usr/lib/go/src/net/http/transport.go:2108
+
+0: 0 [1: 32] @ 0x4cda6c 0x67e9a5 0x67ee55 0x67f890 0x46b301
+#	0x4cda6b	fmt.Sprintf+0x6b									/usr/lib/go/src/fmt/print.go:220
+#	0x67e9a4	github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing.(*Hash).Run+0x124		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/hashing/hashing.go:27
+#	0x67ee54	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x174	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:54
+#	0x67f88f	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x6ef		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:114
+
+0: 0 [0: 0] @ 0x406bea 0x650909 0x64c91e 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67f9a5 0x46b301
+#	0x650908	net/http.(*Transport).getConn+0x468							/usr/lib/go/src/net/http/transport.go:1369
+#	0x64c91d	net/http.(*Transport).roundTrip+0x75d							/usr/lib/go/src/net/http/transport.go:582
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67f9a4	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x804		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:117
+
+0: 0 [5: 1760] @ 0x414553 0x5d64bd 0x635d15 0x65753a 0x6562ca 0x46b301
+#	0x5d64bc	net/textproto.(*Reader).ReadMIMEHeader+0x2dc	/usr/lib/go/src/net/textproto/reader.go:535
+#	0x635d14	net/http.ReadResponse+0x2d4			/usr/lib/go/src/net/http/response.go:188
+#	0x657539	net/http.(*persistConn).readResponse+0xd9	/usr/lib/go/src/net/http/transport.go:2286
+#	0x6562c9	net/http.(*persistConn).readLoop+0x3a9		/usr/lib/go/src/net/http/transport.go:2108
+
+0: 0 [3: 12288] @ 0x671187 0x671148 0x671147 0x675727 0x675719 0x675677 0x675681 0x67f125 0x46b301
+#	0x671186	bufio.NewReaderSize+0x106									/usr/lib/go/src/bufio/bufio.go:57
+#	0x671147	bufio.NewReader+0xc7										/usr/lib/go/src/bufio/bufio.go:63
+#	0x671146	github.com/shirou/gopsutil/v3/internal/common.ReadLinesOffsetN+0xc6				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:128
+#	0x675726	github.com/shirou/gopsutil/v3/internal/common.ReadLines+0x86					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:111
+#	0x675718	github.com/shirou/gopsutil/v3/mem.fillFromMeminfoWithContext+0x78				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:60
+#	0x675676	github.com/shirou/gopsutil/v3/mem.VirtualMemoryWithContext+0x16					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:39
+#	0x675680	github.com/shirou/gopsutil/v3/mem.VirtualMemory+0x20						/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/mem/mem_linux.go:35
+#	0x67f124	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).RunVirtMemCpuListener+0x24	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:76
+
+0: 0 [1: 144] @ 0x563645 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x563644	net.(*Dialer).DialContext+0x5a4		/usr/lib/go/src/net/dial.go:415
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [0: 0] @ 0x65642f 0x46b301
+#	0x65642e	net/http.(*persistConn).readLoop+0x50e	/usr/lib/go/src/net/http/transport.go:2172
+
+0: 0 [1: 16] @ 0x63d73a 0x46b301
+#	0x63d739	net/http.(*conn).serve+0x579	/usr/lib/go/src/net/http/server.go:1978
+
+0: 0 [2: 8192] @ 0x671187 0x671148 0x671147 0x674afd 0x6746eb 0x674637 0x67f13c 0x67f13d 0x46b301
+#	0x671186	bufio.NewReaderSize+0x106									/usr/lib/go/src/bufio/bufio.go:57
+#	0x671147	bufio.NewReader+0xc7										/usr/lib/go/src/bufio/bufio.go:63
+#	0x671146	github.com/shirou/gopsutil/v3/internal/common.ReadLinesOffsetN+0xc6				/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/internal/common/common.go:128
+#	0x674afc	github.com/shirou/gopsutil/v3/cpu.TimesWithContext+0x9c						/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/cpu/cpu_linux.go:112
+#	0x6746ea	github.com/shirou/gopsutil/v3/cpu.percentUsedFromLastCallWithContext+0x6a			/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/cpu/cpu.go:181
+#	0x674636	github.com/shirou/gopsutil/v3/cpu.PercentWithContext+0xf6					/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/cpu/cpu.go:154
+#	0x67f13b	github.com/shirou/gopsutil/v3/cpu.Percent+0x3b							/home/eko/go/pkg/mod/github.com/shirou/gopsutil/v3@v3.22.12/cpu/cpu.go:149
+#	0x67f13c	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).RunVirtMemCpuListener+0x3c	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:77
+
+0: 0 [0: 0] @ 0x406bea 0x65276c 0x6516f0 0x46b301
+#	0x65276b	net/http.(*Transport).dialConn+0x14b	/usr/lib/go/src/net/http/transport.go:1569
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [0: 0] @ 0x53dbe5 0x67eaf9 0x67ee55 0x67fa15 0x46b301
+#	0x53dbe4	crypto/hmac.New+0x124									/usr/lib/go/src/crypto/hmac/hmac.go:155
+#	0x67eaf8	github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing.(*Hash).Run+0x278		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/hashing/hashing.go:36
+#	0x67ee54	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x174	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:54
+#	0x67fa14	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x874		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:119
+
+0: 0 [0: 0] @ 0x4bf8f1 0x58ac8c 0x58ae85 0x67ef78 0x67f945 0x46b301
+#	0x4bf8f0	path.Join+0x70										/usr/lib/go/src/path/path.go:170
+#	0x58ac8b	net/url.(*URL).JoinPath+0x14b								/usr/lib/go/src/net/url/url.go:1200
+#	0x58ae84	net/url.JoinPath+0x64									/usr/lib/go/src/net/url/url.go:1263
+#	0x67ef77	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x297	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:61
+#	0x67f944	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x7a4		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:116
+
+0: 0 [1: 16] @ 0x570965 0x57e1b5 0x57e198 0x63d21b 0x46b301
+#	0x570964	net.IP.String+0x584		/usr/lib/go/src/net/ip.go:338
+#	0x57e1b4	net.ipEmptyString+0x54		/usr/lib/go/src/net/ip.go:397
+#	0x57e197	net.(*TCPAddr).String+0x37	/usr/lib/go/src/net/tcpsock.go:48
+#	0x63d21a	net/http.(*conn).serve+0x5a	/usr/lib/go/src/net/http/server.go:1843
+
+0: 0 [0: 0] @ 0x64c437 0x64c507 0x636219 0x5feff7 0x5fe87b 0x600b1c 0x601ee8 0x601ee9 0x67eff5 0x67efc6 0x67fb29 0x46b301
+#	0x64c436	net/http.setupRewindBody+0x276								/usr/lib/go/src/net/http/transport.go:654
+#	0x64c506	net/http.(*Transport).roundTrip+0x346							/usr/lib/go/src/net/http/transport.go:537
+#	0x636218	net/http.(*Transport).RoundTrip+0x18							/usr/lib/go/src/net/http/roundtrip.go:17
+#	0x5feff6	net/http.send+0x5f6									/usr/lib/go/src/net/http/client.go:251
+#	0x5fe87a	net/http.(*Client).send+0x9a								/usr/lib/go/src/net/http/client.go:175
+#	0x600b1b	net/http.(*Client).do+0x8fb								/usr/lib/go/src/net/http/client.go:715
+#	0x601ee7	net/http.(*Client).Do+0x147								/usr/lib/go/src/net/http/client.go:581
+#	0x601ee8	net/http.(*Client).Post+0x148								/usr/lib/go/src/net/http/client.go:848
+#	0x67eff4	net/http.Post+0x314									/usr/lib/go/src/net/http/client.go:825
+#	0x67efc5	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).sendData+0x2e5	/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:63
+#	0x67fb28	github.com/EgorKo25/DevOps-Track-Yandex/internal/agent.(*Monitor).Run+0x988		/home/eko/MyProjects/Golang/DevOps-Track-Yandex/internal/agent/agent.go:122
+
+0: 0 [0: 0] @ 0x56d0f4 0x57c965 0x57c4d2 0x575498 0x57f085 0x57ef69 0x564f74 0x564932 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x56d0f3	net.(*netFD).connect+0x2b3		/usr/lib/go/src/net/fd_unix.go:117
+#	0x57c964	net.(*netFD).dial+0x384			/usr/lib/go/src/net/sock_posix.go:149
+#	0x57c4d1	net.socket+0x2b1			/usr/lib/go/src/net/sock_posix.go:70
+#	0x575497	net.internetSocket+0xf7			/usr/lib/go/src/net/ipsock_posix.go:142
+#	0x57f084	net.(*sysDialer).doDialTCP+0xa4		/usr/lib/go/src/net/tcpsock_posix.go:68
+#	0x57ef68	net.(*sysDialer).dialTCP+0x68		/usr/lib/go/src/net/tcpsock_posix.go:64
+#	0x564f73	net.(*sysDialer).dialSingle+0x213	/usr/lib/go/src/net/dial.go:582
+#	0x564931	net.(*sysDialer).dialSerial+0x311	/usr/lib/go/src/net/dial.go:550
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [0: 0] @ 0x43b677 0x407d3b 0x407a78 0x56db31 0x56d60a 0x57c965 0x57c4d2 0x575498 0x57f085 0x57ef69 0x564f74 0x564932 0x563ed3 0x5637a5 0x64fd9a 0x652e5f 0x6516f0 0x46b301
+#	0x56db30	net.(*netFD).connect.func1+0x50		/usr/lib/go/src/net/fd_unix.go:106
+#	0x56d609	net.(*netFD).connect+0x7c9		/usr/lib/go/src/net/fd_unix.go:162
+#	0x57c964	net.(*netFD).dial+0x384			/usr/lib/go/src/net/sock_posix.go:149
+#	0x57c4d1	net.socket+0x2b1			/usr/lib/go/src/net/sock_posix.go:70
+#	0x575497	net.internetSocket+0xf7			/usr/lib/go/src/net/ipsock_posix.go:142
+#	0x57f084	net.(*sysDialer).doDialTCP+0xa4		/usr/lib/go/src/net/tcpsock_posix.go:68
+#	0x57ef68	net.(*sysDialer).dialTCP+0x68		/usr/lib/go/src/net/tcpsock_posix.go:64
+#	0x564f73	net.(*sysDialer).dialSingle+0x213	/usr/lib/go/src/net/dial.go:582
+#	0x564931	net.(*sysDialer).dialSerial+0x311	/usr/lib/go/src/net/dial.go:550
+#	0x563ed2	net.(*sysDialer).dialParallel+0x412	/usr/lib/go/src/net/dial.go:451
+#	0x5637a4	net.(*Dialer).DialContext+0x704		/usr/lib/go/src/net/dial.go:428
+#	0x64fd99	net/http.(*Transport).dial+0xd9		/usr/lib/go/src/net/http/transport.go:1170
+#	0x652e5e	net/http.(*Transport).dialConn+0x83e	/usr/lib/go/src/net/http/transport.go:1608
+#	0x6516ef	net/http.(*Transport).dialConnFor+0xaf	/usr/lib/go/src/net/http/transport.go:1450
+
+0: 0 [0: 0] @ 0x4c7da5 0x6bccff 0x6b9b75 0x6bf526 0x6b4b25 0x6b4787 0x6b2d8b 0x6c1f65 0x6c2afe 0x63ea6f 0x640409 0x64162c 0x63d7c7 0x46b301
+#	0x4c7da4	os.ReadFile+0x1a4					/usr/lib/go/src/os/file.go:699
+#	0x6bccfe	runtime/pprof.(*profileBuilder).readMapping+0x3e	/usr/lib/go/src/runtime/pprof/proto.go:647
+#	0x6b9b74	runtime/pprof.newProfileBuilder+0x1f4			/usr/lib/go/src/runtime/pprof/proto.go:270
+#	0x6bf525	runtime/pprof.writeHeapProto+0x65			/usr/lib/go/src/runtime/pprof/protomem.go:16
+#	0x6b4b24	runtime/pprof.writeHeapInternal+0x304			/usr/lib/go/src/runtime/pprof/pprof.go:575
+#	0x6b4786	runtime/pprof.writeHeap+0x26				/usr/lib/go/src/runtime/pprof/pprof.go:535
+#	0x6b2d8a	runtime/pprof.(*Profile).WriteTo+0x14a			/usr/lib/go/src/runtime/pprof/pprof.go:330
+#	0x6c1f64	net/http/pprof.handler.ServeHTTP+0x4a4			/usr/lib/go/src/net/http/pprof/pprof.go:253
+#	0x6c2afd	net/http/pprof.Index+0x13d				/usr/lib/go/src/net/http/pprof/pprof.go:371
+#	0x63ea6e	net/http.HandlerFunc.ServeHTTP+0x2e			/usr/lib/go/src/net/http/server.go:2109
+#	0x640408	net/http.(*ServeMux).ServeHTTP+0x148			/usr/lib/go/src/net/http/server.go:2487
+#	0x64162b	net/http.serverHandler.ServeHTTP+0x30b			/usr/lib/go/src/net/http/server.go:2947
+#	0x63d7c6	net/http.(*conn).serve+0x606				/usr/lib/go/src/net/http/server.go:1991
+
+
+# runtime.MemStats
+# Alloc = 115805992
+# TotalAlloc = 157429840
+# Sys = 202509608
+# Lookups = 0
+# Mallocs = 942815
+# Frees = 535269
+# HeapAlloc = 115805992
+# HeapSys = 121044992
+# HeapIdle = 3719168
+# HeapInuse = 117325824
+# HeapReleased = 3686400
+# HeapObjects = 407546
+# Stack = 59310080 / 59310080
+# MSpan = 2198440 / 2203200
+# MCache = 9600 / 15600
+# BuckHashSys = 1468055
+# GCSys = 14034152
+# OtherSys = 4433529
+# NextGC = 200072896
+# LastGC = 1678384696562988724
+# PauseNs = [63208 181289 133754 161042 127004 75343 173855 103517 44128 90895 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+# PauseEnd = [1678384081563120949 1678384091555949231 1678384106548997944 1678384131559957674 1678384171548446112 1678384246561175312 1678384331570119493 1678384452554311149 1678384574565377891 1678384696562988724 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+# NumGC = 10
+# NumForcedGC = 0
+# GCCPUFraction = 5.347225602673925e-05
+# DebugGC = false
+# MaxRSS = 207921152

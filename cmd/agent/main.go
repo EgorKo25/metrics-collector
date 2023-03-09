@@ -1,9 +1,12 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/agent"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
+
 	_ "net/http/pprof"
 )
 
@@ -15,5 +18,6 @@ func main() {
 
 	monitor := agent.NewMonitor(cfg, hsr)
 
-	monitor.Run()
+	go monitor.Run()
+	http.ListenAndServe(":8080", nil)
 }
