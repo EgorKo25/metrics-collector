@@ -60,7 +60,6 @@ func (m *Monitor) sendData(value storage.Gauge, name, mtype string) {
 
 	URL, _ := url.JoinPath("http://", m.config.Address, "update/")
 
-	log.Println(URL)
 	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
 		log.Printf("Somethings went wrong: %s", err)
@@ -73,6 +72,7 @@ func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
 }
 
 func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
+
 	stats, _ = mems.VirtualMemory()
 	*cpuInfo, _ = cpu.Percent(0, false)
 	m.pollCount++
@@ -80,7 +80,7 @@ func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *
 
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
-	var stats *mems.VirtualMemoryStat
+	var stats mems.VirtualMemoryStat
 	var cpuInfo []float64
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
@@ -91,7 +91,7 @@ func (m *Monitor) Run() {
 
 		case <-tickerPoll.C:
 			go m.RunMemStatListener(&mem)
-			go m.RunVirtMemCpuListener(stats, &cpuInfo)
+			go m.RunVirtMemCpuListener(&stats, &cpuInfo)
 
 		case <-tickerReport.C:
 			m.sendData(storage.Gauge(m.pollCount), "PollCount", "counter")
