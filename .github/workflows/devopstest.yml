@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - iter15
+      - main
 
 jobs:
 
@@ -673,3 +673,28 @@ jobs:
         if: always()
         run: |
           go test -v -race ./...
+
+      - name: "Code increment #15"
+        if: |
+            always()
+        run: |
+          shortenertest -test.v -test.run=^TestIteration15$ -source-path=.
+      - name: "Code increment #16"
+        if: |
+          always()
+        run: |
+          shortenertest -test.v -test.run=^TestIteration16$ -source-path=.
+      - name: "Code increment #17"
+        if: |
+          github.ref == 'refs/heads/main' ||
+          github.head_ref == 'iter17' ||
+          github.head_ref == 'iter18' ||
+          github.head_ref == 'iter19' ||
+          github.head_ref == 'iter20' ||
+          github.head_ref == 'iter21' ||
+          github.head_ref == 'iter22' ||
+          github.head_ref == 'iter23' ||
+          github.head_ref == 'iter24'
+        run: |
+          shortenertest -test.v -test.run=^TestIteration17$ -source-path=.
+
