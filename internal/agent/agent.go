@@ -27,6 +27,8 @@ type Monitor struct {
 	config *config.ConfigurationAgent
 	hasher *hashing.Hash
 
+	stats *mems.VirtualMemoryStat
+
 	pollCount storage.Counter
 }
 
@@ -78,8 +80,8 @@ func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
 }
 
 // RunVirtMemCpuListener считывает метрики процессора
-func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
-	stats, _ = mems.VirtualMemory()
+func (m *Monitor) RunVirtMemCpuListener(cpuInfo *[]float64) {
+	m.stats, _ = mems.VirtualMemory()
 	*cpuInfo, _ = cpu.Percent(0, false)
 	m.pollCount++
 
@@ -90,18 +92,17 @@ func (m *Monitor) Run() {
 	var mem runtime.MemStats
 	var cpuInfo []float64
 
-	var stats *mems.VirtualMemoryStat
+	m.stats, _ = mems.VirtualMemory()
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
 
 	for {
-		println(stats.Free)
 		select {
 
 		case <-tickerPoll.C:
 			go m.RunMemStatListener(&mem)
-			go m.RunVirtMemCpuListener(stats, &cpuInfo)
+			go m.RunVirtMemCpuListener(&cpuInfo)
 
 		case <-tickerReport.C:
 			m.SendData(storage.Gauge(m.pollCount), "PollCount", "counter")
@@ -133,8 +134,8 @@ func (m *Monitor) Run() {
 			m.SendData(storage.Gauge(mem.StackSys), "StackSys", "gauge")
 			m.SendData(storage.Gauge(mem.Sys), "Sys", "gauge")
 			m.SendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
-			m.SendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
-			m.SendData(storage.Gauge(stats.Free), "FreeMemory", "gauge")
+			m.SendData(storage.Gauge(m.stats.Total), "TotalMemory", "gauge")
+			m.SendData(storage.Gauge(m.stats.Free), "FreeMemory", "gauge")
 			m.SendData(storage.Gauge(cpuInfo[0]), "CPUutilization1", "gauge")
 		}
 	}
