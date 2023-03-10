@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"log"
 	"math/rand"
 	"runtime"
 	"testing"
@@ -14,7 +15,10 @@ import (
 
 func BenchmarkMonitor_SendData(b *testing.B) {
 
-	cfg := config.NewAgentConfig()
+	cfg, err := config.NewAgentConfig()
+	if err != nil {
+		log.Fatalf("%s", err)
+	}
 
 	hsr := hashing.NewHash(cfg.Key)
 

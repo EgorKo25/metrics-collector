@@ -54,7 +54,6 @@ func (m *Monitor) SendData(value storage.Gauge, name, mtype string) {
 
 	case "gauge":
 		metric.Value = &value
-
 	}
 
 	metric.Hash, _ = m.hasher.Run(&metric)
