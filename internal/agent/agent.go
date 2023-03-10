@@ -81,6 +81,7 @@ func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
 func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
 
 	stats, _ = mems.VirtualMemory()
+	log.Println(stats)
 	*cpuInfo, _ = cpu.Percent(0, false)
 	m.pollCount++
 }
@@ -88,10 +89,8 @@ func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *
 // Run запускает режим мониторинга в нескольких горутинах
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
-	var tmp mems.VirtualMemoryStat
+	var stats mems.VirtualMemoryStat
 	var cpuInfo []float64
-
-	stats := &tmp
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
@@ -101,7 +100,7 @@ func (m *Monitor) Run() {
 
 		case <-tickerPoll.C:
 			go m.RunMemStatListener(&mem)
-			go m.RunVirtMemCpuListener(stats, &cpuInfo)
+			go m.RunVirtMemCpuListener(&stats, &cpuInfo)
 
 		case <-tickerReport.C:
 			m.SendData(storage.Gauge(m.pollCount), "PollCount", "counter")
