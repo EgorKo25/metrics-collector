@@ -12,6 +12,8 @@ func NewRouter(handler *handlers.Handler) chi.Router {
 
 	r.Use(middleware.Logger)
 
+	r.Mount("/debug", middleware.Profiler())
+
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", handler.GetAllStats)
 		r.Get("/ping", handler.PingDB)
