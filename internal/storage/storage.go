@@ -1,20 +1,22 @@
+// Package storage опрееляет вид и правила взаимодействия с хранилищем веб приложения
 package storage
 
 type Gauge float64
 type Counter uint64
 
-// Storagier rules for interaction with the repository
+// Storagier описывает интерфейс для взаимодействия с хранилищем
 type Storagier interface {
 	SetStats(string, any, string)
 	TakeStats() (map[string]Gauge, map[string]Counter)
 	TakeThisStat(string) any
 }
 
-// MetricStorage storage for runtime metric
+// MetricStorage структура хранилища
 type MetricStorage struct {
 	Metrics map[string]Metric
 }
 
+// Metric описывает структуру метрики
 type Metric struct {
 	ID    string   `json:"id"`
 	MType string   `json:"type"`
@@ -23,7 +25,7 @@ type Metric struct {
 	Value *Gauge   `json:"value,omitempty"`
 }
 
-// NewStorage storage type constructor
+// NewStorage конструктор хранилища
 func NewStorage() *MetricStorage {
 	var m MetricStorage
 
@@ -31,7 +33,7 @@ func NewStorage() *MetricStorage {
 	return &m
 }
 
-// SetStat storing metrics in storage
+// SetStat добавляет значение в хранилище
 func (m *MetricStorage) SetStat(metric *Metric) {
 	if metric.MType == "gauge" {
 		m.Metrics[metric.ID] = *metric
@@ -48,7 +50,7 @@ func (m *MetricStorage) SetStat(metric *Metric) {
 	}
 }
 
-// StatStatusM (name) return: value
+// StatStatusM проеверяет значение в хранилище
 func (m *MetricStorage) StatStatusM(name, mType string) (value any) {
 	if mType == "gauge" {
 		if _, ok := m.Metrics[name]; ok {

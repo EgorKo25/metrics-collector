@@ -1,3 +1,4 @@
+// Package routers описывает роутер
 package routers
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+// NewRouter создет роутер определяющий маршруты к обработчикам
 func NewRouter(handler *handlers.Handler) chi.Router {
 	r := chi.NewRouter()
 

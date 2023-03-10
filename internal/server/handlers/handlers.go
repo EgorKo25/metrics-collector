@@ -1,3 +1,4 @@
+// Package handlers описывает структуру хэндлеров и все хэндлеры веб приложения
 package handlers
 
 import (
@@ -18,6 +19,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// Handler структура определяющая структуру обработчиков
 type Handler struct {
 	storage    *storage.MetricStorage
 	compressor *middleware.Compressor
@@ -25,7 +27,7 @@ type Handler struct {
 	db         *database.DB
 }
 
-// NewHandler handler type constructor
+// NewHandler конструктор структуры хэндлер
 func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB) *Handler {
 	return &Handler{
 		storage:    storage,
@@ -35,7 +37,7 @@ func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compresso
 	}
 }
 
-// PingDB go dock
+// PingDB проверяет соединение с базой данных
 func (h *Handler) PingDB(w http.ResponseWriter, _ *http.Request) {
 
 	ctx := context.Background()
@@ -47,7 +49,7 @@ func (h *Handler) PingDB(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-// GetValueStat a handler that returns the value of a specific metric
+// GetValueStat возвращает значение конкретной метрики
 func (h *Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 	res := h.storage.StatStatusM(chi.URLParam(r, "name"), chi.URLParam(r, "type"))
 	if res == nil {
@@ -65,7 +67,7 @@ func (h *Handler) GetValueStat(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetJSONValue TODO: go dock
+// GetJSONValue возвращает значение метрики в формате JSON
 func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	var err error
@@ -142,7 +144,7 @@ func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetJSONUpdates TODO: go dock
+// GetJSONUpdates обновляет пакет метрик принимая их из формата JSON
 func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
@@ -204,6 +206,7 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// addMetric добавялет метрику в буффер, при заполнении буфера создает транзакцию в бд
 func (h *Handler) addMetric(ctx context.Context, m *storage.Metric) error {
 
 	h.db.Buffer = append(h.db.Buffer, *m)
@@ -217,7 +220,7 @@ func (h *Handler) addMetric(ctx context.Context, m *storage.Metric) error {
 	return nil
 }
 
-// SetJSONValue TODO: go dock
+// SetJSONValue устанавливает значение метрики, принимает формат JSON
 func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
@@ -313,7 +316,7 @@ func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetAllStats returns the values of all metrics
+// GetAllStats возвращает значения всех метрик
 func (h *Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 
 	var res string
@@ -348,7 +351,7 @@ func (h *Handler) GetAllStats(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(tmp)
 }
 
-// SetMetricValue sets the value of the specified metric
+// SetMetricValue устанавливает значение метрики переданное в url
 func (h *Handler) SetMetricValue(w http.ResponseWriter, r *http.Request) {
 
 	var metric storage.Metric

@@ -1,3 +1,7 @@
+// Package agent пакет содержащий функционал агента
+//
+// Монитор - динамически проверяет состочние процессорных метрик и метрик памяти
+// с заданным интервалом отправляет их на сервер
 package agent
 
 import (
@@ -18,6 +22,7 @@ import (
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
+// Monitor структура монитора
 type Monitor struct {
 	config *config.ConfigurationAgent
 	hasher *hashing.Hash
@@ -25,6 +30,7 @@ type Monitor struct {
 	pollCount storage.Counter
 }
 
+// NewMonitor конструтор структруы монитор
 func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash) *Monitor {
 	return &Monitor{
 		config: cfg,
@@ -33,7 +39,7 @@ func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash) *Monitor {
 
 }
 
-// sendData go dock
+// SendData отправляет метрики на сервер
 func (m *Monitor) SendData(value storage.Gauge, name, mtype string) {
 	var metric storage.Metric
 
@@ -66,11 +72,13 @@ func (m *Monitor) SendData(value storage.Gauge, name, mtype string) {
 	}
 }
 
+// RunMemStatListener считывает метрики памяти
 func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
 	runtime.ReadMemStats(mem)
 	m.pollCount++
 }
 
+// RunVirtMemCpuListener считывает метрики процессора
 func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
 
 	stats, _ = mems.VirtualMemory()
@@ -78,6 +86,7 @@ func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *
 	m.pollCount++
 }
 
+// Run запускает режим мониторинга в нескольких горутинах
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
 	var stats mems.VirtualMemoryStat

@@ -1,3 +1,9 @@
+// Package database пакет организует работу с базой данных
+// Работа организована через объект структуры DB
+//
+// Объект создаеться при помощи команды:
+//
+//	newDB := NewDB(config, storage)
 package database
 
 import (
@@ -14,6 +20,7 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
+// DB структура для работы с базой данных
 type DB struct {
 	DB  *sql.DB
 	cfg *config.ConfigurationServer
@@ -22,6 +29,7 @@ type DB struct {
 	Buffer []storage.Metric
 }
 
+// NewDB конструктор для создания экземпяра структуры DB
 func NewDB(cfg *config.ConfigurationServer, str *storage.MetricStorage) *DB {
 
 	ctx := context.Background()
@@ -45,6 +53,7 @@ func NewDB(cfg *config.ConfigurationServer, str *storage.MetricStorage) *DB {
 	}
 }
 
+// createTableWithContext создаёт все необходимые таблицы в базе данных
 func createTableWithContext(ctx context.Context, db *sql.DB) {
 
 	childCtx, cancel := context.WithTimeout(ctx, 1*time.Second)
@@ -57,11 +66,13 @@ func createTableWithContext(ctx context.Context, db *sql.DB) {
 		log.Println("Field to create db table ", err, r)
 	}
 }
+
+// Close закрывает соединение с базой данных
 func (d *DB) Close() error {
 	return d.DB.Close()
 }
 
-// FlushWithContext sends a transaction to the database
+// FlushWithContext отправляет транзакицю в базу данных
 func (d *DB) FlushWithContext(ctx context.Context) (err error) {
 
 	childCtx, cancel := context.WithTimeout(ctx, 3*time.Second)
@@ -135,7 +146,7 @@ func (d *DB) FlushWithContext(ctx context.Context) (err error) {
 
 }
 
-// Run inserts a metric into db
+// Run добавляет метрику в базу данных
 func (d *DB) Run(ctx context.Context, metric *storage.Metric) (err error) {
 
 	childCtx, cancel := context.WithTimeout(ctx, 3*time.Second)

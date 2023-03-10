@@ -1,3 +1,16 @@
+// Пакет с логикой сервера
+//
+// Приложение собирается командой:
+//
+//	go build server
+//
+// Запускается:
+//
+//	./agent
+//
+// Или
+//
+//	go run main.go
 package main
 
 import (
@@ -15,11 +28,14 @@ import (
 )
 
 func main() {
-	cfg := config.NewServerConfig()
+	cfg, err := config.NewServerConfig()
+	if err != nil {
+		log.Fatalf("%s: %s", config.ErrFlagParse, err)
+	}
 
 	str := storage.NewStorage()
 
-	_, err := file.NewRead(cfg, str)
+	_, err = file.NewRead(cfg, str)
 	if err != nil {
 		log.Println("file read error: ", err)
 	}
