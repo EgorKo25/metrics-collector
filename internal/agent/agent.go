@@ -12,7 +12,6 @@ import (
 	"net/http"
 	"net/url"
 	"runtime"
-	"sync"
 	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -27,7 +26,6 @@ import (
 type Monitor struct {
 	config *config.ConfigurationAgent
 	hasher *hashing.Hash
-	mu     sync.RWMutex
 
 	pollCount storage.Counter
 }
@@ -81,8 +79,6 @@ func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
 
 // RunVirtMemCpuListener считывает метрики процессора
 func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
 	stats, _ = mems.VirtualMemory()
 	*cpuInfo, _ = cpu.Percent(0, false)
 	m.pollCount++
@@ -94,7 +90,7 @@ func (m *Monitor) Run() {
 	var mem runtime.MemStats
 	var cpuInfo []float64
 
-	stats, _ := mems.VirtualMemory()
+	var stats *mems.VirtualMemoryStat
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
