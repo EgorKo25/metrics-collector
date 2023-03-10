@@ -80,8 +80,8 @@ func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
 // RunVirtMemCpuListener считывает метрики процессора
 func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
 
-	stats, _ = mems.VirtualMemory()
-	log.Println(stats)
+	stats, err := mems.VirtualMemory()
+	log.Println(stats, err)
 	*cpuInfo, _ = cpu.Percent(0, false)
 	m.pollCount++
 }
@@ -89,7 +89,6 @@ func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *
 // Run запускает режим мониторинга в нескольких горутинах
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
-
 	var cpuInfo []float64
 
 	stats, _ := mems.VirtualMemory()
