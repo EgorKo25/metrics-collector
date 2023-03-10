@@ -81,7 +81,7 @@ func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
 func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
 
 	stats, err := mems.VirtualMemory()
-	log.Println(stats, err)
+	log.Println(stats.Free, err)
 	*cpuInfo, _ = cpu.Percent(0, false)
 	m.pollCount++
 }
