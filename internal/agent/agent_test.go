@@ -9,8 +9,6 @@ import (
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-
-	mems "github.com/shirou/gopsutil/v3/mem"
 )
 
 func BenchmarkMonitor_SendData(b *testing.B) {
@@ -25,11 +23,10 @@ func BenchmarkMonitor_SendData(b *testing.B) {
 	m := NewMonitor(cfg, hsr)
 
 	var mem runtime.MemStats
-	var stats mems.VirtualMemoryStat
 	var cpuInfo []float64
 
 	m.RunMemStatListener(&mem)
-	m.RunVirtMemCpuListener(&stats, &cpuInfo)
+	m.RunVirtMemCpuListener(&cpuInfo)
 
 	for i := 0; i < b.N; i++ {
 		b.Run("message sender", func(b *testing.B) {
@@ -63,8 +60,8 @@ func BenchmarkMonitor_SendData(b *testing.B) {
 			m.SendData(storage.Gauge(mem.StackSys), "StackSys", "gauge")
 			m.SendData(storage.Gauge(mem.Sys), "Sys", "gauge")
 			m.SendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
-			m.SendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
-			m.SendData(storage.Gauge(stats.Free), "FreeMemory", "gauge")
+			m.SendData(storage.Gauge(m.stats.Total), "TotalMemory", "gauge")
+			m.SendData(storage.Gauge(m.stats.Free), "FreeMemory", "gauge")
 			m.SendData(storage.Gauge(cpuInfo[0]), "CPUutilization1", "gauge")
 		})
 	}
