@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 	"runtime"
+	"sync"
 	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -26,6 +27,7 @@ import (
 type Monitor struct {
 	config *config.ConfigurationAgent
 	hasher *hashing.Hash
+	mu     sync.RWMutex
 
 	pollCount storage.Counter
 }
@@ -79,11 +81,12 @@ func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
 
 // RunVirtMemCpuListener считывает метрики процессора
 func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *[]float64) {
-
-	stats, err := mems.VirtualMemory()
-	log.Println(stats.Free, err)
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	stats, _ = mems.VirtualMemory()
 	*cpuInfo, _ = cpu.Percent(0, false)
 	m.pollCount++
+
 }
 
 // Run запускает режим мониторинга в нескольких горутинах
