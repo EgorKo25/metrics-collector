@@ -7,14 +7,15 @@ package agent
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/shirou/gopsutil/v3/cpu"
-	mems "github.com/shirou/gopsutil/v3/mem"
 	"log"
 	"math/rand"
 	"net/http"
 	"net/url"
 	"runtime"
 	"time"
+
+	"github.com/shirou/gopsutil/v3/cpu"
+	mems "github.com/shirou/gopsutil/v3/mem"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
@@ -39,7 +40,7 @@ func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash) *Monitor {
 }
 
 // SendData отправляет метрики на сервер
-func (m *Monitor) sendData(value storage.Gauge, name, mtype string) {
+func (m *Monitor) SendData(value storage.Gauge, name, mtype string) {
 	var metric storage.Metric
 
 	metric.ID = name
@@ -88,8 +89,10 @@ func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *
 // Run запускает режим мониторинга в нескольких горутинах
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
-	var stats *mems.VirtualMemoryStat
+
 	var cpuInfo []float64
+
+	stats, _ := mems.VirtualMemory()
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
@@ -99,41 +102,42 @@ func (m *Monitor) Run() {
 
 		case <-tickerPoll.C:
 			go m.RunMemStatListener(&mem)
-			go m.RunVirtMemCpuListener(stats, &cpuInfo)
+			m.RunVirtMemCpuListener(stats, &cpuInfo)
 
 		case <-tickerReport.C:
-			m.sendData(storage.Gauge(m.pollCount), "PollCount", "counter")
-			m.sendData(storage.Gauge(rand.Float64()), "RandomValue", "gauge")
-			m.sendData(storage.Gauge(mem.Alloc), "Alloc", "gauge")
-			m.sendData(storage.Gauge(mem.BuckHashSys), "BuckHashSys", "gauge")
-			m.sendData(storage.Gauge(mem.Frees), "Frees", "gauge")
-			m.sendData(storage.Gauge(mem.GCCPUFraction), "GCCPUFraction", "gauge")
-			m.sendData(storage.Gauge(mem.GCSys), "GCSys", "gauge")
-			m.sendData(storage.Gauge(mem.HeapAlloc), "HeapAlloc", "gauge")
-			m.sendData(storage.Gauge(mem.HeapIdle), "HeapIdle", "gauge")
-			m.sendData(storage.Gauge(mem.HeapInuse), "HeapInuse", "gauge")
-			m.sendData(storage.Gauge(mem.HeapObjects), "HeapObjects", "gauge")
-			m.sendData(storage.Gauge(mem.HeapReleased), "HeapReleased", "gauge")
-			m.sendData(storage.Gauge(mem.HeapSys), "HeapSys", "gauge")
-			m.sendData(storage.Gauge(mem.LastGC), "LastGC", "gauge")
-			m.sendData(storage.Gauge(mem.Lookups), "Lookups", "gauge")
-			m.sendData(storage.Gauge(mem.MCacheInuse), "MCacheInuse", "gauge")
-			m.sendData(storage.Gauge(mem.MCacheSys), "MCacheSys", "gauge")
-			m.sendData(storage.Gauge(mem.MSpanInuse), "MSpanInuse", "gauge")
-			m.sendData(storage.Gauge(mem.MSpanSys), "MSpanSys", "gauge")
-			m.sendData(storage.Gauge(mem.Mallocs), "Mallocs", "gauge")
-			m.sendData(storage.Gauge(mem.NextGC), "NextGC", "gauge")
-			m.sendData(storage.Gauge(mem.NumForcedGC), "NumForcedGC", "gauge")
-			m.sendData(storage.Gauge(mem.NumGC), "NumGC", "gauge")
-			m.sendData(storage.Gauge(mem.OtherSys), "OtherSys", "gauge")
-			m.sendData(storage.Gauge(mem.PauseTotalNs), "PauseTotalNs", "gauge")
-			m.sendData(storage.Gauge(mem.StackInuse), "StackInuse", "gauge")
-			m.sendData(storage.Gauge(mem.StackSys), "StackSys", "gauge")
-			m.sendData(storage.Gauge(mem.Sys), "Sys", "gauge")
-			m.sendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
-			m.sendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
-			m.sendData(storage.Gauge(stats.Free), "FreeMemory", "gauge")
-			m.sendData(storage.Gauge(cpuInfo[0]), "CPUutilization1", "gauge")
+			m.SendData(storage.Gauge(m.pollCount), "PollCount", "counter")
+			m.SendData(storage.Gauge(rand.Float64()), "RandomValue", "gauge")
+			m.SendData(storage.Gauge(mem.Alloc), "Alloc", "gauge")
+			m.SendData(storage.Gauge(mem.BuckHashSys), "BuckHashSys", "gauge")
+			m.SendData(storage.Gauge(mem.Frees), "Frees", "gauge")
+			m.SendData(storage.Gauge(mem.GCCPUFraction), "GCCPUFraction", "gauge")
+			m.SendData(storage.Gauge(mem.GCSys), "GCSys", "gauge")
+			m.SendData(storage.Gauge(mem.HeapAlloc), "HeapAlloc", "gauge")
+			m.SendData(storage.Gauge(mem.HeapIdle), "HeapIdle", "gauge")
+			m.SendData(storage.Gauge(mem.HeapInuse), "HeapInuse", "gauge")
+			m.SendData(storage.Gauge(mem.HeapObjects), "HeapObjects", "gauge")
+			m.SendData(storage.Gauge(mem.HeapReleased), "HeapReleased", "gauge")
+			m.SendData(storage.Gauge(mem.HeapSys), "HeapSys", "gauge")
+			m.SendData(storage.Gauge(mem.LastGC), "LastGC", "gauge")
+			m.SendData(storage.Gauge(mem.Lookups), "Lookups", "gauge")
+			m.SendData(storage.Gauge(mem.MCacheInuse), "MCacheInuse", "gauge")
+			m.SendData(storage.Gauge(mem.MCacheSys), "MCacheSys", "gauge")
+			m.SendData(storage.Gauge(mem.MSpanInuse), "MSpanInuse", "gauge")
+			m.SendData(storage.Gauge(mem.MSpanSys), "MSpanSys", "gauge")
+			m.SendData(storage.Gauge(mem.Mallocs), "Mallocs", "gauge")
+			m.SendData(storage.Gauge(mem.NextGC), "NextGC", "gauge")
+			m.SendData(storage.Gauge(mem.NumForcedGC), "NumForcedGC", "gauge")
+			m.SendData(storage.Gauge(mem.NumGC), "NumGC", "gauge")
+			m.SendData(storage.Gauge(mem.OtherSys), "OtherSys", "gauge")
+			m.SendData(storage.Gauge(mem.PauseTotalNs), "PauseTotalNs", "gauge")
+			m.SendData(storage.Gauge(mem.StackInuse), "StackInuse", "gauge")
+			m.SendData(storage.Gauge(mem.StackSys), "StackSys", "gauge")
+			m.SendData(storage.Gauge(mem.Sys), "Sys", "gauge")
+			m.SendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
+			log.Println(stats.Total, stats.Free)
+			m.SendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
+			m.SendData(storage.Gauge(stats.Free), "FreeMemory", "gauge")
+			m.SendData(storage.Gauge(cpuInfo[0]), "CPUutilization1", "gauge")
 		}
 	}
 }
