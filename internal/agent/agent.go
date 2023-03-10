@@ -102,7 +102,7 @@ func (m *Monitor) Run() {
 
 		case <-tickerPoll.C:
 			go m.RunMemStatListener(&mem)
-			go m.RunVirtMemCpuListener(stats, &cpuInfo)
+			m.RunVirtMemCpuListener(stats, &cpuInfo)
 
 		case <-tickerReport.C:
 			m.SendData(storage.Gauge(m.pollCount), "PollCount", "counter")
