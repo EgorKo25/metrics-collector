@@ -88,8 +88,10 @@ func (m *Monitor) RunVirtMemCpuListener(stats *mems.VirtualMemoryStat, cpuInfo *
 // Run запускает режим мониторинга в нескольких горутинах
 func (m *Monitor) Run() {
 	var mem runtime.MemStats
-	var stats mems.VirtualMemoryStat
+	var tmp mems.VirtualMemoryStat
 	var cpuInfo []float64
+
+	stats := &tmp
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
@@ -99,7 +101,7 @@ func (m *Monitor) Run() {
 
 		case <-tickerPoll.C:
 			go m.RunMemStatListener(&mem)
-			go m.RunVirtMemCpuListener(&stats, &cpuInfo)
+			go m.RunVirtMemCpuListener(stats, &cpuInfo)
 
 		case <-tickerReport.C:
 			m.SendData(storage.Gauge(m.pollCount), "PollCount", "counter")
@@ -132,7 +134,6 @@ func (m *Monitor) Run() {
 			m.SendData(storage.Gauge(mem.Sys), "Sys", "gauge")
 			m.SendData(storage.Gauge(mem.TotalAlloc), "TotalAlloc", "gauge")
 			m.SendData(storage.Gauge(stats.Total), "TotalMemory", "gauge")
-			log.Println("ЗНАЧЕНИК ФРИ МЕМОРИ   *", stats.Free)
 			m.SendData(storage.Gauge(stats.Free), "FreeMemory", "gauge")
 			m.SendData(storage.Gauge(cpuInfo[0]), "CPUutilization1", "gauge")
 		}
