@@ -678,7 +678,7 @@ jobs:
         if: |
             always()
         run: |
-          shortenertest -test.v -test.run=^TestIteration15$ -source-path=.
+          agent -test.v -test.run=^TestIteration15$ -source-path=.
       - name: "Code increment #16"
         if: |
           always()
