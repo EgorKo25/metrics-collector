@@ -1,15 +1,20 @@
+// Package routers описывает роутер
 package routers
 
 import (
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+// NewRouter создет роутер определяющий маршруты к обработчикам
 func NewRouter(handler *handlers.Handler) chi.Router {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
+
+	r.Mount("/debug", middleware.Profiler())
 
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", handler.GetAllStats)

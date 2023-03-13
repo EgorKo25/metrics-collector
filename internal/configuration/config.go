@@ -1,11 +1,28 @@
+// Package config
+// пакет формирует конфигурации для агента и сервера
+//
+// Конфигурация агента создается при помощи команды:
+//
+//	agent := NewAgentConfig().
+//
+// Конфигурация сервера создается при помощи команды:
+//
+//	agent := NewServerConfig().
 package config
 
 import (
+	"errors"
 	"flag"
-	"github.com/caarlos0/env/v6"
 	"time"
+
+	"github.com/caarlos0/env/v6"
 )
 
+var (
+	ErrFlagParse = errors.New("failed to get flag values")
+)
+
+// ConfigurationAgent структура конфигурации агента
 type ConfigurationAgent struct {
 	PollInterval   time.Duration `env:"POLL_INTERVAL"`
 	ReportInterval time.Duration `env:"REPORT_INTERVAL"`
@@ -13,7 +30,8 @@ type ConfigurationAgent struct {
 	Key            string        `env:"KEY"`
 }
 
-func NewAgentConfig() *ConfigurationAgent {
+// NewAgentConfig конструтор конфигурации объекта
+func NewAgentConfig() (*ConfigurationAgent, error) {
 	var cfg ConfigurationAgent
 	flag.StringVar(&cfg.Address,
 		"a", "127.0.0.1:8080",
@@ -33,10 +51,15 @@ func NewAgentConfig() *ConfigurationAgent {
 	)
 	flag.Parse()
 
-	_ = env.Parse(&cfg)
-	return &cfg
+	err := env.Parse(&cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return &cfg, nil
 }
 
+// ConfigurationServer структура конфигурации агента
 type ConfigurationServer struct {
 	Address       string        `env:"ADDRESS"`
 	StoreInterval time.Duration `env:"STORE_INTERVAL"`
@@ -46,7 +69,8 @@ type ConfigurationServer struct {
 	DB            string        `env:"DATABASE_DSN"`
 }
 
-func NewServerConfig() *ConfigurationServer {
+// NewServerConfig конструктор конфигурации объекта
+func NewServerConfig() (*ConfigurationServer, error) {
 	var cfg ConfigurationServer
 
 	flag.StringVar(&cfg.Address,
@@ -76,7 +100,10 @@ func NewServerConfig() *ConfigurationServer {
 
 	flag.Parse()
 
-	_ = env.Parse(&cfg)
+	err := env.Parse(&cfg)
+	if err != nil {
+		return nil, err
+	}
 
-	return &cfg
+	return &cfg, nil
 }

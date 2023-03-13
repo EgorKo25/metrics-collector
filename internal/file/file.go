@@ -1,3 +1,4 @@
+// Package file определяет работу с файлом
 package file
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
+// Save структура для работы данных
 type Save struct {
 	cfg  *config.ConfigurationServer
 	strg *storage.MetricStorage
@@ -20,6 +22,7 @@ type Save struct {
 	writer *bufio.Writer
 }
 
+// NewSave конструктор Save
 func NewSave(cfg *config.ConfigurationServer, strg *storage.MetricStorage) *Save {
 	file, _ := os.OpenFile(cfg.StoreFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0777)
 	return &Save{
@@ -30,10 +33,12 @@ func NewSave(cfg *config.ConfigurationServer, strg *storage.MetricStorage) *Save
 	}
 }
 
+// Close закрываюет файл
 func (s *Save) Close() error {
 	return s.file.Close()
 }
 
+// WriteAll записывае в файл
 func (s *Save) WriteAll() (err error) {
 	var metric storage.Metric
 	var data []byte
@@ -80,6 +85,7 @@ func (s *Save) Run() error {
 	}
 }
 
+// Read структура чтения из файла
 type Read struct {
 	cfg  *config.ConfigurationServer
 	strg *storage.MetricStorage
@@ -88,6 +94,7 @@ type Read struct {
 	reader *bufio.Reader
 }
 
+// NewRead конструктор Read
 func NewRead(cfg *config.ConfigurationServer, strg *storage.MetricStorage) (*Read, error) {
 
 	file, err := os.OpenFile(cfg.StoreFile, os.O_RDONLY|os.O_CREATE, 0777)
@@ -109,6 +116,7 @@ func NewRead(cfg *config.ConfigurationServer, strg *storage.MetricStorage) (*Rea
 	return reader, err
 }
 
+// readAll читает из файла
 func (r *Read) readAll() (err error) {
 
 	for {

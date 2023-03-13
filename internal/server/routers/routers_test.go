@@ -4,6 +4,7 @@ import (
 	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -19,7 +20,10 @@ import (
 
 func TestNewRouter(t *testing.T) {
 
-	cfg := config.NewServerConfig()
+	cfg, err := config.NewServerConfig()
+	if err != nil {
+		log.Fatalf("%s", err)
+	}
 	mem := storage.NewStorage()
 	cpr := middleware.NewCompressor()
 	hsr := hashing.NewHash(cfg.Key)

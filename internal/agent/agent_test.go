@@ -1,110 +1,36 @@
-// Package agent пакет содержащий функционал агента
-//
-// Монитор - динамически проверяет состочние процессорных метрик и метрик памяти
-// с заданным интервалом отправляет их на сервер
 package agent
 
 import (
-	"bytes"
-	"encoding/json"
 	"log"
 	"math/rand"
-	"net/http"
-	"net/url"
 	"runtime"
-	"time"
-
-	"github.com/shirou/gopsutil/v3/cpu"
-	mems "github.com/shirou/gopsutil/v3/mem"
+	"testing"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
-// Monitor структура монитора
-type Monitor struct {
-	config *config.ConfigurationAgent
-	hasher *hashing.Hash
+func BenchmarkMonitor_SendData(b *testing.B) {
 
-	stats *mems.VirtualMemoryStat
-
-	pollCount storage.Counter
-}
-
-// NewMonitor конструтор структруы монитор
-func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash) *Monitor {
-	return &Monitor{
-		config: cfg,
-		hasher: hsr,
-	}
-
-}
-
-// SendData отправляет метрики на сервер
-func (m *Monitor) SendData(value storage.Gauge, name, mtype string) {
-	var metric storage.Metric
-
-	metric.ID = name
-	metric.MType = mtype
-
-	switch mtype {
-
-	case "counter":
-		tmp := storage.Counter(value)
-		metric.Delta = &tmp
-
-	case "gauge":
-		metric.Value = &value
-	}
-
-	metric.Hash, _ = m.hasher.Run(&metric)
-
-	dataJSON, err := json.Marshal(metric)
+	cfg, err := config.NewAgentConfig()
 	if err != nil {
-		log.Printf("Somethings went wrong: %s", err)
+		log.Fatalf("%s", err)
 	}
 
-	URL, _ := url.JoinPath("http://", m.config.Address, "update/")
+	hsr := hashing.NewHash(cfg.Key)
 
-	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
-	if err != nil {
-		log.Printf("Somethings went wrong: %s", err)
-	}
-}
+	m := NewMonitor(cfg, hsr)
 
-// RunMemStatListener считывает метрики памяти
-func (m *Monitor) RunMemStatListener(mem *runtime.MemStats) {
-	runtime.ReadMemStats(mem)
-	m.pollCount++
-}
-
-// RunVirtMemCpuListener считывает метрики процессора
-func (m *Monitor) RunVirtMemCpuListener(cpuInfo *[]float64) {
-	m.stats, _ = mems.VirtualMemory()
-	*cpuInfo, _ = cpu.Percent(0, false)
-	m.pollCount++
-
-}
-
-// Run запускает режим мониторинга в нескольких горутинах
-func (m *Monitor) Run() {
 	var mem runtime.MemStats
 	var cpuInfo []float64
 
-	m.stats, _ = mems.VirtualMemory()
+	m.RunMemStatListener(&mem)
+	m.RunVirtMemCpuListener(&cpuInfo)
 
-	tickerPoll := time.NewTicker(m.config.PollInterval)
-	tickerReport := time.NewTicker(m.config.ReportInterval)
-
-	for {
-		select {
-
-		case <-tickerPoll.C:
-			go m.RunMemStatListener(&mem)
-			go m.RunVirtMemCpuListener(&cpuInfo)
-
-		case <-tickerReport.C:
+	for i := 0; i < b.N; i++ {
+		b.Run("message sender", func(b *testing.B) {
+			m.SendData(storage.Gauge(rand.Float64()), "RandomValue", "gauge")
 			m.SendData(storage.Gauge(m.pollCount), "PollCount", "counter")
 			m.SendData(storage.Gauge(rand.Float64()), "RandomValue", "gauge")
 			m.SendData(storage.Gauge(mem.Alloc), "Alloc", "gauge")
@@ -137,6 +63,6 @@ func (m *Monitor) Run() {
 			m.SendData(storage.Gauge(m.stats.Total), "TotalMemory", "gauge")
 			m.SendData(storage.Gauge(m.stats.Free), "FreeMemory", "gauge")
 			m.SendData(storage.Gauge(cpuInfo[0]), "CPUutilization1", "gauge")
-		}
+		})
 	}
 }
