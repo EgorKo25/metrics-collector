@@ -14,6 +14,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/agent"
@@ -23,12 +24,17 @@ import (
 	_ "net/http/pprof"
 )
 
+var buildVersion = "N/A"
+var buildDate = "N/A"
+var buildCommit = "N/A"
+
 func main() {
+
+	fmt.Printf("Build version: %s\nBuild date:    %s\nBuild commit:  %s\n", buildVersion, buildDate, buildCommit)
 
 	cfg, err := config.NewAgentConfig()
 	if err != nil {
 		log.Fatalf("%s: %s", config.ErrFlagParse, err)
-		return
 	}
 
 	hsr := hashing.NewHash(cfg.Key)

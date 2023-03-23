@@ -14,6 +14,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -27,7 +28,14 @@ import (
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
+var buildVersion = "N/A"
+var buildDate = "N/A"
+var buildCommit = "N/A"
+
 func main() {
+
+	fmt.Printf("Build version: %s\nBuild date:    %s\nBuild commit:  %s\n", buildVersion, buildDate, buildCommit)
+
 	cfg, err := config.NewServerConfig()
 	if err != nil {
 		log.Fatalf("%s: %s", config.ErrFlagParse, err)
