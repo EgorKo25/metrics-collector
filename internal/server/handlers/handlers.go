@@ -75,7 +75,8 @@ func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	b, _ := io.ReadAll(r.Body)
 
-	if err := json.Unmarshal(b, &metric); err != nil {
+	err = json.Unmarshal(b, &metric)
+	if err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
 
@@ -234,8 +235,11 @@ func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 		b, _ = h.compressor.Decompress(b)
 	}
 
-	if err := json.Unmarshal(b, &metric); err != nil {
+	err = json.Unmarshal(b, &metric)
+	if err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	if metric.Value == nil && metric.Delta == nil {
