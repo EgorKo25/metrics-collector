@@ -1,14 +1,14 @@
 package routers
 
 import (
-	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"io"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
