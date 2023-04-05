@@ -28,6 +28,7 @@ type ConfigurationAgent struct {
 	ReportInterval time.Duration `env:"REPORT_INTERVAL"`
 	Address        string        `env:"ADDRESS"`
 	Key            string        `env:"KEY"`
+	CryptoKey      string        `env:"CRYPTO_KEY"`
 }
 
 // NewAgentConfig конструтор конфигурации объекта
@@ -39,6 +40,10 @@ func NewAgentConfig() (*ConfigurationAgent, error) {
 	)
 	flag.StringVar(&cfg.Key,
 		"k", "",
+		"traffic encryption key",
+	)
+	flag.StringVar(&cfg.Key,
+		"crypto-key", "",
 		"traffic encryption key",
 	)
 	flag.DurationVar(&cfg.PollInterval,
@@ -67,6 +72,7 @@ type ConfigurationServer struct {
 	Restore       bool          `env:"RESTORE"`
 	Key           string        `env:"KEY"`
 	DB            string        `env:"DATABASE_DSN"`
+	CryptoKey     string        `env:"CRYPTO_KEY"`
 }
 
 // NewServerConfig конструктор конфигурации объекта
@@ -79,6 +85,10 @@ func NewServerConfig() (*ConfigurationServer, error) {
 	)
 	flag.StringVar(&cfg.Key,
 		"k", "",
+		"traffic encryption key",
+	)
+	flag.StringVar(&cfg.Key,
+		"crypto-key", "",
 		"traffic encryption key",
 	)
 	flag.StringVar(&cfg.DB,

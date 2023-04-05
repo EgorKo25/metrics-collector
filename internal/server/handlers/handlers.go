@@ -11,12 +11,13 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-
 	"github.com/go-chi/chi/v5"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/middleware"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
 // Handler структура определяющая структуру обработчиков
@@ -25,15 +26,18 @@ type Handler struct {
 	compressor *middleware.Compressor
 	hasher     *hashing.Hash
 	db         *database.DB
+	encryptor  *encryption.Encryptor
 }
 
 // NewHandler конструктор структуры хэндлер
-func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB) *Handler {
+func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB, enc *encryption.Encryptor) *Handler {
+
 	return &Handler{
 		storage:    storage,
 		compressor: compressor,
 		hasher:     hasher,
 		db:         db,
+		encryptor:  enc,
 	}
 }
 
@@ -74,6 +78,12 @@ func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 	var metric storage.Metric
 
 	b, _ := io.ReadAll(r.Body)
+
+	b, err = h.encryptor.Decrypt(b)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	err = json.Unmarshal(b, &metric)
 	if err != nil {
@@ -162,6 +172,12 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	b, err = h.encryptor.Decrypt(b)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	if r.Header.Get("Content-Encoding") == "gzip" {
 
 		b, err = h.compressor.Decompress(b)
@@ -230,6 +246,12 @@ func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 	var metric storage.Metric
 
 	b, _ := io.ReadAll(r.Body)
+
+	b, err = h.encryptor.Decrypt(b)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	if r.Header.Get("Content-Encoding") == "gzip" {
 		b, _ = h.compressor.Decompress(b)

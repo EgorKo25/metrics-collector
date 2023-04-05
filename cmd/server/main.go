@@ -20,10 +20,11 @@ import (
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/file"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/middleware"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/routers"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
@@ -52,9 +53,14 @@ func main() {
 
 	db := database.NewDB(cfg, str)
 
-	compressor := middleware.NewCompressor()
+	cpr := middleware.NewCompressor()
 
-	handler := handlers.NewHandler(str, compressor, hsr, db)
+	enc, err := encryption.NewEncryptor(cfg.CryptoKey, "private")
+	if err != nil {
+		log.Fatalf("%s", err)
+	}
+
+	handler := handlers.NewHandler(str, cpr, hsr, db, enc)
 
 	router := routers.NewRouter(handler)
 

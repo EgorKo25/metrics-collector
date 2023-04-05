@@ -19,6 +19,7 @@ import (
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/agent"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 
 	_ "net/http/pprof"
@@ -39,7 +40,15 @@ func main() {
 
 	hsr := hashing.NewHash(cfg.Key)
 
-	monitor := agent.NewMonitor(cfg, hsr)
+	enc, err := encryption.NewEncryptor(cfg.CryptoKey, "public")
+	if err != nil {
+		log.Fatalf("%s", err)
+	}
+
+	monitor, err := agent.NewMonitor(cfg, hsr, enc)
+	if err != nil {
+		log.Fatalf("%s: %s", agent.ErrConstructor, err)
+	}
 
 	monitor.Run()
 }
