@@ -16,6 +16,9 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/agent"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
@@ -50,5 +53,9 @@ func main() {
 		log.Fatalf("%s: %s", agent.ErrConstructor, err)
 	}
 
-	monitor.Run()
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
+	monitor.Run(sigs)
+
 }

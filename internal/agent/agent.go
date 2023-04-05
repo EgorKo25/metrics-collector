@@ -12,6 +12,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"os"
 	"runtime"
 	"time"
 
@@ -38,6 +39,8 @@ type Monitor struct {
 	PublicKey []byte
 
 	pollCount storage.Counter
+
+	shutdown bool
 }
 
 // NewMonitor конструтор структруы монитор
@@ -106,17 +109,22 @@ func (m *Monitor) RunVirtMemCpuListener(cpuInfo *[]float64) {
 }
 
 // Run запускает режим мониторинга в нескольких горутинах
-func (m *Monitor) Run() {
+func (m *Monitor) Run(sigs chan os.Signal) {
 	var mem runtime.MemStats
 	var cpuInfo []float64
 
+	m.shutdown = true
 	m.stats, _ = mems.VirtualMemory()
 
 	tickerPoll := time.NewTicker(m.config.PollInterval)
 	tickerReport := time.NewTicker(m.config.ReportInterval)
 
-	for {
+	for m.shutdown {
+
 		select {
+
+		case <-sigs:
+			m.shutdown = false
 
 		case <-tickerPoll.C:
 			go m.RunMemStatListener(&mem)

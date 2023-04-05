@@ -14,9 +14,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
@@ -73,6 +77,32 @@ func main() {
 		}
 	}()
 
-	log.Println(http.ListenAndServe(cfg.Address, router))
+	server := &http.Server{
+		Addr:    cfg.Address,
+		Handler: router,
+	}
 
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
+	idleConnsClosed := make(chan struct{})
+
+	go func() {
+		sigint := make(chan os.Signal, 1)
+		signal.Notify(sigint, os.Interrupt)
+		<-sigint
+
+		if err = server.Shutdown(context.Background()); err != nil {
+
+			log.Printf("\nHTTP server Shutdown: %v", err)
+		}
+		close(idleConnsClosed)
+	}()
+
+	err = server.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
+
+	<-idleConnsClosed
 }
