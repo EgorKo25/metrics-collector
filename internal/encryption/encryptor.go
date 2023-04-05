@@ -75,7 +75,7 @@ func (e *Encryptor) Encrypt(message []byte) (encryptString []byte, err error) {
 
 func (e *Encryptor) Decrypt(message []byte) (encryptString []byte, err error) {
 
-	if e.publicKey == nil {
+	if e.privateKey == nil {
 		return message, nil
 	}
 
