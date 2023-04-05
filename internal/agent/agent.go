@@ -7,6 +7,7 @@ package agent
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"log"
 	"math/rand"
 	"net/http"
@@ -18,26 +19,35 @@ import (
 	mems "github.com/shirou/gopsutil/v3/mem"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
+)
+
+var (
+	ErrConstructor = errors.New("ошибка конструктора")
 )
 
 // Monitor структура монитора
 type Monitor struct {
 	config *config.ConfigurationAgent
 	hasher *hashing.Hash
+	enc    *encryption.Encryptor
 
-	stats *mems.VirtualMemoryStat
+	stats     *mems.VirtualMemoryStat
+	PublicKey []byte
 
 	pollCount storage.Counter
 }
 
 // NewMonitor конструтор структруы монитор
-func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash) *Monitor {
+func NewMonitor(cfg *config.ConfigurationAgent, hsr *hashing.Hash, enc *encryption.Encryptor) (*Monitor, error) {
+
 	return &Monitor{
 		config: cfg,
 		hasher: hsr,
-	}
+		enc:    enc,
+	}, nil
 
 }
 
@@ -62,14 +72,22 @@ func (m *Monitor) SendData(value storage.Gauge, name, mtype string) {
 
 	dataJSON, err := json.Marshal(metric)
 	if err != nil {
-		log.Printf("Somethings went wrong: %s", err)
+		log.Printf("somethings went wrong: %s", err)
+		return
+	}
+
+	dataJSON, err = m.enc.Encrypt(dataJSON)
+	if err != nil {
+		log.Printf("somethings went wrong: %s", err)
+		return
 	}
 
 	URL, _ := url.JoinPath("http://", m.config.Address, "update/")
 
 	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
 	if err != nil {
-		log.Printf("Somethings went wrong: %s", err)
+		log.Printf("somethings went wrong: %s", err)
+		return
 	}
 }
 
