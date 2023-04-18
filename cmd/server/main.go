@@ -66,7 +66,9 @@ func main() {
 
 	handler := handlers.NewHandler(str, cpr, hsr, db, enc)
 
-	router := routers.NewRouter(handler)
+	middle := middleware.NewMiddle(cfg)
+
+	router := routers.NewRouter(handler, middle)
 
 	save := file.NewSave(cfg, str)
 

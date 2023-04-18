@@ -87,6 +87,7 @@ type ConfigurationServer struct {
 	Key           string        `env:"KEY"`
 	DB            string        `env:"DATABASE_DSN" json:"database_dsn"`
 	CryptoKey     string        `env:"CRYPTO_KEY" json:"crypto_key"`
+	TrustedSubnet string        `env:"TRUSTED_SUBNET" json:"trusted_subnet"`
 	configFile    string        `env:"CONFIG"`
 }
 
@@ -101,6 +102,10 @@ func NewServerConfig() (*ConfigurationServer, error) {
 	flag.StringVar(&cfg.Key,
 		"k", "",
 		"traffic encryption key",
+	)
+	flag.StringVar(&cfg.TrustedSubnet,
+		"t", "",
+		"trusted subnet",
 	)
 	flag.StringVar(&cfg.CryptoKey,
 		"crypto-key", "",

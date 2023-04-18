@@ -87,11 +87,24 @@ func (m *Monitor) SendData(value storage.Gauge, name, mtype string) {
 
 	URL, _ := url.JoinPath("http://", m.config.Address, "update/")
 
-	_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
+	/*
+		_, err = http.Post(URL, "application/json", bytes.NewBuffer(dataJSON))
+		if err != nil {
+			log.Printf("somethings went wrong: %s", err)
+			return
+		}
+	*/
+	req, err := http.NewRequest("POST", URL, bytes.NewBuffer(dataJSON))
+	req.Header.Set("X-Real-IP", m.config.Address)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("somethings went wrong: %s", err)
+		log.Printf("%s", err)
 		return
 	}
+	defer resp.Body.Close()
 }
 
 // RunMemStatListener считывает метрики памяти

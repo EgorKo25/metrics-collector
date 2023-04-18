@@ -4,6 +4,10 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
+	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"log"
+	"net"
+	"net/http"
 )
 
 type Compressor struct {
@@ -46,4 +50,44 @@ func (c *Compressor) Decompress(data []byte) ([]byte, error) {
 	}
 
 	return b.Bytes(), nil
+}
+
+type Middle struct {
+	ipNet *net.IPNet
+	cfg   *config.ConfigurationServer
+}
+
+func NewMiddle(cfg *config.ConfigurationServer) *Middle {
+	return &Middle{
+		cfg: cfg,
+	}
+}
+
+func (m *Middle) IpChecker(next http.Handler) http.Handler {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		var err error
+
+		ipStr := r.Header.Get("X-Real-IP")
+
+		if m.cfg.TrustedSubnet == "" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		_, m.ipNet, err = net.ParseCIDR(m.cfg.TrustedSubnet)
+		if err != nil {
+			log.Printf("%s", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		if m.ipNet.Contains(net.ParseIP(ipStr)) {
+			next.ServeHTTP(w, r)
+		}
+
+		w.WriteHeader(http.StatusForbidden)
+		return
+	})
 }

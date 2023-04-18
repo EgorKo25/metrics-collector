@@ -31,6 +31,7 @@ func TestNewRouter(t *testing.T) {
 	db := database.NewDB(cfg, mem)
 	enc, _ := encryption.NewEncryptor(cfg.CryptoKey, "private")
 	handler := handlers.NewHandler(mem, cpr, hsr, db, enc)
+	mid := middleware.NewMiddle(cfg)
 
 	value := storage.Gauge(123)
 	metric := storage.Metric{
@@ -40,7 +41,7 @@ func TestNewRouter(t *testing.T) {
 		Value: &value,
 	}
 
-	r := NewRouter(handler)
+	r := NewRouter(handler, mid)
 	ts := httptest.NewServer(r)
 	defer ts.Close()
 
