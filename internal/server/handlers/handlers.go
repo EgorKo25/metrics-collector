@@ -219,9 +219,10 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 
 	}
 	b, _ = json.Marshal(Metrics)
-	w.Write(b)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	w.Write(b)
+
 }
 
 // addMetric добавялет метрику в буффер, при заполнении буфера создает транзакцию в бд
