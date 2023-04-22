@@ -1,34 +1,19 @@
 package main
 
 import (
-	"context"
-	"log"
-
-	"google.golang.org/grpc"
-
-	"github.com/EgorKo25/DevOps-Track-Yandex/proto/service"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/agent"
+	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 )
 
 func main() {
 
-	var metric service.Metric
+	cfg, _ := config.NewAgentConfig()
+	hsr := hashing.NewHash(cfg.Key)
+	enc, _ := encryption.NewEncryptor(cfg.CryptoKey, "public")
 
-	metric.Id = "Random"
-	metric.Type = service.Metric_GAUGE
-	metric.Hash = ""
-	metric.Value = 123.0
+	grpcAgent, _ := agent.NewMonitor(cfg, hsr, enc)
 
-	conn, err := grpc.Dial(":8080", grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("%s", err)
-	}
-
-	agent := service.NewServiceClient(conn)
-
-	req, err := agent.TakeMetric(context.Background(), &service.MetricRequest{Metric: &metric})
-	if err != nil {
-		log.Fatalf("%s", err)
-	}
-
-	log.Println(req.Status)
+	grpcAgent.GrpcMonitorRun()
 }
