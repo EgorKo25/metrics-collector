@@ -216,6 +216,8 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 		h.storage.SetStat(&metric)
 		if err = h.addMetric(ctx, &metric); err != nil {
 			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 
 	}
