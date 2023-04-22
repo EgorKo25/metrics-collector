@@ -127,8 +127,8 @@ func (m *Monitor) SendData(value storage.Gauge, name, mtype string) {
 	URL, _ := url.JoinPath("http://", m.config.Address, "update/")
 
 	req, err := http.NewRequest("POST", URL, bytes.NewBuffer(dataJSON))
-	req.Header.Set("X-Real-IP", m.config.Address)
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Real-IP", m.config.Address)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
