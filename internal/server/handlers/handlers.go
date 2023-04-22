@@ -219,12 +219,12 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	log.Println(Metrics, b)
 	b, _ = json.Marshal(Metrics)
-	c, _ := h.compressor.Compress(b)
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept-Encoding", "gzip")
 	w.WriteHeader(http.StatusOK)
-	w.Write(c)
+	w.Write(b)
 
 }
 
