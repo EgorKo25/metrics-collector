@@ -165,14 +165,13 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
-
 		log.Println("read request body error!")
-
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	b, err = h.encryptor.Decrypt(b)
+	log.Println(b)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
