@@ -2,7 +2,7 @@
 //
 // Приложение собирается командой:
 //
-//	go build server
+//	go build service
 //
 // Запускается:
 //
@@ -96,7 +96,7 @@ func main() {
 
 		if err = server.Shutdown(context.Background()); err != nil {
 
-			log.Printf("\nHTTP server Shutdown: %v", err)
+			log.Printf("\nHTTP service Shutdown: %v", err)
 		}
 		close(idleConnsClosed)
 	}()

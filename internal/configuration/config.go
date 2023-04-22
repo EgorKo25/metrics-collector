@@ -39,7 +39,7 @@ func NewAgentConfig() (*ConfigurationAgent, error) {
 	var cfg ConfigurationAgent
 	flag.StringVar(&cfg.Address,
 		"a", "127.0.0.1:8080",
-		"listening address of the server",
+		"listening address of the service",
 	)
 	flag.StringVar(&cfg.Key,
 		"k", "",
@@ -97,7 +97,7 @@ func NewServerConfig() (*ConfigurationServer, error) {
 
 	flag.StringVar(&cfg.Address,
 		"a", "127.0.0.1:8080",
-		"listening address of the server",
+		"listening address of the service",
 	)
 	flag.StringVar(&cfg.Key,
 		"k", "",
