@@ -171,7 +171,6 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 	}
 
 	b, err = h.encryptor.Decrypt(b)
-	log.Println(b)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -198,8 +197,10 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(Metrics)
 	for _, metric := range Metrics {
 
+		log.Println(metric)
 		if metric.Value == nil && metric.Delta == nil {
 
 			log.Println("no metric value")
