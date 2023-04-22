@@ -219,8 +219,6 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	w.Write(b)
-	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }
 
