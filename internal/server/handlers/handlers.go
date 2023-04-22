@@ -197,10 +197,7 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(Metrics)
 	for _, metric := range Metrics {
-
-		log.Println(metric)
 		if metric.Value == nil && metric.Delta == nil {
 
 			log.Println("no metric value")
@@ -221,6 +218,8 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+
+	w.Write(b)
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }
