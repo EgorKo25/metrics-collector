@@ -72,7 +72,6 @@ func (m *Middle) IpChecker(next http.Handler) http.Handler {
 
 		if m.cfg.TrustedSubnet == "" {
 			next.ServeHTTP(w, r)
-			w.WriteHeader(500)
 			return
 		}
 
