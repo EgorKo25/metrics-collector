@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package proto.service;
+
+option go_package = "github.com/user/project/proto/service";
+
+message Metric {
+  string id = 1;
+  string hash = 2;
+  enum Type {
+    UNKNOWN = 0;
+    GAUGE = 1;
+    COUNTER = 2;
+  }
+  enum Value {
+    VALUE = 0;
+    DELTA = 1;
+  }
+
+  Type type = 3;
+  Value value = 4;
+
+}
+
+message MetricRequest{
+  Metric metric = 1;
+}
+
+message MetricResponse {
+  Metric metric = 1;
+  int32 status = 2;
+}
+
+message PingRequest {}
+message PingResponse{
+  int32 code = 1;
+}
+
+message AllStatsRequest{}
+
+message AllStatsResponse{
+  repeated Metric metrics = 1;
+  int32 code = 2;
+}
+
+service Service {
+  rpc TakeMetric (MetricRequest) returns (MetricResponse);
+  rpc Ping (PingRequest) returns (PingResponse);
+  rpc GetMetric (MetricRequest) returns (MetricResponse);
+  rpc AllStats (AllStatsRequest) returns (AllStatsResponse);
+}

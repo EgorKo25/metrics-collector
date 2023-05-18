@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
@@ -19,8 +20,15 @@ func BenchmarkMonitor_SendData(b *testing.B) {
 	}
 
 	hsr := hashing.NewHash(cfg.Key)
+	enc, err := encryption.NewEncryptor(cfg.CryptoKey, "public")
+	if err != nil {
+		log.Fatalf("%s", err)
+	}
 
-	m := NewMonitor(cfg, hsr)
+	m, err := NewMonitor(cfg, hsr, enc)
+	if err != nil {
+		log.Fatalf("%s", err)
+	}
 
 	var mem runtime.MemStats
 	var cpuInfo []float64

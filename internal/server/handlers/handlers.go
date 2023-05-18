@@ -11,12 +11,13 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-
 	"github.com/go-chi/chi/v5"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/middleware"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
 // Handler структура определяющая структуру обработчиков
@@ -25,15 +26,18 @@ type Handler struct {
 	compressor *middleware.Compressor
 	hasher     *hashing.Hash
 	db         *database.DB
+	encryptor  *encryption.Encryptor
 }
 
 // NewHandler конструктор структуры хэндлер
-func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB) *Handler {
+func NewHandler(storage *storage.MetricStorage, compressor *middleware.Compressor, hasher *hashing.Hash, db *database.DB, enc *encryption.Encryptor) *Handler {
+
 	return &Handler{
 		storage:    storage,
 		compressor: compressor,
 		hasher:     hasher,
 		db:         db,
+		encryptor:  enc,
 	}
 }
 
@@ -75,7 +79,14 @@ func (h *Handler) GetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	b, _ := io.ReadAll(r.Body)
 
-	if err := json.Unmarshal(b, &metric); err != nil {
+	b, err = h.encryptor.Decrypt(b)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = json.Unmarshal(b, &metric)
+	if err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
 	}
 
@@ -154,9 +165,13 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
-
 		log.Println("read request body error!")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
+	b, err = h.encryptor.Decrypt(b)
+	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -183,7 +198,6 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, metric := range Metrics {
-
 		if metric.Value == nil && metric.Delta == nil {
 
 			log.Println("no metric value")
@@ -199,11 +213,19 @@ func (h *Handler) GetJSONUpdates(w http.ResponseWriter, r *http.Request) {
 		h.storage.SetStat(&metric)
 		if err = h.addMetric(ctx, &metric); err != nil {
 			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 
 	}
 
+	log.Println(Metrics, b)
+	b, _ = json.Marshal(Metrics)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Accept-Encoding", "gzip")
 	w.WriteHeader(http.StatusOK)
+	w.Write(b)
+
 }
 
 // addMetric добавялет метрику в буффер, при заполнении буфера создает транзакцию в бд
@@ -230,12 +252,21 @@ func (h *Handler) SetJSONValue(w http.ResponseWriter, r *http.Request) {
 
 	b, _ := io.ReadAll(r.Body)
 
+	b, err = h.encryptor.Decrypt(b)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	if r.Header.Get("Content-Encoding") == "gzip" {
 		b, _ = h.compressor.Decompress(b)
 	}
 
-	if err := json.Unmarshal(b, &metric); err != nil {
+	err = json.Unmarshal(b, &metric)
+	if err != nil {
 		fmt.Printf("Unmarshal went wrong:  %s\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	if metric.Value == nil && metric.Delta == nil {

@@ -11,8 +11,10 @@
 package config
 
 import (
+	"encoding/json"
 	"errors"
 	"flag"
+	"os"
 	"time"
 
 	"github.com/caarlos0/env/v6"
@@ -24,10 +26,12 @@ var (
 
 // ConfigurationAgent структура конфигурации агента
 type ConfigurationAgent struct {
-	PollInterval   time.Duration `env:"POLL_INTERVAL"`
-	ReportInterval time.Duration `env:"REPORT_INTERVAL"`
-	Address        string        `env:"ADDRESS"`
+	PollInterval   time.Duration `env:"POLL_INTERVAL" json:"poll_interval"`
+	ReportInterval time.Duration `env:"REPORT_INTERVAL" json:"report_interval"`
+	Address        string        `env:"ADDRESS" json:"address"`
 	Key            string        `env:"KEY"`
+	CryptoKey      string        `env:"CRYPTO_KEY" json:"crypto_key"`
+	configFile     string        `env:"CONFIG"`
 }
 
 // NewAgentConfig конструтор конфигурации объекта
@@ -35,11 +39,19 @@ func NewAgentConfig() (*ConfigurationAgent, error) {
 	var cfg ConfigurationAgent
 	flag.StringVar(&cfg.Address,
 		"a", "127.0.0.1:8080",
-		"listening address of the server",
+		"listening address of the service",
 	)
 	flag.StringVar(&cfg.Key,
 		"k", "",
 		"traffic encryption key",
+	)
+	flag.StringVar(&cfg.Key,
+		"crypto-key", "",
+		"traffic encryption key",
+	)
+	flag.StringVar(&cfg.configFile,
+		"c", "",
+		"file of configuration",
 	)
 	flag.DurationVar(&cfg.PollInterval,
 		"p", time.Second*2,
@@ -49,6 +61,7 @@ func NewAgentConfig() (*ConfigurationAgent, error) {
 		"r", time.Second*5,
 		"timeout for report metrics",
 	)
+
 	flag.Parse()
 
 	err := env.Parse(&cfg)
@@ -56,17 +69,26 @@ func NewAgentConfig() (*ConfigurationAgent, error) {
 		return nil, err
 	}
 
+	if cfg.configFile != "" {
+		file, _ := os.ReadFile(cfg.configFile)
+
+		_ = json.Unmarshal(file, &cfg)
+	}
+
 	return &cfg, nil
 }
 
 // ConfigurationServer структура конфигурации агента
 type ConfigurationServer struct {
-	Address       string        `env:"ADDRESS"`
-	StoreInterval time.Duration `env:"STORE_INTERVAL"`
-	StoreFile     string        `env:"STORE_FILE"`
-	Restore       bool          `env:"RESTORE"`
+	Address       string        `env:"ADDRESS" json:"address"`
+	StoreInterval time.Duration `env:"STORE_INTERVAL" json:"store_interval"`
+	StoreFile     string        `env:"STORE_FILE" json:"store_file"`
+	Restore       bool          `env:"RESTORE" json:"restore"`
 	Key           string        `env:"KEY"`
-	DB            string        `env:"DATABASE_DSN"`
+	DB            string        `env:"DATABASE_DSN" json:"database_dsn"`
+	CryptoKey     string        `env:"CRYPTO_KEY" json:"crypto_key"`
+	TrustedSubnet string        `env:"TRUSTED_SUBNET" json:"trusted_subnet"`
+	configFile    string        `env:"CONFIG"`
 }
 
 // NewServerConfig конструктор конфигурации объекта
@@ -75,11 +97,23 @@ func NewServerConfig() (*ConfigurationServer, error) {
 
 	flag.StringVar(&cfg.Address,
 		"a", "127.0.0.1:8080",
-		"listening address of the server",
+		"listening address of the service",
 	)
 	flag.StringVar(&cfg.Key,
 		"k", "",
 		"traffic encryption key",
+	)
+	flag.StringVar(&cfg.TrustedSubnet,
+		"t", "",
+		"trusted subnet",
+	)
+	flag.StringVar(&cfg.CryptoKey,
+		"crypto-key", "",
+		"traffic encryption key",
+	)
+	flag.StringVar(&cfg.configFile,
+		"c", "",
+		"file of configuration",
 	)
 	flag.StringVar(&cfg.DB,
 		"d", "",
@@ -103,6 +137,12 @@ func NewServerConfig() (*ConfigurationServer, error) {
 	err := env.Parse(&cfg)
 	if err != nil {
 		return nil, err
+	}
+
+	if cfg.configFile != "" {
+		file, _ := os.ReadFile(cfg.configFile)
+
+		_ = json.Unmarshal(file, &cfg)
 	}
 
 	return &cfg, nil

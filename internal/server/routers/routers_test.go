@@ -1,21 +1,22 @@
 package routers
 
 import (
-	config "github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
 	"io"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/middleware"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
-	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/database"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/handlers"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/server/middleware"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/storage"
 )
 
 func TestNewRouter(t *testing.T) {
@@ -28,7 +29,9 @@ func TestNewRouter(t *testing.T) {
 	cpr := middleware.NewCompressor()
 	hsr := hashing.NewHash(cfg.Key)
 	db := database.NewDB(cfg, mem)
-	handler := handlers.NewHandler(mem, cpr, hsr, db)
+	enc, _ := encryption.NewEncryptor(cfg.CryptoKey, "private")
+	handler := handlers.NewHandler(mem, cpr, hsr, db, enc)
+	mid := middleware.NewMiddle(cfg)
 
 	value := storage.Gauge(123)
 	metric := storage.Metric{
@@ -38,7 +41,7 @@ func TestNewRouter(t *testing.T) {
 		Value: &value,
 	}
 
-	r := NewRouter(handler)
+	r := NewRouter(handler, mid)
 	ts := httptest.NewServer(r)
 	defer ts.Close()
 

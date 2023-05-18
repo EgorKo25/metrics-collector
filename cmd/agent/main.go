@@ -14,26 +14,48 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/agent"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/configuration"
+	"github.com/EgorKo25/DevOps-Track-Yandex/internal/encryption"
 	"github.com/EgorKo25/DevOps-Track-Yandex/internal/hashing"
 
 	_ "net/http/pprof"
 )
 
+var buildVersion = "N/A"
+var buildDate = "N/A"
+var buildCommit = "N/A"
+
 func main() {
+
+	fmt.Printf("Build version: %s\nBuild date:    %s\nBuild commit:  %s\n", buildVersion, buildDate, buildCommit)
 
 	cfg, err := config.NewAgentConfig()
 	if err != nil {
 		log.Fatalf("%s: %s", config.ErrFlagParse, err)
-		return
 	}
 
 	hsr := hashing.NewHash(cfg.Key)
 
-	monitor := agent.NewMonitor(cfg, hsr)
+	enc, err := encryption.NewEncryptor(cfg.CryptoKey, "public")
+	if err != nil {
+		log.Fatalf("%s", err)
+	}
 
-	monitor.Run()
+	monitor, err := agent.NewMonitor(cfg, hsr, enc)
+	if err != nil {
+		log.Fatalf("%s: %s", agent.ErrConstructor, err)
+	}
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
+	monitor.Run(sigs)
+
 }

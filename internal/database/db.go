@@ -20,6 +20,12 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
+type Database interface {
+	Close() error
+	FlushWithContext(ctx context.Context) error
+	Run(ctx context.Context, metric *storage.Metric) error
+}
+
 // DB структура для работы с базой данных
 type DB struct {
 	DB  *sql.DB
